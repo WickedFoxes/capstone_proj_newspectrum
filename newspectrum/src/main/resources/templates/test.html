@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <p>안녕하세요 테스트 페이지입니다.</p>
+    <ul th:each="test_data : ${test_data_list}">
+        <li th:text="${test_data.title}"></li>
+        <li th:text="${test_data.content}"></li>
+    </ul>
+</body>
+</html>
