@@ -1,19 +1,22 @@
 package com.capstone.newspectrum.model;
 
-import com.capstone.newspectrum.dto.KeywordDTO;
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
+@Table(name = "keyword_relation")
 public class KeywordRelation {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
-    @JoinColumn(name="keyword")
+    @JoinColumn(name="keyword_id")
     private Keyword keyword;
-    @OneToMany
-    private List<KeywordDTO> related_keywords;
+
+    @ManyToOne
+    @JoinColumn(name="related_keyword_id")
+    private Keyword related_keyword;
+
+    @Column(name = "simularity")
     private float simularity;
 }

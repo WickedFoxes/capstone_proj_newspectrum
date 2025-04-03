@@ -1,21 +1,25 @@
 package com.capstone.newspectrum.model;
 
-import com.capstone.newspectrum.dto.NewsArticleDTO;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 @Entity
+@Table(name = "news_cluster")
 public class NewsCluster {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long clusterId;
-    @OneToMany
-    private List<NewsArticleDTO> news_article;
+
+    @Column(name = "cluster_id")
+    private String clusterId;
+
+    @ManyToOne
+    @JoinColumn(name = "news_article_id")
+    private NewsArticle news_article;
+
     @DateTimeFormat
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 }

@@ -1,10 +1,13 @@
 package com.capstone.newspectrum.model;
 
 import com.capstone.newspectrum.dto.NewsArticleDTO;
+import com.capstone.newspectrum.enumeration.Domain;
+import com.capstone.newspectrum.enumeration.Media;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Table(name = "news_article")
@@ -12,17 +15,36 @@ public class NewsArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
+    @Column(name = "title")
     private String title;
-    @Column(columnDefinition = "LONGTEXT")
+
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
+
+    @Column(name = "media")
+    @Enumerated(EnumType.STRING)
     private Media media;
+
+    @Column(name = "domain")
+    @Enumerated(EnumType.STRING)
     private Domain domain;
 
+    @Column(name = "href")
     private String href;
+
+    @Column(name = "img_url")
     private String img_url;
+
     @DateTimeFormat
-    private Date createdDate;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @OneToMany(mappedBy = "news_article", cascade = CascadeType.ALL)
+    private List<NewsArticleRelation> related_news_articles;
+
+    @OneToMany(mappedBy = "news_article", cascade = CascadeType.ALL)
+    private List<NewsHyperlink> news_hyperlinks;
 
     public NewsArticle(){}
     public NewsArticle(NewsArticleDTO newsArticleDTO){
@@ -52,12 +74,5 @@ public class NewsArticle {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    enum Media{
-        sbs, mbc, kbs, mbn, jtbc, 중앙일보, 조선일보;
-    }
-    enum Domain{
-        정치, 경제, 사회, 과학, 스포츠, 연애;
     }
 }
