@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인페이지</title>
+    <style>
+        /* 최상단 제목 스타일 */
+        .title-bar {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .title-bar a {
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+        /* 전체 컨테이너 스타일 */
+        .container {
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 검색창 컨테이너 */
+        .search-bar-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            background-color: #f1f1f1;
+            border-bottom: 1px solid #ddd;
+        }
+        .search-bar-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .search-bar-container button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .search-bar-container button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 메뉴 바 스타일 */
+        .menu-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-bar a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .menu-bar a:hover {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        /* 오늘의 이슈 섹션 스타일 */
+        .issues-section {
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .issues-section h2 {
+            font-size: 24px;
+            color: #333;
+            text-align: left; /* 왼쪽 정렬 */
+            margin-bottom: 20px;
+        }
+        .issue-list {
+            display: flex;
+            flex-direction: column; /* 한 줄에 하나씩 */
+            gap: 20px; /* 항목 간의 간격 */
+        }
+        .issue-item {
+            display: flex;
+            align-items: center; /* 이미지와 텍스트를 세로로 정렬 */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+        .issue-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .issue-item img {
+            max-width: 150px; /* 최대 너비 */
+            max-height: 100px; /* 최대 높이 */
+            width: auto; /* 비율 유지 */
+            height: auto; /* 비율 유지 */
+            border-right: 1px solid #ddd;
+        }
+        .issue-item-content {
+            padding: 15px;
+            text-align: left;
+            flex: 1; /* 텍스트가 이미지 옆에 적합하게 채워짐 */
+        }
+        .issue-item-content h3 {
+            font-size: 18px;
+            margin: 0 0 5px; /* 제목과 설명 사이 간격 줄임 */
+            color: #007bff;
+        }
+        .issue-item-content h3 a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .issue-item-content h3 a:hover {
+            text-decoration: underline;
+        }
+        .issue-item-content p {
+            font-size: 14px;
+            color: #555;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<!-- 최상단 타이틀 -->
+    <div class="title-bar">
+        <a href="main_page.html">NewSpectrum</a>
+    </div>
+
+<!-- 검색창 컴포넌트 -->
+    <div class="search-bar-container">
+        <input type="text" placeholder="검색어를 입력하세요">
+        <button type="button">검색</button>
+    </div>
+
+<!-- 메뉴 바 -->
+    <div class="menu-bar">
+            <a href="section/politics.html">정치</a>
+            <a href="section/economy.html">경제</a>
+            <a href="section/sports.html">스포츠</a>
+            <a href="keyword/keyword.html">키워드</a>
+    </div>
+
+<!-- 오늘의 이슈 섹션 -->
+    <div class="issues-section">
+        <h2>오늘의 이슈</h2>
+        <div class="issue-list">
+            <!-- 이슈 1 -->
+            <div class="issue-item">
+                <img src="https://imgnews.pstatic.net/image/366/2025/03/26/0001064008_001_20250326181509201.JPG?type=w860"
+                     alt="정치 뉴스">
+                <div class="issue-item-content">
+                    <h3><a href="#">이재명 선거법 위반 항소심서 ‘무죄’</a></h3>
+                    <p>조선일보</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Sports</title>
+  <style>
+    /* 최상단 제목 스타일 */
+    .title-bar {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+    }
+    .title-bar a {
+        text-decoration: none;
+        color: white;
+        transition: 0.3s;
+    }
+
+  /* 메뉴 바 스타일 */
+  .menu-bar {
+      display: flex;
+      justify-content: space-around;
+      background-color: #f8f9fa;
+      padding: 10px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .menu-bar a {
+      text-decoration: none;
+      color: #333;
+      padding: 10px 20px;
+      font-size: 16px;
+      transition: 0.3s;
+  }
+  .menu-bar a:hover {
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 5px;
+  }
+  /* 섹션 스타일 */
+  .section {
+      padding: 50px;
+      height: 500px;
+      border: 1px solid #ddd;
+      margin: 20px;
+  }
+  </style>
+</head>
+<body>
+<!-- 최상단 타이틀 -->
+<div class="title-bar">
+  <a href="../main_page.html">NewSpectrum</a>
+</div>
+
+<!-- 메뉴 바 -->
+<div class="menu-bar">
+    <a href="politics.html">정치</a>
+    <a href="economy.html">경제</a>
+    <a href="sports.html">스포츠</a>
+    <a href="../keyword/keyword.html">키워드</a>
+</div>
+    <h1>스포츠 뉴스 페이지입니다.</h1>
+</body>
+</html>
