@@ -17,6 +17,6 @@ public class KeywordRelation {
     @JoinColumn(name="related_keyword_id")
     private Keyword related_keyword;
 
-    @Column(name = "simularity")
-    private float simularity;
+    @Column(name = "similarity")
+    private float similarity;
 }
