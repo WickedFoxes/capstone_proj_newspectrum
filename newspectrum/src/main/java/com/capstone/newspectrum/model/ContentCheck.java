@@ -18,4 +18,7 @@ public class ContentCheck {
     @Column(name = "content_check_type")
     @Enumerated(EnumType.STRING)
     private CheckType content_check_type;
+
+    public ContentCheck() {
+    }
 }

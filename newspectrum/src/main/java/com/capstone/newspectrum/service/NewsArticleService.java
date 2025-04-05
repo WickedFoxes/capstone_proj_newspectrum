@@ -32,7 +32,6 @@ public class NewsArticleService {
         for(NewsArticle data : list){
             dto_list.add(new NewsArticleDTO(data));
         }
-
         return dto_list;
     }
 
