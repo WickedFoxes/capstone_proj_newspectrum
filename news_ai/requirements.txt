@@ -1,0 +1,21 @@
+# NLP 관련
+transformers
+konlpy
+torch
+scikit-learn
+keybert
+sentencepiece
+kss
+gliner
+python-mecab-ko
+
+# crawler 관련
+requests
+beautifulsoup4 
+
+pymysql
+matplotlib
+plotly
+pandas
+hdbscan
+umap-learn
