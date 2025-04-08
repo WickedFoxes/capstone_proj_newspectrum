@@ -1,4 +1,4 @@
-package com.capstone.newspectrum.service;
+package com.capstone.newspectrum.service.search;
 
 import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.model.NewsArticle;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class KeywordSearchService implements SearchServiceInterface{
+public class KeywordSearchService implements SearchServiceInterface {
     @Autowired
     private NewsArticleRepo newsArticleRepo;
     public List<NewsArticleDTO> getAllNewsArticleByKeyword(){

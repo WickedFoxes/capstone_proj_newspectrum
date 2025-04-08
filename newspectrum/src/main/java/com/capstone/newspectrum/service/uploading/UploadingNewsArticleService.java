@@ -1,4 +1,4 @@
-package com.capstone.newspectrum.service;
+package com.capstone.newspectrum.service.uploading;
 
 import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.model.NewsArticle;

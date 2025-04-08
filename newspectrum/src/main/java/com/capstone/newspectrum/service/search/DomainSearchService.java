@@ -1,4 +1,4 @@
-package com.capstone.newspectrum.service;
+package com.capstone.newspectrum.service.search;
 
 import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.enumeration.Domain;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 @Service
-public class DomainSearchService implements SearchServiceInterface{
+public class DomainSearchService implements SearchServiceInterface {
     @Autowired
     private NewsArticleRepo newsArticleRepo;
     public List<NewsArticleDTO> getAllNewsArticleListByDomain(Domain domain){

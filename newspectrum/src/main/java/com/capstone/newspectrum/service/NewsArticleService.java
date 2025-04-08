@@ -26,7 +26,7 @@ public class NewsArticleService {
     }
 
     public List<NewsArticleDTO> getNewsArticleListByTitle(String title){
-        List<NewsArticle> list = newsArticleRepo.findAllByTitle(title);
+        List<NewsArticle> list = newsArticleRepo.findAllNewsArticleByTitle(title);
         List<NewsArticleDTO> dto_list = new ArrayList<NewsArticleDTO>();
 
         for(NewsArticle data : list){
