@@ -1,32 +1,29 @@
-package com.capstone.newspectrum.model;
+package com.capstone.newspectrum.dto;
 
-import jakarta.persistence.*;
+import com.capstone.newspectrum.model.Keyword;
+import com.capstone.newspectrum.model.KeywordRelation;
 
-@Entity
-@Table(name = "keyword_relation")
-public class KeywordRelation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class KeywordRelationDTO {
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name="keyword_id")
     private Keyword keyword;
-
-    @ManyToOne
-    @JoinColumn(name="related_keyword_id")
     private Keyword related_keyword;
-
-    @Column(name = "similarity")
     private float similarity;
 
-    public KeywordRelation() {
-    }
-    public KeywordRelation(Long id, Keyword keyword, Keyword related_keyword, float similarity) {
+    public KeywordRelationDTO() {}
+    public KeywordRelationDTO(Long id,
+                              Keyword keyword,
+                              Keyword related_keyword,
+                              float similarity) {
         this.id = id;
         this.keyword = keyword;
         this.related_keyword = related_keyword;
         this.similarity = similarity;
+    }
+    public KeywordRelationDTO(KeywordRelation keyword_relation){
+        this.id = keyword_relation.getId();
+        this.keyword = keyword_relation.getKeyword();
+        this.related_keyword = keyword_relation.getRelated_keyword();
+        this.similarity = keyword_relation.getSimilarity();
     }
 
     public Long getId() {

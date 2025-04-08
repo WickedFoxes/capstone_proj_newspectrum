@@ -47,10 +47,6 @@ public class NewsArticle {
     private List<NewsHyperlink> news_hyperlinks;
 
     public NewsArticle(){}
-    public NewsArticle(NewsArticleDTO newsArticleDTO){
-        this.title = newsArticleDTO.getTitle();
-        this.content = newsArticleDTO.getContent();
-    }
 
     public Long getId() {
         return id;
@@ -74,5 +70,61 @@ public class NewsArticle {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Media getMedia() {
+        return media;
+    }
+
+    public void setMedia(Media media) {
+        this.media = media;
+    }
+
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
+
+    public String getImg_url() {
+        return img_url;
+    }
+
+    public void setImg_url(String img_url) {
+        this.img_url = img_url;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public List<NewsArticleRelation> getRelated_news_articles() {
+        return related_news_articles;
+    }
+
+    public void setRelated_news_articles(List<NewsArticleRelation> related_news_articles) {
+        this.related_news_articles = related_news_articles;
+    }
+
+    public List<NewsHyperlink> getNews_hyperlinks() {
+        return news_hyperlinks;
+    }
+
+    public void setNews_hyperlinks(List<NewsHyperlink> news_hyperlinks) {
+        this.news_hyperlinks = news_hyperlinks;
     }
 }
