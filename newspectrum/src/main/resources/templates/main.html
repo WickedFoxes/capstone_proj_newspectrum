@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인페이지</title>
+    <style>
+        /* 최상단 제목 스타일 */
+        .title-bar {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .title-bar a {
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+        /* 전체 컨테이너 스타일 */
+        .container {
+            padding: 0;
+            margin: 0;
+        }
+
+        /* 검색창 컨테이너 */
+        .search-bar-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            background-color: #f1f1f1;
+            border-bottom: 1px solid #ddd;
+        }
+        .search-bar-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .search-bar-container button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .search-bar-container button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 메뉴 바 스타일 */
+        .menu-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-bar a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .menu-bar a:hover {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        /* 오늘의 이슈 섹션 스타일 */
+        .issues-section {
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .issues-section h2 {
+            font-size: 24px;
+            color: #333;
+            text-align: left; /* 왼쪽 정렬 */
+            margin-bottom: 20px;
+        }
+        .issue-list {
+            display: flex;
+            flex-direction: column; /* 한 줄에 하나씩 */
+            gap: 20px; /* 항목 간의 간격 */
+        }
+        .issue-item {
+            display: flex;
+            align-items: center; /* 이미지와 텍스트를 세로로 정렬 */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+        .issue-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .issue-item img {
+            max-width: 150px; /* 최대 너비 */
+            max-height: 100px; /* 최대 높이 */
+            width: auto; /* 비율 유지 */
+            height: auto; /* 비율 유지 */
+            border-right: 1px solid #ddd;
+        }
+        .issue-item-content {
+            padding: 15px;
+            text-align: left;
+            flex: 1; /* 텍스트가 이미지 옆에 적합하게 채워짐 */
+        }
+        .issue-item-content h3 {
+            font-size: 18px;
+            margin: 0 0 5px; /* 제목과 설명 사이 간격 줄임 */
+            color: #007bff;
+        }
+        .issue-item-content h3 a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .issue-item-content h3 a:hover {
+            text-decoration: underline;
+        }
+        .issue-item-content p {
+            font-size: 14px;
+            color: #555;
+            margin: 0;
+        }
+
+        /* 팝업 모달 스타일 */
+        #popupModal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 400px;
+            z-index: 9999;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        #popupModal h3 {
+            margin-top: 0;
+        }
+        #popupModal ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #popupModal ul li {
+            margin-bottom: 5px;
+        }
+        #popupModal button {
+            margin-top: 15px;
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #popupModal button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 오늘의 키워드 리스트 */
+        .keyword-section {
+            display: flex;
+            gap: 20px;
+            margin-top: 50px;
+            padding: 0 20px;
+        }
+
+        .keyword-list-container {
+            flex: 1;
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .keyword-list-container h3 {
+            margin-bottom: 20px;
+        }
+
+        #keywordList {
+            list-style: none;
+            padding: 0;
+        }
+
+        #keywordList li {
+            background-color: #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        #keywordList li:hover {
+            background-color: #bbb;
+        }
+
+        .keyword-detail-container {
+            flex: 3;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .keyword-detail-container table {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .keyword-detail-container table thead td {
+            font-weight: bold;
+        }
+
+        .keyword-detail-container ul {
+            padding-left: 15px;
+        }
+
+        .keyword-detail-container li {
+            margin-bottom: 8px;
+        }
+
+        .related-news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .related-news-item {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            padding: 10px;
+        }
+
+        .related-news-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .related-news-item img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-right: 1px solid #eee;
+            margin-right: 15px;
+        }
+
+        .related-news-content {
+            flex: 1;
+        }
+
+        .related-news-content .news-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .related-news-content .news-title:hover {
+            text-decoration: underline;
+        }
+
+        .related-news-content .news-media {
+            font-size: 14px;
+            color: #555;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- 최상단 타이틀 -->
+<div class="title-bar">
+    <a th:href="@{/}">NewSpectrum</a>
+</div>
+
+<!-- 검색창 컴포넌트 -->
+<div class="search-bar-container">
+    <input type="text" placeholder="검색어를 입력하세요">
+    <button type="button">검색</button>
+</div>
+
+<!-- 메뉴 바 -->
+<div class="menu-bar">
+    <a th:href="@{/section/politics}">정치</a>
+    <a th:href="@{/section/economy}">경제</a>
+    <a th:href="@{/section/social}">사회</a>
+    <a th:href="@{/section/entertainment}">연예</a>
+    <a th:href="@{/section/sports}">스포츠</a>
+    <a th:href="@{/keyword/keyword}">키워드</a>
+</div>
+
+<div class="issues-section">
+    <h2>오늘의 이슈</h2>
+    <div class="issue-list">
+        <div class="issue-item" th:each="article : ${newsList}">
+            <img th:src="${article.img_url != null ? article.img_url : 'https://via.placeholder.com/150'}"
+                 alt="뉴스 이미지">
+            <div class="issue-item-content">
+                <h3><a th:href="${article.href}" th:text="${article.title}" target="_blank"></a></h3>
+                <p th:text="${article.media}">언론사</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 오늘의 이슈 -->
+<div class="issues-section">
+    <h2>오늘의 이슈</h2>
+    <div class="issue-list">
+        <div class="issue-item" th:each="issue, iterStat : ${issues}"
+             th:data-index="${iterStat.index}" onclick="openPopup(this)">
+            <img th:src="${issue.imgUrl}" alt="이슈 이미지">
+            <div class="issue-item-content">
+                <h3 th:text="${issue.title}">이슈 제목</h3>
+                <p th:text="${issue.media}">언론사 이름</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 모달 팝업 -->
+<div id="popupModal">
+    <h3 id="popupTitle">이슈 제목</h3>
+    <ul id="popupList"></ul>
+    <button onclick="closePopup()">닫기</button>
+</div>
+
+<!-- 키워드와 관련 뉴스 영역 -->
+<div class="keyword-section">
+    <!-- 좌측: 오늘의 키워드 리스트 -->
+    <div class="keyword-list-container">
+        <h3>오늘의 키워드</h3>
+        <ul id="keywordList">
+            <li data-index="0" onclick="selectKeyword(this)">총선 (120개)</li>
+            <li data-index="1" onclick="selectKeyword(this)">산불 (98개)</li>
+            <li data-index="2" onclick="selectKeyword(this)">금리 (72개)</li>
+            <li data-index="3" onclick="selectKeyword(this)">부동산 (63개)</li>
+            <li data-index="4" onclick="selectKeyword(this)">탄소중립 (58개)</li>
+            <li data-index="5" onclick="selectKeyword(this)">AI (52개)</li>
+            <li data-index="6" onclick="selectKeyword(this)">실업률 (45개)</li>
+            <li data-index="7" onclick="selectKeyword(this)">우크라이나 (39개)</li>
+            <li data-index="8" onclick="selectKeyword(this)">한미동맹 (34개)</li>
+            <li data-index="9" onclick="selectKeyword(this)">엔터테인먼트 (29개)</li>
+        </ul>
+    </div>
+
+    <!-- 우측: 키워드 변화 + 관련 뉴스 리스트 -->
+    <div class="keyword-detail-container">
+        <h3 id="selectedKeywordTitle">키워드를 선택하세요</h3>
+
+        <!-- 날짜별 키워드 변화 -->
+        <table>
+            <thead>
+            <tr>
+                <td>25.03.01</td>
+                <td>25.03.10</td>
+                <td>25.03.20</td>
+                <td>25.03.30</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr id="keywordChangeRow">
+                <td>---</td>
+                <td>---</td>
+                <td>---</td>
+                <td>---</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 관련 뉴스 리스트 -->
+        <div id="relatedNewsList" class="related-news-list">
+            <ul></ul>
+        </div>
+    </div>
+</div>
+
+<!-- JS: 임시 데이터 주입 -->
+<script th:inline="javascript">
+    const keywordData = [
+        {
+            name: "총선",
+            count: 120,
+            relatedKeywords: ["여당", "야당", "정치권", "공약"],
+            relatedNews: [
+                { title: "총선 여당 전략 발표", url: "https://example.com/news1" },
+                { title: "야당, 총선 후보 확정", url: "https://example.com/news2" },
+                { title: "총선 D-30, 변수는?", url: "https://example.com/news3" },
+                { title: "정치권 총선 메시지 분석", url: "https://example.com/news4" },
+                { title: "총선 여론조사 결과 공개", url: "https://example.com/news5" }
+            ]
+        },
+        {
+            name: "산불",
+            count: 98,
+            relatedKeywords: ["진화작업", "소방관", "기상청", "피해규모"],
+            relatedNews: [
+                { title: "산불 피해, 복구는 언제?", url: "https://example.com/fire1" },
+                { title: "기상청, 강풍 경고", url: "https://example.com/fire2" },
+                { title: "소방관들 밤샘 진화", url: "https://example.com/fire3" },
+                { title: "산불 진화율 80%", url: "https://example.com/fire4" },
+                { title: "산불로 인한 대피 상황", url: "https://example.com/fire5" }
+            ]
+        },
+        {
+            name: "금리",
+            count: 72,
+            relatedKeywords: ["한국은행", "기준금리", "인플레이션", "경기침체"],
+            relatedNews: [
+                { title: "기준금리 동결 결정", url: "https://example.com/finance1" },
+                { title: "금리 인하 가능성?", url: "https://example.com/finance2" },
+                { title: "시장 반응 분석", url: "https://example.com/finance3" },
+                { title: "한국은행 총재 발언", url: "https://example.com/finance4" },
+                { title: "금리와 환율 관계", url: "https://example.com/finance5" }
+            ]
+        },
+        // 나머지 키워드는 동일하게 추가 가능
+    ];
+</script>
+
+<script th:inline="javascript">
+    const issueData = /*[[${issues}]]*/ [];
+</script>
+
+<script>
+    function openPopup(el) {
+        const index = el.dataset.index;
+        const issue = issueData[index];
+        document.getElementById("popupTitle").innerText = issue.title;
+
+        const list = document.getElementById("popupList");
+        list.innerHTML = "";
+        issue.relatedArticles.forEach(link => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = link;
+            a.innerText = link;
+            a.target = "_blank";
+            li.appendChild(a);
+            list.appendChild(li);
+        });
+
+        document.getElementById("popupModal").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popupModal").style.display = "none";
+    }
+
+    function selectKeyword(el) {
+        const index = el.dataset.index;
+        const keyword = keywordData[index];
+
+        // 제목 변경
+        document.getElementById("selectedKeywordTitle").innerText = keyword.name;
+
+        // 키워드 변화 테이블 업데이트
+        const row = document.getElementById("keywordChangeRow");
+        row.innerHTML = "";
+        keyword.relatedKeywords.forEach(k => {
+            const td = document.createElement("td");
+            const a = document.createElement("a");
+            a.innerText = k;
+            a.href = "#";
+            td.appendChild(a);
+            row.appendChild(td);
+        });
+
+        // 관련 뉴스 업데이트
+        const newsList = document.getElementById("relatedNewsList");
+        newsList.innerHTML = "";
+        keyword.relatedNews.forEach(n => {
+            const item = document.createElement("div");
+            item.className = "related-news-item";
+
+            const img = document.createElement("img");
+            img.src = n.img || "https://via.placeholder.com/150";
+            img.alt = "뉴스 이미지";
+
+            const content = document.createElement("div");
+            content.className = "related-news-content";
+
+            const title = document.createElement("a");
+            title.href = n.url;
+            title.innerText = n.title;
+            title.target = "_blank";
+            title.className = "news-title";
+
+            const media = document.createElement("p");
+            media.innerText = n.media || "NewSpectrum 언론사";
+            media.className = "news-media";
+
+            content.appendChild(title);
+            content.appendChild(media);
+
+            item.appendChild(img);
+            item.appendChild(content);
+
+            newsList.appendChild(item);
+        });
+    }
+</script>
+
+</body>
+</html>
