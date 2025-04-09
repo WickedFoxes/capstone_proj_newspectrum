@@ -36,8 +36,8 @@ public class NewsArticleService {
         return dto_list;
     }
 
-    public NewsArticleDTO saveNewsArticle(NewsArticleDTO newsArticleDTO){
-        newsArticleRepo.save(new NewsArticle(newsArticleDTO));
-        return newsArticleDTO;
-    }
+//    public NewsArticleDTO saveNewsArticle(NewsArticleDTO newsArticleDTO){
+//        newsArticleRepo.save(new NewsArticle(newsArticleDTO));
+//        return newsArticleDTO;
+//    }
 }
