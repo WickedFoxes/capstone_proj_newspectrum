@@ -46,7 +46,8 @@ public class NewsArticle {
     @OneToMany(mappedBy = "news_article", cascade = CascadeType.ALL)
     private List<NewsHyperlink> news_hyperlinks;
 
-    public NewsArticle(){}
+    //Service에서 오류 나기에 추가
+    public NewsArticle(NewsArticleDTO newsArticleDTO){}
 
     public Long getId() {
         return id;

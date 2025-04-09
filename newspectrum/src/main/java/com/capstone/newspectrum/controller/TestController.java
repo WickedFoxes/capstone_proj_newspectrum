@@ -15,23 +15,23 @@ public class TestController {
     @Autowired
     private NewsArticleService newsArticleService;
 
-    @RequestMapping("/test_add")
-    public String test_add(Model model){
-        List<NewsArticleDTO> test_data = new ArrayList<>();
-        test_data.add(newsArticleService.saveNewsArticle(
-                new NewsArticleDTO("title1", "this is title1")
-        ));
-        test_data.add(newsArticleService.saveNewsArticle(
-                new NewsArticleDTO("title2", "this is title2")
-        ));
-        model.addAttribute("test_data_list", test_data);
-        return "test";
-    }
+//    @RequestMapping("/test_add")
+//    public String test_add(Model model){
+//        List<NewsArticleDTO> test_data = new ArrayList<>();
+//        test_data.add(newsArticleService.saveNewsArticle(
+//                new NewsArticleDTO("title1", "this is title1")
+//        ));
+//        test_data.add(newsArticleService.saveNewsArticle(
+//                new NewsArticleDTO("title2", "this is title2")
+//        ));
+//        model.addAttribute("test_data_list", test_data);
+//        return "test";
+//    }
 
-    @RequestMapping("/test")
-    public String test(Model model){
-        List<NewsArticleDTO> test_data = newsArticleService.getNewsArticleListAll();
-        model.addAttribute("test_data_list", test_data);
-        return "test";
-    }
+//    @RequestMapping("/test")
+//    public String test(Model model){
+//        List<NewsArticleDTO> test_data = newsArticleService.getNewsArticleListAll();
+//        model.addAttribute("test_data_list", test_data);
+//        return "test";
+//    }
 }
