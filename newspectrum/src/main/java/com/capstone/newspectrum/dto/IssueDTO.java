@@ -1,5 +1,7 @@
 package com.capstone.newspectrum.dto;
 
+import com.capstone.newspectrum.model.NewsCluster;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class IssueDTO {
     private List<NewsArticleDTO> news_articles;
     private LocalDateTime created_date;
 
+    public IssueDTO(){};
     public IssueDTO(int cluster_cnt,
                     String cluster_title,
                     List<NewsArticleDTO> news_articles,
@@ -28,7 +31,7 @@ public class IssueDTO {
         this.cluster_cnt = cluster_cnt;
     }
 
-    public String getCluster_title() {
+    public String getCluster_title(NewsCluster newsCluster) {
         return cluster_title;
     }
 
