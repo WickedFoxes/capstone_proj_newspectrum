@@ -1,0 +1,71 @@
+[33mcommit 3aa218d6f583a98250a0d5e0bf4f6bd2a2d3f46d[m[33m ([m[1;31morigin/seokhun[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/eojin[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: seokhun <sostar0832@cau.ac.kr>
+Date:   Wed Apr 9 00:37:01 2025 +0900
+
+    메인페이지 관련 DTO 추가
+
+[33mcommit 1ec2c73f1ff01b9c5257cd69e8fbb3dd2872d134[m
+Author: eojin <chch6879@naver.com>
+Date:   Tue Apr 8 22:52:31 2025 +0900
+
+    controller 추가
+
+[33mcommit 4638d0e039be8000de2db573d981451d29064144[m
+Author: eojin <chch6879@naver.com>
+Date:   Tue Apr 8 22:44:18 2025 +0900
+
+    mainpage
+
+[33mcommit f652c8d391549fc7b3a7b4c271a530ef6fe20231[m
+Author: seokhun <sostar0832@cau.ac.kr>
+Date:   Tue Apr 8 21:02:10 2025 +0900
+
+    news 크롤러 및 뉴스 분석 모델 추가가
+
+[33mcommit a931e71d1b0b27e31ee89ca5c9f1734b4a1b1095[m[33m ([m[1;31morigin/seokwon[m[33m, [m[1;32mseokwon[m[33m)[m
+Author: softwon999 <112156322+softwon999@users.noreply.github.com>
+Date:   Tue Apr 8 16:50:21 2025 +0900
+
+    relationService
+
+[33mcommit 0c28c65a70001a8b598893f81964122de67d1871[m
+Author: seokhun <sostar0832@cau.ac.kr>
+Date:   Sun Apr 6 23:53:55 2025 +0900
+
+    enum 패키지 추가
+
+[33mcommit f4bc85d23ff82b19bf7778a20caafeab222cb832[m
+Author: softwon999 <112156322+softwon999@users.noreply.github.com>
+Date:   Sun Apr 6 03:17:37 2025 +0900
+
+    04.05
+
+[33mcommit d6619f697c3d66ceb275575efa8777c724886909[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: seokhun <sostar0832@cau.ac.kr>
+Date:   Fri Apr 4 20:39:22 2025 +0900
+
+    simularity -> similarity 컬럼명 변경
+
+[33mcommit bf7a898be614ab90b63020e88da168babf1ae98d[m
+Author: seokhun <sostar0832@cau.ac.kr>
+Date:   Fri Apr 4 01:04:21 2025 +0900
+
+    Spring Model 내용 수정
+
+[33mcommit 5e85347ac995d250853d7e10061a84da35e474c6[m[33m ([m[1;32mnewbranch[m[33m)[m
+Author: softwon999 <112156322+softwon999@users.noreply.github.com>
+Date:   Tue Apr 1 15:32:59 2025 +0900
+
+    seokwon
+
+[33mcommit e36be02024da5330cd8c9605fc2407287afffd20[m
+Author: seokhun <sostar0832@cau.ac.kr>
+Date:   Wed Mar 19 20:05:49 2025 +0900
+
+    Spring 기본 구조 설계
+
+[33mcommit a271e4b4743ea57810c5780b1fc4891099f8754c[m
+Author: 정석훈 <48846088+WickedFoxes@users.noreply.github.com>
+Date:   Wed Mar 19 13:50:11 2025 +0900
+
+    Initial commit
