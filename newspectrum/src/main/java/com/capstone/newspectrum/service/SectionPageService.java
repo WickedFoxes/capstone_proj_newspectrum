@@ -1,7 +1,6 @@
 package com.capstone.newspectrum.service;
 
 import com.capstone.newspectrum.dto.IssueDTO;
-import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.dto.TodayKeywordItemDTO;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.model.NewsArticle;
@@ -24,7 +23,7 @@ import java.util.*;
 // get_today_keyword_items_by_domain
 
 @Service
-public class MainSectionPageService {
+public class SectionPageService {
     @Autowired
     private NewsArticleRepo news_article_repo;
     @Autowired
