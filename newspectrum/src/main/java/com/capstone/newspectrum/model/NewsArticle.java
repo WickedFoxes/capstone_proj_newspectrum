@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "news_article")
+@Table(name = "news_article", indexes = {
+        @Index(name = "idx_news_article_created_domain", columnList = "created_date, domain")
+})
 public class NewsArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

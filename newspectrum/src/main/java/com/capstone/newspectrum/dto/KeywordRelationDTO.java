@@ -5,8 +5,8 @@ import com.capstone.newspectrum.model.KeywordRelation;
 
 public class KeywordRelationDTO {
     private Long id;
-    private Keyword keyword;
-    private Keyword related_keyword;
+    private String keyword;
+    private String related_keyword;
     private float similarity;
 
     public KeywordRelationDTO() {}
@@ -15,14 +15,14 @@ public class KeywordRelationDTO {
                               Keyword related_keyword,
                               float similarity) {
         this.id = id;
-        this.keyword = keyword;
-        this.related_keyword = related_keyword;
+        this.keyword = keyword.getKeyword();
+        this.related_keyword = related_keyword.getKeyword();
         this.similarity = similarity;
     }
     public KeywordRelationDTO(KeywordRelation keyword_relation){
         this.id = keyword_relation.getId();
-        this.keyword = keyword_relation.getKeyword();
-        this.related_keyword = keyword_relation.getRelated_keyword();
+        this.keyword = keyword_relation.getKeyword().getKeyword();
+        this.related_keyword = keyword_relation.getRelated_keyword().getKeyword();
         this.similarity = keyword_relation.getSimilarity();
     }
 
@@ -34,19 +34,19 @@ public class KeywordRelationDTO {
         this.id = id;
     }
 
-    public Keyword getKeyword() {
+    public String getKeyword() {
         return keyword;
     }
 
-    public void setKeyword(Keyword keyword) {
+    public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
 
-    public Keyword getRelated_keyword() {
+    public String getRelated_keyword() {
         return related_keyword;
     }
 
-    public void setRelated_keyword(Keyword related_keyword) {
+    public void setRelated_keyword(String related_keyword) {
         this.related_keyword = related_keyword;
     }
 

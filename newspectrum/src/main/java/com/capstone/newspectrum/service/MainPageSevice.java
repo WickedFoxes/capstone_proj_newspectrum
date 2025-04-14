@@ -1,8 +1,10 @@
 package com.capstone.newspectrum.service;
 
-import com.capstone.newspectrum.dto.MainBlockDTO;
+import com.capstone.newspectrum.dto.*;
 import com.capstone.newspectrum.enumeration.Domain;
+import com.capstone.newspectrum.model.Keyword;
 import com.capstone.newspectrum.model.NewsArticle;
+import com.capstone.newspectrum.model.NewsCluster;
 import com.capstone.newspectrum.repository.KeywordRepo;
 import com.capstone.newspectrum.repository.NewsArticleRepo;
 import com.capstone.newspectrum.repository.NewsClusterRepo;
@@ -11,7 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 // 2025-04-10 저녁 10시까지
@@ -21,65 +26,115 @@ import java.util.List;
 public class MainPageSevice {
     @Autowired
     private NewsArticleRepo news_article_repo;
+    @Autowired
     private NewsClusterRepo news_cluster_repo;
+    @Autowired
     private KeywordRepo keyword_repo;
 
-    // start_date와 end_date 사이에 출시된 뉴스의 수
-    public int get_total_news_cnt(LocalDateTime start_date,
-                                  LocalDateTime end_date){
-        List<NewsArticle> news_articles = news_article_repo.findByCreatedDateBetween(start_date, end_date);
-        return news_articles.size();
-    }
 
-    // start_date와 end_date 사이에 출시되었으며 도메인이 domain인 뉴스의 수
-    public int get_total_news_cnt_by_domain(LocalDateTime start_date,
-                                            LocalDateTime end_date,
-                                            Domain domain){
-        List<NewsArticle> news_articles = news_article_repo.findByCreatedDateBetweenAndDomain(start_date, end_date, domain);
-        return news_articles.size();
-    }
+    public List<MainBlockDTO> get_main_block_list(LocalDateTime today){
+        List<MainBlockDTO> mainBlockList = new ArrayList<>();
 
-    /*
-    오늘의 이슈 리스트 가져오기
-    1. List<TodayIssueDTO> today_issue_list 생성
-    2. news_cluster_repo.findByNewsArticle_CreatedDateBetween를 사용하여 List<NewsCluster> clusters 생성
-    3. clusters의 데이터를 Map<String(cluster_id), List<NewsCluster>> cluster_map 로 분리하여 저장
-    4. for (String clusterId : cluster_map.keySet()) 반복문
-    4-1. List<NewsArticleDTO> news_articles 생성
-    4-2. Map<String, Integer> keyword_cnt_map 생성
-    4-3. for (NewsCluster cluster : cluster_map.get(clusterId)) 반복문
-    4-3-1. news_articles에 cluster.news_article 추가
-    4-3-2. for(Keyword keyword : cluster.news_article.keywords) 반복문
-    4-3-2-1. keyword.keyword의 카운트를 keyword_cnt_map에 저장
-    4-4. keyword_cnt_map의 key를 value가 높은 순서대로 정렬하여 List<KeywordDTO> keywords로 저장
-    4-5. keywords와 동일한 순서로 value 값들을 List<Integer> keywords_count로 저장
-    4-6. List<IssueKeywordItemDTO> issue_keyword_items 생성
-    4-7. for(KeywordDTO keyword : keywords.subList(0,5)) 반복문
-    4-7-1 (start_date, end_date)를 7일 간격으로 4번 반복
-    4-7-1-1. keyword_repo.findRelatedKeywordsByKeywordAndDate 사용하여 List<Keyword> related_keywords 획득
-    4-7-1-2. List<Keyword> related_keywords 를 List<KeywordDTO> related_DTO_keywords로 변경
-    4-7-1-3. (keyword, , related_DTO_keywords) 활용해서
-           (keyword, cluster_map.get(keyword.keyword, start_date, end_date,
-                                      LocalDateTime start_time,
-                                      LocalDateTime end_time,
-                                      List<KeywordDTO> related_keywords)
-           IssueKeywordItemDTO issue_keyword_item 생성
-    4-7-1-4. issue_keyword_items에 issue_keyword_item 추가
-    4-8. (news_articles, keywords, keywords_count)를 사용하여 TodayIssueDTO today_issue 생성
-    */
-    public List<MainBlockDTO> get_today_issue_list(LocalDateTime today){
-        List<MainBlockDTO> today_issue_list = new ArrayList<>();
+        // 1. 뉴스 클러스터 조회
+        List<NewsCluster> today_clusters = news_cluster_repo
+                .findByNewsArticle_CreatedDateBetween(today.minusHours(48), today);
+//        System.out.println("news_article size : " + today_clusters.size());
 
-        // 이후 코드 구현
+        // 2. 클러스터 ID로 그룹핑
+        Map<String, List<NewsCluster>> clusterMap = new HashMap<>();
+        for (NewsCluster cluster : today_clusters) {
+            String clusterId = cluster.getClusterId();
+            clusterMap.computeIfAbsent(clusterId, k -> new ArrayList<>()).add(cluster);
+        }
+        // 3. Top10 cluster만을 추출
+        List<List<NewsCluster>> top10Clusters = clusterMap.entrySet()
+                .stream()
+                .sorted((e1, e2) -> Integer.compare(e2.getValue().size(), e1.getValue().size()))
+                .limit(10)
+                .map(Map.Entry::getValue)
+                .toList();
+//        for(List<NewsCluster> temp_cluster : top10Clusters){
+//            System.out.println("클러스터의 크기 : " + temp_cluster.size());
+//        }
 
-        return today_issue_list;
-    }
-    public List<MainBlockDTO> get_today_issue_list_with_domain(LocalDateTime today,
-                                                               Domain domain){
-        List<MainBlockDTO> today_issue_list = new ArrayList<>();
+        // 3. 클러스터별 MainBlock 생성
+        for (List<NewsCluster> clusters : top10Clusters) {
+            List<NewsArticleDTO> newsArticles = new ArrayList<>();
+            Map<String, Integer> keywordCntMap = new HashMap<>();
 
-        // 이후 코드 구현
+            for (NewsCluster cluster : clusters) {
+                NewsArticle article = cluster.getNews_article();
 
-        return today_issue_list;
+                // 3-1. 뉴스 기사 DTO 추가
+                newsArticles.add(new NewsArticleDTO(article));
+
+                // 3-2. 키워드 카운팅
+                for (Keyword keyword : article.getKeywords()) {
+                    String word = keyword.getKeyword();
+                    keywordCntMap.put(word, keywordCntMap.getOrDefault(word, 0) + 1);
+                }
+            }
+
+            // 4. 키워드 정렬 (value 기준 내림차순)
+            List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(keywordCntMap.entrySet());
+            sortedEntries.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
+            // 5. 키워드 리스트 및 카운트 리스트 생성
+            List<String> keywords = new ArrayList<>();
+            List<Integer> keywordsCount = new ArrayList<>();
+            for (Map.Entry<String, Integer> entry : sortedEntries) {
+                keywords.add(entry.getKey());
+                keywordsCount.add(entry.getValue());
+            }
+//            System.out.println("### 키워드 테스트 ###");
+//            for(int i=0; i<5; i++){
+//                System.out.println(keywords.get(i) + " : " + keywordsCount.get(i));
+//            }
+
+            // 6. MainBlockTopKeywordDTO 리스트 생성
+            List<MainBlockTopKeywordDTO> mainBlockKeywords = new ArrayList<>();
+            int N = 5;
+            for(String keyword : keywords.subList(0,N)){
+                LocalDateTime realted_start_date = today.minusDays(7);
+                LocalDateTime realted_end_date = today;
+
+                List<MainBlockRelatedKeywordsDTO> related_keywords_timelines = new ArrayList<>();
+                for(int i=0; i<4; i++){
+                    List<Keyword> related_keywords = keyword_repo
+                            .findRelatedKeywordsByKeywordAndDate(keyword, realted_start_date, realted_end_date);
+
+                    List<String> top10_related_Keywords = related_keywords.stream()
+                            .map(Keyword::getKeyword)        // String 추출
+                            .distinct()                         // 중복 제거
+                            .limit(10)                          // 10개 제한
+                            .toList();      // List<String>으로 수집
+//                    System.out.println("관련 있는 키워드 리스트 : "+top10_related_Keywords);
+
+
+                    related_keywords_timelines.add(new MainBlockRelatedKeywordsDTO(
+                            realted_start_date,
+                            realted_end_date,
+                            top10_related_Keywords
+                    ));
+                    realted_start_date = realted_start_date.minusDays(7);
+                    realted_end_date = realted_end_date.minusDays(7);
+                }
+                mainBlockKeywords.add(new MainBlockTopKeywordDTO(
+                        keyword,
+                        related_keywords_timelines
+                ));
+            }
+
+            // 최종 TodayIssueDTO 생성 및 추가
+            mainBlockList.add(new MainBlockDTO(
+                    newsArticles,
+                    clusters.size(),
+                    keywords,
+                    keywordsCount,
+                    mainBlockKeywords
+            ));
+        }
+
+        return mainBlockList;
     }
 }

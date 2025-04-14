@@ -1,5 +1,6 @@
 package com.capstone.newspectrum.dto;
 
+import com.capstone.newspectrum.model.Keyword;
 import com.capstone.newspectrum.model.KeywordRelation;
 import com.capstone.newspectrum.model.NewsArticle;
 import jakarta.persistence.*;
@@ -12,25 +13,25 @@ import java.util.List;
 public class KeywordDTO {
     private Long id;
     private String keyword;
-    private NewsArticle news_article;
-    private List<KeywordRelationDTO> related_keywords;
+    private Long news_article_id;  // ID만 보존
     private LocalDateTime createdDate;
 
     public KeywordDTO() {}
+
     public KeywordDTO(Long id,
                       String keyword,
-                      NewsArticle news_article,
-                      List<KeywordRelation> related_keywords,
+                      Long news_article_id,
                       LocalDateTime createdDate) {
         this.id = id;
         this.keyword = keyword;
-        this.news_article = news_article;
-        this.related_keywords = new ArrayList<>();
+        this.news_article_id = news_article_id;
         this.createdDate = createdDate;
-
-        for (KeywordRelation keyword_relation : related_keywords){
-            this.related_keywords.add(new KeywordRelationDTO(keyword_relation));
-        }
+    }
+    public KeywordDTO(Keyword keyword){
+        this.id = keyword.getId();
+        this.keyword = keyword.getKeyword();
+        this.news_article_id = keyword.getNews_article().getId();
+        this.createdDate = keyword.getCreatedDate();
     }
 
     public Long getId() {
@@ -49,20 +50,12 @@ public class KeywordDTO {
         this.keyword = keyword;
     }
 
-    public NewsArticle getNews_article() {
-        return news_article;
+    public Long getNews_article_id() {
+        return news_article_id;
     }
 
-    public void setNews_article(NewsArticle news_article) {
-        this.news_article = news_article;
-    }
-
-    public List<KeywordRelationDTO> getRelated_keywords() {
-        return related_keywords;
-    }
-
-    public void setRelated_keywords(List<KeywordRelationDTO> related_keywords) {
-        this.related_keywords = related_keywords;
+    public void setNews_article_id(Long news_article_id) {
+        this.news_article_id = news_article_id;
     }
 
     public LocalDateTime getCreatedDate() {

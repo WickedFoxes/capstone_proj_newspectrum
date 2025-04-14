@@ -8,15 +8,18 @@ public class MainBlockDTO {
     private int cluster_count;
     private List<String> keywords;
     private List<Integer> keywords_cnt;
-    private List<MainBlockTopKeywordDTO> related_keywords_timeline;
+    private List<MainBlockTopKeywordDTO> main_block_top_keywords;
 
     public MainBlockDTO(List<NewsArticleDTO> news_articles,
-                        LocalDateTime created_date,
+                        int cluster_count,
                         List<String> keywords,
-                        List<Integer> keywords_cnt) {
+                        List<Integer> keywords_cnt,
+                        List<MainBlockTopKeywordDTO> main_block_top_keywords) {
         this.news_articles = news_articles;
+        this.cluster_count = cluster_count;
         this.keywords = keywords;
         this.keywords_cnt = keywords_cnt;
+        this.main_block_top_keywords = main_block_top_keywords;
     }
 
     public List<NewsArticleDTO> getNews_articles() {
@@ -43,19 +46,19 @@ public class MainBlockDTO {
         this.keywords = keywords;
     }
 
-    public List<MainBlockTopKeywordDTO> getRelated_keywords_timeline() {
-        return related_keywords_timeline;
-    }
-
-    public void setRelated_keywords_timeline(List<MainBlockTopKeywordDTO> related_keywords_timeline) {
-        this.related_keywords_timeline = related_keywords_timeline;
-    }
-
     public List<Integer> getKeywords_cnt() {
         return keywords_cnt;
     }
 
     public void setKeywords_cnt(List<Integer> keywords_cnt) {
         this.keywords_cnt = keywords_cnt;
+    }
+
+    public List<MainBlockTopKeywordDTO> getMain_block_top_keywords() {
+        return main_block_top_keywords;
+    }
+
+    public void setMain_block_top_keywords(List<MainBlockTopKeywordDTO> main_block_top_keywords) {
+        this.main_block_top_keywords = main_block_top_keywords;
     }
 }

@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "keyword")
+@Table(name = "keyword", indexes = {
+        @Index(name = "idx_keyword_keyword", columnList = "keyword"),
+        @Index(name = "idx_keyword_news_article_id", columnList = "news_article_id")
+})
 public class Keyword {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

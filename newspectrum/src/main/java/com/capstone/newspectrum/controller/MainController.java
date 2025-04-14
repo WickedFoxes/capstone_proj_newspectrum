@@ -18,7 +18,7 @@ public class MainController {
     @GetMapping("/")
     public String main(Model model) {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
-        List<MainBlockDTO> today_issues = mainPageSevice.get_today_issue_list(today);
+        List<MainBlockDTO> today_issues = mainPageSevice.get_main_block_list(today);
 
         model.addAttribute("today_issues", today_issues);
         return "main";
