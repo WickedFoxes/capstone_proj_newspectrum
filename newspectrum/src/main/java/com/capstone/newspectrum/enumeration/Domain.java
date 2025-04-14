@@ -5,5 +5,5 @@ public enum Domain {
     경제,
     사회,
     스포츠,
-    연애;
+    연예;
 }

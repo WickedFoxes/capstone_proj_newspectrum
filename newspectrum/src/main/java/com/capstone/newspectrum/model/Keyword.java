@@ -26,4 +26,47 @@ public class Keyword {
     @DateTimeFormat
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+
+    public Keyword() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public NewsArticle getNews_article() {
+        return news_article;
+    }
+
+    public void setNews_article(NewsArticle news_article) {
+        this.news_article = news_article;
+    }
+
+    public List<KeywordRelation> getRelated_keywords() {
+        return related_keywords;
+    }
+
+    public void setRelated_keywords(List<KeywordRelation> related_keywords) {
+        this.related_keywords = related_keywords;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 }

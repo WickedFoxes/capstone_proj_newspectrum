@@ -22,4 +22,39 @@ public class NewsCluster {
     @DateTimeFormat
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+
+    public NewsCluster() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getClusterId() {
+        return clusterId;
+    }
+
+    public void setClusterId(String clusterId) {
+        this.clusterId = clusterId;
+    }
+
+    public NewsArticle getNews_article() {
+        return news_article;
+    }
+
+    public void setNews_article(NewsArticle news_article) {
+        this.news_article = news_article;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 }
