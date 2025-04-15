@@ -99,7 +99,6 @@ public class MainController {
         model.addAttribute("today_keyword_items", todayKeywordItems);
         model.addAttribute("total_news_cnt", total_news_cnt);
         model.addAttribute("total_cluster_cnt", total_cluster_cnt);
-        //model.addAttribute("today_keyword_items", today_keyword_items);
         return "main";
     }
 
