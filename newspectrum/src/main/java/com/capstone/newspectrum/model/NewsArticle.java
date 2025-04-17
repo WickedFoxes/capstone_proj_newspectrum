@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "news_article")
+@Table(name = "news_article", indexes = {
+        @Index(name = "idx_news_article_created_domain", columnList = "created_date, domain")
+})
 public class NewsArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,8 +48,11 @@ public class NewsArticle {
     @OneToMany(mappedBy = "news_article", cascade = CascadeType.ALL)
     private List<NewsHyperlink> news_hyperlinks;
 
-    //Service에서 오류 나기에 추가
-    public NewsArticle(NewsArticleDTO newsArticleDTO){}
+    @OneToMany(mappedBy = "news_article")
+    private List<Keyword> keywords;
+
+    public NewsArticle() {
+    }
 
     public Long getId() {
         return id;
@@ -127,5 +132,13 @@ public class NewsArticle {
 
     public void setNews_hyperlinks(List<NewsHyperlink> news_hyperlinks) {
         this.news_hyperlinks = news_hyperlinks;
+    }
+
+    public List<Keyword> getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(List<Keyword> keywords) {
+        this.keywords = keywords;
     }
 }
