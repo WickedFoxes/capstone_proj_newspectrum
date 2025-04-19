@@ -77,7 +77,7 @@ public class SectionPageService {
                                               Domain domain){
         List<NewsCluster> news_clusters = news_cluster_repo.findByNewsArticle_CreatedDateBetween(start_date, end_date);
         List<IssueDTO> issues = new ArrayList<>();
-        Map<String, NewsCluster> clusterMap = new HashMap<>();
+        Map<String, List<NewsCluster>>clusterMap = new HashMap<>();
 
         // Domain으로 필터링
         List<NewsCluster> clusterByDomain = news_clusters.stream()
