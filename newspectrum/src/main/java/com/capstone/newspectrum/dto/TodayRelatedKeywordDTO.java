@@ -1,15 +1,16 @@
 package com.capstone.newspectrum.dto;
 
+import com.capstone.newspectrum.model.Keyword;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class TodayRelatedKeywordDTO {
     private LocalDateTime date;
-    private List<String> keywords;
+    private List<Keyword> keywords;
     private List<NewsArticleDTO> related_news;
-
     public TodayRelatedKeywordDTO(LocalDateTime date,
-                                  List<String> keywords,
+                                  List<Keyword> keywords,
                                   List<NewsArticleDTO> related_news) {
         this.date = date;
         this.keywords = keywords;
@@ -24,11 +25,11 @@ public class TodayRelatedKeywordDTO {
         this.date = date;
     }
 
-    public List<String> getKeywords() {
+    public List<Keyword> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(List<String> keywords) {
+    public void setKeywords(List<Keyword> keywords) {
         this.keywords = keywords;
     }
 

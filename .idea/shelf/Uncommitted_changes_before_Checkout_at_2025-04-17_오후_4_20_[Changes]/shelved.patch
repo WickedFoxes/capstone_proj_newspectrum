@@ -1,0 +1,17 @@
+Index: newspectrum/src/main/java/com/capstone/newspectrum/model/NewsCluster.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.capstone.newspectrum.model;\r\n\r\nimport jakarta.persistence.*;\r\nimport org.springframework.format.annotation.DateTimeFormat;\r\n\r\nimport java.time.LocalDateTime;\r\n\r\n@Entity\r\n@Table(name = \"news_cluster\")\r\npublic class NewsCluster {\r\n    @Id\r\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\r\n    private Long id;\r\n\r\n    @Column(name = \"cluster_id\")\r\n    private String clusterId;\r\n\r\n    @ManyToOne\r\n    @JoinColumn(name = \"news_article_id\")\r\n    private NewsArticle news_article;\r\n\r\n    @DateTimeFormat\r\n    @Column(name = \"created_date\")\r\n    private LocalDateTime createdDate;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/newspectrum/src/main/java/com/capstone/newspectrum/model/NewsCluster.java b/newspectrum/src/main/java/com/capstone/newspectrum/model/NewsCluster.java
+--- a/newspectrum/src/main/java/com/capstone/newspectrum/model/NewsCluster.java	(revision d6619f697c3d66ceb275575efa8777c724886909)
++++ b/newspectrum/src/main/java/com/capstone/newspectrum/model/NewsCluster.java	(date 1744874369932)
+@@ -22,4 +22,4 @@
+     @DateTimeFormat
+     @Column(name = "created_date")
+     private LocalDateTime createdDate;
+-}
++}
+\ No newline at end of file

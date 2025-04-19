@@ -1,0 +1,94 @@
+Index: newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsArticleRepo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.capstone.newspectrum.repository;\r\n\r\nimport com.capstone.newspectrum.dto.NewsArticleDTO;\r\nimport com.capstone.newspectrum.enumeration.Domain;\r\nimport com.capstone.newspectrum.model.NewsArticle;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.data.jpa.repository.Query;\r\nimport org.springframework.data.repository.query.Param;\r\nimport org.springframework.stereotype.Repository;\r\n\r\nimport java.time.LocalDateTime;\r\nimport java.util.List;\r\n\r\n@Repository\r\npublic interface NewsArticleRepo extends JpaRepository<NewsArticle, Long> {\r\n    NewsArticle findById(long id);\r\n    @Query(\"SELECT a.domain FROM NewsArticle a WHERE a.id = :articleId\")\r\n    Domain getDomain(NewsArticle article_id);\r\n    @Query(\"SELECT na FROM NewsArticle na WHERE na.title LIKE '%:title%'\")\r\n    List<NewsArticle> findAllByTitle(String title);\r\n    @Query(\"SELECT na FROM NewsArticle na WHERE na.content LIKE '%content%'\")\r\n    List<NewsArticle> findAllNewsArticleByContent(String content);\r\n    @Query(\"SELECT na FROM NewsArticle na WHERE na.createdDate := start_date\")\r\n    List<NewsArticle> findAllByCreatedDate(@Param(\"startDate\") LocalDateTime start_date);\r\n    @Query(\"SELECT na FROM NewsArticle na WHERE na.createdDate :>= startDate AND createdDate :<= endDate\")\r\n    List<NewsArticle> findAllByPeriod(@Param(\"startDate\")LocalDateTime start_date,\r\n                                      @Param(\"endDate\") LocalDateTime end_date);\r\n    @Query(\"SELECT na FROM newsArticle WHERE \")\r\n    List<NewsArticleDTO> findNewsArticleForNewsArticleDTO();\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsArticleRepo.java b/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsArticleRepo.java
+--- a/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsArticleRepo.java	
++++ b/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsArticleRepo.java	
+@@ -26,5 +26,5 @@
+     List<NewsArticle> findAllByPeriod(@Param("startDate")LocalDateTime start_date,
+                                       @Param("endDate") LocalDateTime end_date);
+     @Query("SELECT na FROM newsArticle WHERE ")
+-    List<NewsArticleDTO> findNewsArticleForNewsArticleDTO();
++    List<NewsArticleDTO> findAllNewsArticle ();
+ }
+Index: newspectrum/src/main/java/com/capstone/newspectrum/service/MainPageService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.capstone.newspectrum.service;\r\n\r\nimport com.capstone.newspectrum.dto.IssueDTO;\r\nimport com.capstone.newspectrum.dto.NewsArticleDTO;\r\nimport com.capstone.newspectrum.enumeration.Domain;\r\nimport com.capstone.newspectrum.model.NewsArticle;\r\nimport com.capstone.newspectrum.model.NewsCluster;\r\nimport com.capstone.newspectrum.repository.NewsArticleRepo;\r\nimport com.capstone.newspectrum.repository.NewsClusterRepo;\r\nimport org.springframework.beans.factory.annotation.Autowired;\r\nimport org.springframework.stereotype.Service;\r\n\r\nimport java.time.LocalDateTime;\r\nimport java.util.*;\r\n\r\n\r\n// 2025-04-10 저녁 10시까지\r\n// get_total_news_cnt, get_total_cluster_cnt, get_total_news_cnt_by_domain, get_total_cluster_cnt_by_domain 구현\r\n\r\n@Service\r\npublic class MainPageService {\r\n    @Autowired\r\n    private NewsArticleRepo news_article_repo;\r\n    @Autowired\r\n    private NewsClusterRepo news_cluster_repo;\r\n\r\n    public int get_total_news_cnt(LocalDateTime start_date,\r\n                                  LocalDateTime end_date){\r\n        List<NewsArticle> news_articles = news_article_repo.findAllByPeriod(start_date, end_date);\r\n        return news_articles.size();\r\n    }\r\n    public int get_total_news_cnt_by_domain(LocalDateTime start_date,\r\n                                            LocalDateTime end_date,\r\n                                            Domain domain){\r\n        List<NewsArticle> news_articles = news_article_repo.findAllByPeriod(start_date, end_date);\r\n\r\n        Set<NewsArticle> cnt_set = new HashSet<>();\r\n        for(NewsArticle newsArticle: news_articles){\r\n            if(newsArticle.getDomain().equals(domain))\r\n                cnt_set.add(newsArticle);\r\n        }\r\n        return cnt_set.size();\r\n    }\r\n    public int get_total_cluster_cnt(LocalDateTime start_date,\r\n                                     LocalDateTime end_date){\r\n        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByCreatedDate(start_date, end_date);\r\n\r\n        Set<NewsCluster> cnt_set = new HashSet<>();\r\n        for(NewsCluster cluster : news_clusters) {\r\n            cnt_set.add(cluster);\r\n        }\r\n        return cnt_set.size();\r\n    }\r\n\r\n    public int get_total_cluster_cnt_by_domain(LocalDateTime start_date,\r\n                                     LocalDateTime end_date,\r\n                                     Domain domain){\r\n        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByCreatedDate(start_date, end_date);\r\n\r\n        Set<NewsCluster> cnt_map = new HashSet<>();\r\n        for(NewsCluster cluster : news_clusters){\r\n            if(cluster.getNewsArticle().getDomain().equals(domain)){\r\n                cnt_map.add(cluster);\r\n            }\r\n        }\r\n        return cnt_map.size();\r\n    }\r\n    public List<IssueDTO> get_issue(LocalDateTime start_date,\r\n                                    LocalDateTime end_date){\r\n        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByCreatedDate(start_date, end_date);\r\n        List<IssueDTO> issues = new ArrayList<>();\r\n        Map<Long, NewsCluster> cluster_map = new HashMap<>();\r\n\r\n        for(NewsCluster cluster : news_clusters){\r\n            cluster_map.put(cluster.getClusterId(), cluster);\r\n        }\r\n\r\n        Set<Map.Entry<Long,NewsCluster>> entrySet = cluster_map.entrySet();\r\n        for (Map.Entry e : entrySet){\r\n            IssueDTO issue = new IssueDTO();\r\n            issue.setCluster_cnt(entrySet.size());\r\n            issue.setCluster_title(issue.getCluster_title((NewsCluster) e.getValue()));\r\n            issue.setCreated_date(end_date);\r\n\r\n            List<NewsArticleDTO> news_articles = news_article_repo.findNewsArticleForNewsArticleDTO(); //repo에서 쿼리 완성할 것. DTO에 담길 어트리뷰트 가져오는.\r\n            for (NewsArticleDTO newsArticle : news_articles) {\r\n//                news_articles.add(new NewsArticleDTO());\r\n                issue.setNews_articles(news_articles);\r\n            }\r\n            issues.add(issue);\r\n        }\r\n        return issues;\r\n    }\r\n//    public List<IssueDTO> get_issue_domain(LocalDateTime start_date,\r\n//                                    LocalDateTime end_date,Domain domain){}\r\n\r\n}\r\n
+===================================================================
+diff --git a/newspectrum/src/main/java/com/capstone/newspectrum/service/MainPageService.java b/newspectrum/src/main/java/com/capstone/newspectrum/service/MainPageService.java
+--- a/newspectrum/src/main/java/com/capstone/newspectrum/service/MainPageService.java	
++++ b/newspectrum/src/main/java/com/capstone/newspectrum/service/MainPageService.java	
+@@ -13,7 +13,6 @@
+ import java.time.LocalDateTime;
+ import java.util.*;
+ 
+-
+ // 2025-04-10 저녁 10시까지
+ // get_total_news_cnt, get_total_cluster_cnt, get_total_news_cnt_by_domain, get_total_cluster_cnt_by_domain 구현
+ 
+@@ -43,7 +42,7 @@
+     }
+     public int get_total_cluster_cnt(LocalDateTime start_date,
+                                      LocalDateTime end_date){
+-        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByCreatedDate(start_date, end_date);
++        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByPeriod(start_date, end_date);
+ 
+         Set<NewsCluster> cnt_set = new HashSet<>();
+         for(NewsCluster cluster : news_clusters) {
+@@ -55,7 +54,7 @@
+     public int get_total_cluster_cnt_by_domain(LocalDateTime start_date,
+                                      LocalDateTime end_date,
+                                      Domain domain){
+-        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByCreatedDate(start_date, end_date);
++        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByPeriod(start_date, end_date);
+ 
+         Set<NewsCluster> cnt_map = new HashSet<>();
+         for(NewsCluster cluster : news_clusters){
+@@ -67,7 +66,7 @@
+     }
+     public List<IssueDTO> get_issue(LocalDateTime start_date,
+                                     LocalDateTime end_date){
+-        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByCreatedDate(start_date, end_date);
++        List<NewsCluster> news_clusters = news_cluster_repo.findNewsClusterByPeriod(start_date, end_date);
+         List<IssueDTO> issues = new ArrayList<>();
+         Map<Long, NewsCluster> cluster_map = new HashMap<>();
+ 
+@@ -82,7 +81,7 @@
+             issue.setCluster_title(issue.getCluster_title((NewsCluster) e.getValue()));
+             issue.setCreated_date(end_date);
+ 
+-            List<NewsArticleDTO> news_articles = news_article_repo.findNewsArticleForNewsArticleDTO(); //repo에서 쿼리 완성할 것. DTO에 담길 어트리뷰트 가져오는.
++            List<NewsArticleDTO> news_articles = news_article_repo.findAllNewsArticle();
+             for (NewsArticleDTO newsArticle : news_articles) {
+ //                news_articles.add(new NewsArticleDTO());
+                 issue.setNews_articles(news_articles);
+@@ -93,5 +92,4 @@
+     }
+ //    public List<IssueDTO> get_issue_domain(LocalDateTime start_date,
+ //                                    LocalDateTime end_date,Domain domain){}
+-
+-}
++}
+\ No newline at end of file
+Index: newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsClusterRepo.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.capstone.newspectrum.repository;\r\n\r\nimport com.capstone.newspectrum.model.NewsArticle;\r\nimport com.capstone.newspectrum.model.NewsCluster;\r\nimport org.springframework.data.jpa.repository.JpaRepository;\r\nimport org.springframework.data.jpa.repository.Query;\r\nimport org.springframework.data.repository.query.Param;\r\nimport org.springframework.stereotype.Repository;\r\n\r\nimport java.time.LocalDateTime;\r\nimport java.util.List;\r\n\r\nimport static org.springframework.data.jpa.domain.AbstractPersistable_.id;\r\n\r\n@Repository\r\npublic interface NewsClusterRepo extends JpaRepository<NewsCluster, Long> {\r\n    @Query(\"SELECT na FROM NewsCluster nc WHERE nc.createdDate BETWEEN :startDate AND :endDate\")\r\n    List<NewsCluster> findNewsClusterByCreatedDate(@Param(\"startDate\") LocalDateTime start_time,\r\n                                                   @Param(\"endDate\")LocalDateTime end_time);\r\n    @Query(value = \"SELECT na.* FROM news_article na \" +\r\n            \"LEFT JOIN news_cluster_mapping ncm ON na.id = ncm.news_article_id \" +\r\n            \"WHERE ncm.news_cluster_id = :clusterId\", nativeQuery = true)\r\n    List<NewsArticle> getNewsArticle(@Param(\"clusterId\") Long clusterId);\r\n}\r\n
+===================================================================
+diff --git a/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsClusterRepo.java b/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsClusterRepo.java
+--- a/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsClusterRepo.java	
++++ b/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsClusterRepo.java	
+@@ -15,7 +15,7 @@
+ @Repository
+ public interface NewsClusterRepo extends JpaRepository<NewsCluster, Long> {
+     @Query("SELECT na FROM NewsCluster nc WHERE nc.createdDate BETWEEN :startDate AND :endDate")
+-    List<NewsCluster> findNewsClusterByCreatedDate(@Param("startDate") LocalDateTime start_time,
++    List<NewsCluster> findNewsClusterByPeriod(@Param("startDate") LocalDateTime start_time,
+                                                    @Param("endDate")LocalDateTime end_time);
+     @Query(value = "SELECT na.* FROM news_article na " +
+             "LEFT JOIN news_cluster_mapping ncm ON na.id = ncm.news_article_id " +

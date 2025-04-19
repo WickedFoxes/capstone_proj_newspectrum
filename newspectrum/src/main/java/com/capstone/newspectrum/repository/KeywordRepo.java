@@ -46,4 +46,6 @@ public interface KeywordRepo extends JpaRepository<Keyword, Long> {
             @Param("endDate") LocalDateTime endDate,
             @Param("domain") Domain domain
     );
+    List<Keyword> findKeywordByCreatedDateBetween(@Param("starDate") LocalDateTime startDate,
+                                                  @Param("endDate") LocalDateTime endDate);
 }

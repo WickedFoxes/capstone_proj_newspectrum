@@ -1,10 +1,14 @@
 package com.capstone.newspectrum.service;
 
 import com.capstone.newspectrum.dto.IssueDTO;
+import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.dto.TodayKeywordItemDTO;
+import com.capstone.newspectrum.dto.TodayRelatedKeywordDTO;
 import com.capstone.newspectrum.enumeration.Domain;
+import com.capstone.newspectrum.model.Keyword;
 import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.model.NewsCluster;
+import com.capstone.newspectrum.repository.KeywordRepo;
 import com.capstone.newspectrum.repository.NewsArticleRepo;
 import com.capstone.newspectrum.repository.NewsClusterRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,8 @@ public class SectionPageService {
     private NewsArticleRepo news_article_repo;
     @Autowired
     private NewsClusterRepo news_cluster_repo;
+    @Autowired
+    private KeywordRepo keywordRepo;
 
     public int get_total_news_cnt(LocalDateTime start_date,
                                   LocalDateTime end_date){
@@ -71,25 +77,47 @@ public class SectionPageService {
                                               Domain domain){
         List<NewsCluster> news_clusters = news_cluster_repo.findByNewsArticle_CreatedDateBetween(start_date, end_date);
         List<IssueDTO> issues = new ArrayList<>();
-        Map<String, NewsCluster> cluster_map = new HashMap<>();
+        Map<String, NewsCluster> clusterMap = new HashMap<>();
 
-//        for(NewsCluster cluster : news_clusters){
-//            cluster_map.put(cluster.getClusterId(), cluster);
-//        }
-//        Set<Map.Entry<Long,NewsCluster>> entrySet = cluster_map.entrySet();
-//        for (Map.Entry e : entrySet){
-//            IssueDTO issue = new IssueDTO();
-//            issue.setCluster_cnt(entrySet.size());
-//            issue.setCluster_title(issue.getCluster_title((NewsCluster) e.getValue()));
-//            issue.setCreated_date(end_date);
-//
-//            List<NewsArticleDTO> news_articles = news_article_repo.findNewsArticleForNewsArticleDTO(); //repo에서 쿼리 완성할 것. DTO에 담길 어트리뷰트 가져오는.
-//            for (NewsArticleDTO newsArticle : news_articles) {
-//                news_articles.add(new NewsArticleDTO());
-//                issue.setNews_articles(news_articles);
-//            }
-//            issues.add(issue);
-//        }
+        // Domain으로 필터링
+        List<NewsCluster> clusterByDomain = news_clusters.stream()
+                .filter(cluster -> cluster.getNews_article().getDomain().equals(domain))
+                .toList();
+
+        // 클러스터 ID 기준으로 묶기
+        for (NewsCluster cluster : clusterByDomain) {
+            String clusterId = cluster.getClusterId();
+            clusterMap.computeIfAbsent(clusterId, k -> new ArrayList<>()).add(cluster);
+        }
+        for (Map.Entry<String, List<NewsCluster>> entry : clusterMap.entrySet()) {
+            String clusterId = entry.getKey();
+            List<NewsCluster> clusterGroup = entry.getValue();
+
+            // NewsArticleDTO 리스트로 변환
+            List<NewsArticleDTO> newsArticleDTOList = clusterGroup.stream()
+                    .map(c -> {
+                        NewsArticle article = c.getNews_article();
+                        return new NewsArticleDTO(article
+                        );
+                    })
+                    .toList();
+
+            // 대표 제목: 첫 번째 뉴스 제목
+            String clusterTitle = newsArticleDTOList.isEmpty() ? "No Title" : newsArticleDTOList.get(0).getTitle();
+
+            // 클러스터 생성일: 첫 번째 클러스터의 createdDate
+            LocalDateTime createdDate = clusterGroup.get(0).getCreatedDate();
+
+            // DTO 생성
+            IssueDTO issue = new IssueDTO(
+                    newsArticleDTOList.size(),
+                    clusterTitle,
+                    newsArticleDTOList,
+                    createdDate
+            );
+
+            issues.add(issue);
+        }
         return issues;
     }
 
@@ -97,11 +125,57 @@ public class SectionPageService {
                                                             LocalDateTime end_date,
                                                             Domain domain){
         List<TodayKeywordItemDTO> today_keyword_items = new ArrayList<>();
-        
-        // 코드 구현
-        
+
+        List<Keyword> keywordList = keywordRepo.findKeywordByCreatedDateBetween(start_date, end_date);
+
+        //Domin으로 Keyword 필터링
+        List<Keyword> keywordFilteredByDomain = keywordList.stream()
+                .filter(k -> k.getNews_article().getDomain().equals(domain))
+                .toList();
+
+        //필터링된 keyword Map의 List에 추가
+        Map<String, List<Keyword>> keywordMap = new HashMap<>();
+        for(Keyword keyword : keywordFilteredByDomain){
+            String kw = keyword.getKeyword();
+            keywordMap.computeIfAbsent(kw, s-> new ArrayList<>()).add(keyword);
+        }
+        //
+        for (Map.Entry<String, List<Keyword>> keywordEntry : keywordMap.entrySet()) {
+            String keywordText = keywordEntry.getKey();
+            List<Keyword> keywordMap_value_KeywordList = keywordEntry.getValue();
+
+            // keyword 수
+            int cnt = keywordMap_value_KeywordList.size();
+
+            // relatedKeyword
+            List<Keyword> relatedKeywords = keywordMap_value_KeywordList.stream()
+                    .flatMap(k -> k.getRelated_keywords().stream())
+                    .map(rel -> rel.getRelated_keyword())
+                    .distinct()
+                    .toList();
+
+            // relatedArticles
+            List<NewsArticleDTO> relatedArticles = keywordMap_value_KeywordList.stream()
+                    .map(k -> k.getNews_article())
+                    .distinct()
+                    .map(article -> new NewsArticleDTO(article))
+                    .toList();
+
+            // TodayRelatedKeywordDTO
+            TodayRelatedKeywordDTO relatedDTO = new TodayRelatedKeywordDTO(
+                    keywordMap_value_KeywordList.get(0).getCreatedDate(),
+                    relatedKeywords,
+                    relatedArticles
+            );
+
+            // TodayKeywordItemDTO
+            TodayKeywordItemDTO itemDTO = new TodayKeywordItemDTO(
+                    keywordText,
+                    cnt,
+                    List.of(relatedDTO)
+            );
+            today_keyword_items.add(itemDTO);
+        }
         return today_keyword_items;
     }
-
-
 }
