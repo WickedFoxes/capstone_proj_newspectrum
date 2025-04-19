@@ -2,7 +2,6 @@ package com.capstone.newspectrum.repository;
 
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.model.Keyword;
-import com.capstone.newspectrum.model.NewsCluster;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -46,4 +45,15 @@ public interface KeywordRepo extends JpaRepository<Keyword, Long> {
             @Param("endDate") LocalDateTime endDate,
             @Param("domain") Domain domain
     );
+
+    @Query("""
+    SELECT k1
+    FROM Keyword k1
+    JOIN k1.news_article na1
+    WHERE na1.createdDate BETWEEN :startDate AND :endDate
+      AND na1.domain = :domain
+    """)
+    List<Keyword> findKeywordByNewsArticle_CreatedDateBetweenAndDomain(@Param("startDate") LocalDateTime startDate,
+                                                                       @Param("endDate") LocalDateTime endDate,
+                                                                       @Param("domain")Domain domain);
 }

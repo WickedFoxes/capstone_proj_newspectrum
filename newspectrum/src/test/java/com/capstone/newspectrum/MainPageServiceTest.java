@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class MainPageServiceTest {
     @Autowired
-    private MainPageSevice mainPageSevice;;
+    private MainPageSevice mainPageSevice;
 
     @Test
     void test_get_main_block_list() {

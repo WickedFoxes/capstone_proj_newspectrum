@@ -21,7 +21,7 @@ public class NewsArticleDTO {
     private String href;
     private String img_url;
     private LocalDateTime createdDate;
-    private List<NewsArticleRelationDTO> related_news_articles;
+    private List<Long> related_news_articles;
     private List<NewsHyperlinkDTO> news_hyperlinks;
 
     public NewsArticleDTO() {
@@ -39,7 +39,7 @@ public class NewsArticleDTO {
         this.news_hyperlinks = new ArrayList<>();
 
         for (NewsArticleRelation news_article_relation : news_article.getRelated_news_articles()){
-            related_news_articles.add(new NewsArticleRelationDTO(news_article_relation));
+            related_news_articles.add(news_article_relation.getNews_article().getId());
         }
         for (NewsHyperlink news_hyperlink : news_article.getNews_hyperlinks()){
             news_hyperlinks.add(new NewsHyperlinkDTO(news_hyperlink));
@@ -110,11 +110,11 @@ public class NewsArticleDTO {
         this.createdDate = createdDate;
     }
 
-    public List<NewsArticleRelationDTO> getRelated_news_articles() {
+    public List<Long> getRelated_news_articles() {
         return related_news_articles;
     }
 
-    public void setRelated_news_articles(List<NewsArticleRelationDTO> related_news_articles) {
+    public void setRelated_news_articles(List<Long> related_news_articles) {
         this.related_news_articles = related_news_articles;
     }
 
