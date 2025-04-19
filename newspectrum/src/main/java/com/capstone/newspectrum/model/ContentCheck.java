@@ -21,6 +21,7 @@ public class ContentCheck {
 
     public ContentCheck() {
     }
+<<<<<<< HEAD
 
     public Long getId() {
         return id;
@@ -53,4 +54,6 @@ public class ContentCheck {
     public void setContent_check_type(CheckType content_check_type) {
         this.content_check_type = content_check_type;
     }
+=======
+>>>>>>> 6670d8302d6e5480f5a9cdc866ccedc8fd251c55
 }

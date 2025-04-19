@@ -4,7 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca8b583c-34a2-4336-a5ef-b937769a70b7" name="Changes" comment="SectionPageService&amp;Test" />
+    <list default="true" id="ca8b583c-34a2-4336-a5ef-b937769a70b7" name="Changes" comment="SectionPageService&amp;Test">
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/capstone.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/dbnavigator.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Desktop/capstone/capstone_proj_newspectrum" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/controller/search/DomainSearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/controller/search/IssueSearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/controller/search/KeywordSearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/repository/relation/KeywordRelationRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/repository/relation/NewsArticleRelationRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/relation/KeywordRelationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/relation/NewsArticleRelationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/search/DomainSearchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/search/IssueSearchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/search/KeywordSearchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/search/SearchServiceImple.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/search/SearchServiceInterface.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/uploading/UploadingNewsArticleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/enumeration/CheckType.java" beforeDir="false" afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/enumeration/CheckType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/enumeration/Domain.java" beforeDir="false" afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/enumeration/Domain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/enumeration/Media.java" beforeDir="false" afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/enumeration/Media.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/model/ContentCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/model/ContentCheck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsArticleRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/repository/NewsArticleRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/NewsArticleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/newspectrum/src/main/java/com/capstone/newspectrum/service/NewsArticleService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -129,7 +159,14 @@
       <option name="project" value="LOCAL" />
       <updated>1745060705328</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="SectionPageService&amp;Test">
+      <created>1745061124521</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1745061124521</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
