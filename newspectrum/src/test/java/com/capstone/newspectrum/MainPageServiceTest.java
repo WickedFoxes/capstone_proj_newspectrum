@@ -28,6 +28,7 @@ public class MainPageServiceTest {
         System.out.println(items.size());
         for(MainBlockDTO item : items){
             System.out.println("########### cluster ##############");
+            System.out.println("domain : "+ item.getDomain());
             System.out.println("cluster cnt : "+ item.getCluster_count());
             System.out.println("aritcles cnt : "+ item.getNews_articles().size());
             System.out.println("keywords : "+ item.getKeywords().subList(0, 10));

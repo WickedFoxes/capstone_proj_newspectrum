@@ -1,25 +1,38 @@
 package com.capstone.newspectrum.dto;
 
+import com.capstone.newspectrum.enumeration.Domain;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class MainBlockDTO {
+    private Domain domain;
     private List<NewsArticleDTO> news_articles;
     private int cluster_count;
     private List<String> keywords;
     private List<Integer> keywords_cnt;
     private List<MainBlockTopKeywordDTO> main_block_top_keywords;
 
-    public MainBlockDTO(List<NewsArticleDTO> news_articles,
+    public MainBlockDTO(Domain domain,
+                        List<NewsArticleDTO> news_articles,
                         int cluster_count,
                         List<String> keywords,
                         List<Integer> keywords_cnt,
                         List<MainBlockTopKeywordDTO> main_block_top_keywords) {
+        this.domain = domain;
         this.news_articles = news_articles;
         this.cluster_count = cluster_count;
         this.keywords = keywords;
         this.keywords_cnt = keywords_cnt;
         this.main_block_top_keywords = main_block_top_keywords;
+    }
+
+    public Domain getDomain() {
+        return domain;
+    }
+
+    public void setDomain(Domain domain) {
+        this.domain = domain;
     }
 
     public List<NewsArticleDTO> getNews_articles() {

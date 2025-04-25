@@ -78,6 +78,7 @@ public class MainController {
 
             // 최종 MainBlockDTO 구성
             MainBlockDTO block = new MainBlockDTO(
+                    Domain.정치,
                     articles,
                     articles.size(),
                     keywords,
