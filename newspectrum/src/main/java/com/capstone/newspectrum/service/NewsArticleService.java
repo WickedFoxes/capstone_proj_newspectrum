@@ -1,5 +1,6 @@
 package com.capstone.newspectrum.service;
 
+import com.capstone.newspectrum.dto.FocusKeywordItemDTO;
 import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.repository.NewsArticleRepo;
@@ -14,30 +15,18 @@ public class NewsArticleService {
     @Autowired
     private NewsArticleRepo newsArticleRepo;
 
-//    public List<NewsArticleDTO> getNewsArticleListAll(){
-//        List<NewsArticle> list = newsArticleRepo.findAll();
-//        List<NewsArticleDTO> dto_list = new ArrayList<NewsArticleDTO>();
-//
-//        for(NewsArticle data : list){
-//            dto_list.add(new NewsArticleDTO(data));
-//        }
-//
-//        return dto_list;
-//    }
-//
-//    public List<NewsArticleDTO> getNewsArticleListByTitle(String title){
-//        List<NewsArticle> list = newsArticleRepo.findAllByTitle(title);
-//        List<NewsArticleDTO> dto_list = new ArrayList<NewsArticleDTO>();
-//
-//        for(NewsArticle data : list){
-//            dto_list.add(new NewsArticleDTO(data));
-//        }
-//
-//        return dto_list;
-//    }
+    public NewsArticleDTO get_news_article_by_id(Long news_article_id){
+        NewsArticleDTO result = null;
+        return result;
+    }
 
-//    public NewsArticleDTO saveNewsArticle(NewsArticleDTO newsArticleDTO){
-//        newsArticleRepo.save(new NewsArticle(newsArticleDTO));
-//        return newsArticleDTO;
-//    }
+    public List<FocusKeywordItemDTO> get_focus_keyword_items_by_id(Long news_article_id){
+        List<FocusKeywordItemDTO> result = new ArrayList<>();
+        return result;
+    }
+
+    public List<NewsArticleDTO> get_related_news_articles_by_id(Long news_article_id){
+        List<NewsArticleDTO> result = new ArrayList<>();
+        return result;
+    }
 }

@@ -12,11 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 
 // 2025-04-10 저녁 10시까지
@@ -31,13 +27,29 @@ public class MainPageSevice {
     @Autowired
     private KeywordRepo keyword_repo;
 
-
     public List<MainBlockDTO> get_main_block_list(LocalDateTime today){
+        List<MainBlockDTO> politic_list = get_main_block_list_by_domain(today, Domain.정치);
+        List<MainBlockDTO> economy_list = get_main_block_list_by_domain(today, Domain.경제);
+        List<MainBlockDTO> social_list = get_main_block_list_by_domain(today, Domain.사회);
+        List<MainBlockDTO> enter_list = get_main_block_list_by_domain(today, Domain.연예);
+        List<MainBlockDTO> sports_list = get_main_block_list_by_domain(today, Domain.스포츠);
+        List<MainBlockDTO> result = new ArrayList<>();
+
+        result.addAll(selectTwoWithoutKeywordOverlap(politic_list, 4));
+        result.addAll(selectTwoWithoutKeywordOverlap(economy_list, 4));
+        result.addAll(selectTwoWithoutKeywordOverlap(social_list, 4));
+        result.addAll(selectTwoWithoutKeywordOverlap(enter_list, 4));
+        result.addAll(selectTwoWithoutKeywordOverlap(sports_list, 4));
+        return result;
+    }
+
+    public List<MainBlockDTO> get_main_block_list_by_domain(LocalDateTime today,
+                                                            Domain domain){
         List<MainBlockDTO> mainBlockList = new ArrayList<>();
 
         // 1. 뉴스 클러스터 조회
         List<NewsCluster> today_clusters = news_cluster_repo
-                .findByNewsArticle_CreatedDateBetween(today.minusHours(48), today);
+                .findByNewsArticle_CreatedDateBetweenAndDomain(today.minusHours(48), today, domain);
 //        System.out.println("news_article size : " + today_clusters.size());
 
         // 2. 클러스터 ID로 그룹핑
@@ -46,19 +58,20 @@ public class MainPageSevice {
             String clusterId = cluster.getClusterId();
             clusterMap.computeIfAbsent(clusterId, k -> new ArrayList<>()).add(cluster);
         }
-        // 3. Top10 cluster만을 추출
-        List<List<NewsCluster>> top10Clusters = clusterMap.entrySet()
+        // 3. TopK cluster만을 추출
+        int k = 5;
+        List<List<NewsCluster>> topKClusters = clusterMap.entrySet()
                 .stream()
                 .sorted((e1, e2) -> Integer.compare(e2.getValue().size(), e1.getValue().size()))
-                .limit(10)
+                .limit(k)
                 .map(Map.Entry::getValue)
                 .toList();
-//        for(List<NewsCluster> temp_cluster : top10Clusters){
+//        for(List<NewsCluster> temp_cluster : topKClusters){
 //            System.out.println("클러스터의 크기 : " + temp_cluster.size());
 //        }
 
         // 3. 클러스터별 MainBlock 생성
-        for (List<NewsCluster> clusters : top10Clusters) {
+        for (List<NewsCluster> clusters : topKClusters) {
             List<NewsArticleDTO> newsArticles = new ArrayList<>();
             Map<String, Integer> keywordCntMap = new HashMap<>();
 
@@ -93,7 +106,7 @@ public class MainPageSevice {
 
             // 6. MainBlockTopKeywordDTO 리스트 생성
             List<MainBlockTopKeywordDTO> mainBlockKeywords = new ArrayList<>();
-            int N = 5;
+            int N = 2;
             for(String keyword : keywords.subList(0,N)){
                 LocalDateTime realted_start_date = today.minusDays(7);
                 LocalDateTime realted_end_date = today;
@@ -127,6 +140,7 @@ public class MainPageSevice {
 
             // 최종 TodayIssueDTO 생성 및 추가
             mainBlockList.add(new MainBlockDTO(
+                    domain,
                     newsArticles,
                     clusters.size(),
                     keywords,
@@ -136,5 +150,27 @@ public class MainPageSevice {
         }
 
         return mainBlockList;
+    }
+
+    private List<MainBlockDTO> selectTwoWithoutKeywordOverlap(List<MainBlockDTO> list, int k) {
+        int n = list.size();
+        for (int i = 0; i < n; i++) {
+            MainBlockDTO first = list.get(i);
+            for (int j = i + 1; j < n; j++) {
+                MainBlockDTO second = list.get(j);
+                if (countKeywordOverlap(first, second) < k) {
+                    return Arrays.asList(first, second);
+                }
+            }
+        }
+        // 조건을 만족하는 쌍이 없는 경우
+        return Arrays.asList(list.get(0), list.get(1));
+    }
+
+    private int countKeywordOverlap(MainBlockDTO a, MainBlockDTO b) {
+        Set<String> keywordsA = new HashSet<>(a.getKeywords());
+        Set<String> keywordsB = new HashSet<>(b.getKeywords());
+        keywordsA.retainAll(keywordsB);  // 교집합
+        return keywordsA.size();
     }
 }
