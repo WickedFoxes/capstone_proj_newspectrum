@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
     <title>메인페이지</title>
     <style>
         .title-bar {
@@ -60,95 +61,6 @@
             border-bottom: 2px solid #007bff;
             padding-bottom: 5px;
         }
-        .cluster-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            padding: 20px;
-        }
-        .cluster-block {
-            background-color: #e0f7fa;
-            border-radius: 10px;
-            padding: 10px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: flex-start;
-            justify-content: center;
-            box-sizing: border-box;
-            overflow: hidden;
-            text-align: center;
-        }
-        .cluster-block:hover {
-            transform: scale(1.05);
-        }
-        .cluster-block span {
-            display: inline-block;
-            margin: 2px 4px;
-            line-height: 1.2;
-            word-break: keep-all;
-        }
-        #clusterModal {
-            display: none;
-            position: fixed;
-            top: 10%;
-            left: 10%;
-            width: 80%;
-            height: 80%;
-            background: white;
-            border: 2px solid #007bff;
-            padding: 20px;
-            overflow-y: auto;
-            z-index: 999;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-        }
-        .news-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-        }
-        .news-item img {
-            width: 150px;
-            height: 100px;
-            object-fit: cover;
-            margin-right: 16px;
-            border-radius: 6px;
-        }
-        .news-item div {
-            display: flex;
-            flex-direction: column;
-        }
-        .news-item a {
-            font-size: 18px;
-            font-weight: bold;
-            color: #007bff;
-            text-decoration: none;
-            margin-bottom: 6px;
-        }
-        .news-item span {
-            font-size: 14px;
-            color: #666;
-        }
-        .modal-pagination {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .modal-pagination button {
-            margin: 0 5px;
-            padding: 6px 12px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -167,120 +79,67 @@
     <a th:href="@{/section/sports}">스포츠</a>
     <a th:href="@{/keyword/keyword}">키워드</a>
 </div>
-<div class="section-title">오늘의 키워드</div>
-<div class="cluster-container">
-    <div th:each="block, idxStat : ${today_issues}"
-         class="cluster-block"
-         th:attr="data-count=${block.cluster_count}, onclick='openModal(' + ${idxStat.index} + ')'">
-        <div th:each="kw, stat : ${block.keywords}" th:if="${stat.index} < 10">
-            <span th:text="${kw}"
-                  th:style="'font-size:' + (${block.keywords_cnt[stat.index]} * 1.5 + 12) + 'px;'">
-            </span>
-        </div>
-        <!-- 블록의 크기 확인 하기 위해 임시로 작성한 뉴스 개수 표시 -->
-        <div style="margin-top: 10px; font-size: 12px; color: #333;">
-            <b th:text="'총 ' + ${block.cluster_count} + '개'"></b>
-        </div>
-    </div>
+
+<!--<div>-->
+<!--    <p th:text="${today_issues[0].keywords}">키워드 디버그</p>-->
+<!--</div>-->
+
+<div class="section-title">워드 클라우드</div>
+<div id="wordCloudChart" style="height:500px; width:100%;"></div>
+
+<div>
+    <ul id="debugList"></ul>
 </div>
-<div id="clusterModal">
-    <div style="text-align: right;">
-        <button onclick="closeModal()">✖</button>
-    </div>
-    <div id="modalNewsList"></div>
-    <div class="modal-pagination">
-        <button onclick="prevPage()">⬅</button>
-        <button onclick="nextPage()">➡</button>
-    </div>
-    <hr>
-    <div id="keywordTimeline"></div>
-</div>
+
 <script th:inline="javascript">
-    let currentBlockIndex = 0;
-    let currentPage = 0;
-    const blocks = /*[[${today_issues}]]*/ [];
+    let blocks = JSON.parse(/*[[${todayIssuesJson}]]*/ '');
+    let wordCloudData = [];
 
-    function openModal(index) {
-        currentBlockIndex = index;
-        currentPage = 0;
-        document.getElementById("clusterModal").style.display = "block";
-        renderNews();
-        renderTimeline();
-    }
-
-    function closeModal() {
-        document.getElementById("clusterModal").style.display = "none";
-    }
-
-    // 뉴스 리스트는 해당 클러스터에 포함된 뉴스 전체를 제공
-    function renderNews() {
-        const newsList = blocks[currentBlockIndex].news_articles;
-        const container = document.getElementById("modalNewsList");
-        container.innerHTML = "";
-        // 한번에 5개의 뉴스를 보여줌
-        const start = currentPage * 5;
-        const end = Math.min(start + 5, newsList.length);
-
-        for (let i = start; i < end; i++) {
-            const news = newsList[i];
-            const div = document.createElement("div");
-            div.className = "news-item";
-            div.innerHTML = `
-                <img src="${news.img_url}" alt="thumbnail">
-                <div>
-                    <a href="${news.href}">${news.title}</a>
-                    <span>${news.media}</span>
-                </div>
-            `;
-            container.appendChild(div);
-        }
-    }
-
-    function renderTimeline() {
-        const timelineContainer = document.getElementById("keywordTimeline");
-        timelineContainer.innerHTML = "";
-
-        const topKeyword = blocks[currentBlockIndex].main_block_top_keywords[0];
-        let html = `<h4>가장 많이 사용된 키워드: <strong>${topKeyword.keyword}</strong></h4>`;
-        html += `<div>`;
-
-        for (const period of topKeyword.related_keywords_timelines) {
-        html += `<div><b>${period.start_time.split('T')[0]} ~ ${period.end_time.split('T')[0]}</b>: `;
-        if (period.related_keywords.length > 0) {
-            html += period.related_keywords.join(", ");
-        } else {
-            html += `<span style="color: gray;">(연관 키워드 없음)</span>`;    // 연관 키워드가 없는 기간이 있는 문제 있음
-        }
-        html += `</div>`;
-    }
-        html += `</div>`;
-        timelineContainer.innerHTML = html;
-    }
-
-    function nextPage() {
-        const total = blocks[currentBlockIndex].news_articles.length;
-        if ((currentPage + 1) * 5 < total) {
-            currentPage++;
-            renderNews();
-        }
-    }
-
-    function prevPage() {
-        if (currentPage > 0) {
-            currentPage--;
-            renderNews();
-        }
-    }
-
-    // JS에서 동적으로 블록 크기 조절
-    window.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll(".cluster-block").forEach(block => {
-            const count = parseInt(block.dataset.count);
-            const size = count * 10 + 120;
-            block.style.width = `${size}px`;
-            block.style.height = `${size}px`;
+    blocks.forEach(block => {
+        block.keywords.forEach((kw, idx) => {
+            wordCloudData.push({
+                text: kw,
+                count: block.keywords_cnt[idx]
+            });
         });
     });
+
+    wordCloudData = wordCloudData
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 100);
+
+    console.log("Top 100 WordCloudData:", wordCloudData);
+
+    zingchart.render({
+        id: 'wordCloudChart',
+        data: {
+            type: 'wordcloud',
+            options: {
+                text: wordCloudData.map(item => item.text + ' ' + item.count).join(','),
+                minLength: 2,
+                maxItems: 40,
+                aspect: 'spiral',
+                rotate: false,
+                colorType: 'palette',
+                palette: ['#007bff', '#00bcd4', '#4caf50', '#ff9800', '#e91e63'],
+                style: {
+                    fontFamily: 'Arial',
+                    hoverState: { backgroundColor: '#D32F2F', borderRadius: 2, fontColor: 'white' },
+                    tooltip: { text: '%text: %hits' }
+                }
+            }
+        },
+        height: 500,
+        width: '100%'
+    });
+
+    const debugList = document.getElementById("debugList");
+    wordCloudData.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = `키워드: ${item.text}, 카운트: ${item.count}`;
+        debugList.appendChild(li);
+    });
 </script>
+
 </body>
 </html>

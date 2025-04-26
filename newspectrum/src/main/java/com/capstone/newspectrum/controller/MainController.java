@@ -4,6 +4,10 @@ import com.capstone.newspectrum.dto.*;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.enumeration.Media;
 import com.capstone.newspectrum.service.MainPageSevice;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,77 +24,83 @@ public class MainController {
     private MainPageSevice mainPageSevice;
 
     @GetMapping("/")
-    public String main(Model model) {
+    public String main(Model model) throws JsonProcessingException {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
         List<MainBlockDTO> today_issues = mainPageSevice.get_main_block_list(today);
+        // JSON 변환
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String todayIssuesJson = mapper.writeValueAsString(today_issues);
 
-        model.addAttribute("today_issues", today_issues);
+        model.addAttribute("todayIssuesJson", todayIssuesJson);
         return "main";
     }
 
-    @GetMapping("/main")
-    public String mainPage(Model model) {
-        List<MainBlockDTO> mainBlocks = new ArrayList<>();
-        Random rand = new Random();
 
-        for (int i = 1; i <= 10; i++) {
-            // 뉴스 기사 생성
-            List<NewsArticleDTO> articles = new ArrayList<>();
-            for (int j = 1; j <= 20; j++) {
-                NewsArticleDTO dto = new NewsArticleDTO();
-                dto.setId((long) j);
-                dto.setTitle("클러스터 " + i + " 뉴스 제목 " + j);
-                dto.setContent("이것은 클러스터 " + i + "의 뉴스 본문 내용 예시입니다.");
-                dto.setMedia(Media.values()[j % Media.values().length]); // Enum 순환
-                dto.setDomain(Domain.values()[j % Domain.values().length]); // Enum 순환
-                dto.setHref("https://example.com/news/" + i + "/" + j);
-                dto.setImg_url("https://via.placeholder.com/120x80?text=뉴스" + j);
-                dto.setCreatedDate(LocalDateTime.now().minusDays(j));
-                dto.setRelated_news_articles(new ArrayList<>());
-                dto.setNews_hyperlinks(new ArrayList<>());
-                articles.add(dto);
-            }
-
-            // 키워드 및 빈도
-            List<String> keywords = new ArrayList<>();
-            List<Integer> keywordCounts = new ArrayList<>();
-            for (int k = 1; k <= 5; k++) {
-                keywords.add("키워드" + k);
-                keywordCounts.add(rand.nextInt(10) + 1); // 1~10
-            }
-
-            // Top Keyword 관련 키워드 시간별 변화
-            List<MainBlockTopKeywordDTO> topKeywords = new ArrayList<>();
-            String topKeyword = "키워드1";
-
-            List<MainBlockRelatedKeywordsDTO> timeline = new ArrayList<>();
-            LocalDateTime now = LocalDateTime.now();
-            for (int t = 0; t < 3; t++) {
-                timeline.add(new MainBlockRelatedKeywordsDTO(
-                        now.minusDays((3 - t) * 7),
-                        now.minusDays((2 - t) * 7),
-                        List.of("연관" + (t + 1) + "-1", "연관" + (t + 1) + "-2")
-                ));
-            }
-
-            MainBlockTopKeywordDTO topKeywordDTO = new MainBlockTopKeywordDTO(topKeyword, timeline);
-            topKeywords.add(topKeywordDTO);
-
-            // 최종 MainBlockDTO 구성
-            MainBlockDTO block = new MainBlockDTO(
-                    articles,
-                    articles.size(),
-                    keywords,
-                    keywordCounts,
-                    topKeywords
-            );
-
-            mainBlocks.add(block);
-        }
-
-        model.addAttribute("mainBlocks", mainBlocks);
-        return "main";
-    }
+//    @GetMapping("/main")
+//    public String mainPage(Model model) {
+//        List<MainBlockDTO> mainBlocks = new ArrayList<>();
+//        Random rand = new Random();
+//
+//        for (int i = 1; i <= 10; i++) {
+//            // 뉴스 기사 생성
+//            List<NewsArticleDTO> articles = new ArrayList<>();
+//            for (int j = 1; j <= 20; j++) {
+//                NewsArticleDTO dto = new NewsArticleDTO();
+//                dto.setId((long) j);
+//                dto.setTitle("클러스터 " + i + " 뉴스 제목 " + j);
+//                dto.setContent("이것은 클러스터 " + i + "의 뉴스 본문 내용 예시입니다.");
+//                dto.setMedia(Media.values()[j % Media.values().length]); // Enum 순환
+//                dto.setDomain(Domain.values()[j % Domain.values().length]); // Enum 순환
+//                dto.setHref("https://example.com/news/" + i + "/" + j);
+//                dto.setImg_url("https://via.placeholder.com/120x80?text=뉴스" + j);
+//                dto.setCreatedDate(LocalDateTime.now().minusDays(j));
+//                dto.setRelated_news_articles(new ArrayList<>());
+//                dto.setNews_hyperlinks(new ArrayList<>());
+//                articles.add(dto);
+//            }
+//
+//            // 키워드 및 빈도
+//            List<String> keywords = new ArrayList<>();
+//            List<Integer> keywordCounts = new ArrayList<>();
+//            for (int k = 1; k <= 5; k++) {
+//                keywords.add("키워드" + k);
+//                keywordCounts.add(rand.nextInt(10) + 1); // 1~10
+//            }
+//
+//            // Top Keyword 관련 키워드 시간별 변화
+//            List<MainBlockTopKeywordDTO> topKeywords = new ArrayList<>();
+//            String topKeyword = "키워드1";
+//
+//            List<MainBlockRelatedKeywordsDTO> timeline = new ArrayList<>();
+//            LocalDateTime now = LocalDateTime.now();
+//            for (int t = 0; t < 3; t++) {
+//                timeline.add(new MainBlockRelatedKeywordsDTO(
+//                        now.minusDays((3 - t) * 7),
+//                        now.minusDays((2 - t) * 7),
+//                        List.of("연관" + (t + 1) + "-1", "연관" + (t + 1) + "-2")
+//                ));
+//            }
+//
+//            MainBlockTopKeywordDTO topKeywordDTO = new MainBlockTopKeywordDTO(topKeyword, timeline);
+//            topKeywords.add(topKeywordDTO);
+//
+//            // 최종 MainBlockDTO 구성
+//            MainBlockDTO block = new MainBlockDTO(
+//                    articles,
+//                    articles.size(),
+//                    keywords,
+//                    keywordCounts,
+//                    topKeywords
+//            );
+//
+//            mainBlocks.add(block);
+//        }
+//
+//        model.addAttribute("mainBlocks", mainBlocks);
+//        return "main";
+//    }
 
 
 //    @GetMapping("/test")
