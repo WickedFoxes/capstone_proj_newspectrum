@@ -15,23 +15,27 @@ public class KeywordDTO {
     private String keyword;
     private Long news_article_id;  // ID만 보존
     private LocalDateTime createdDate;
+    private float score;
 
     public KeywordDTO() {}
 
     public KeywordDTO(Long id,
                       String keyword,
                       Long news_article_id,
-                      LocalDateTime createdDate) {
+                      LocalDateTime createdDate,
+                      float score) {
         this.id = id;
         this.keyword = keyword;
         this.news_article_id = news_article_id;
         this.createdDate = createdDate;
+        this.score = score;
     }
     public KeywordDTO(Keyword keyword){
         this.id = keyword.getId();
         this.keyword = keyword.getKeyword();
         this.news_article_id = keyword.getNews_article().getId();
         this.createdDate = keyword.getCreatedDate();
+        this.score = keyword.getScore();
     }
 
     public Long getId() {
@@ -64,5 +68,13 @@ public class KeywordDTO {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
     }
 }

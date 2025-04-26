@@ -37,10 +37,28 @@ public interface NewsArticleRepo extends JpaRepository<NewsArticle, Long> {
       AND k.news_article.domain = :domain
     GROUP BY k.news_article
     HAVING COUNT(DISTINCT k.keyword) = 2
-""")
+    """)
     List<NewsArticle> findNewsArticlesWithBothKeywords(@Param("keyword1") String keyword1,
                                                        @Param("keyword2") String keyword2,
                                                        @Param("startDate") LocalDateTime startDate,
                                                        @Param("endDate") LocalDateTime endDate,
                                                        @Param("domain") Domain domain);
+
+    @Query("""
+    SELECT k.news_article
+    FROM Keyword k
+    WHERE k.keyword = :keyword
+      AND k.news_article.createdDate BETWEEN :startDate AND :endDate
+      AND k.news_article.domain = :domain
+    GROUP BY k.news_article
+    """)
+    List<NewsArticle> findNewsArticlesByKeyword(
+            @Param("keyword") String keyword,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            @Param("domain") Domain domain
+    );
+
+
 }
+
