@@ -34,12 +34,37 @@ public class MainPageSevice {
         List<MainBlockDTO> enter_list = get_main_block_list_by_domain(today, Domain.연예);
         List<MainBlockDTO> sports_list = get_main_block_list_by_domain(today, Domain.스포츠);
         List<MainBlockDTO> result = new ArrayList<>();
+        System.out.println(politic_list.size());
+        System.out.println(economy_list.size());
+        System.out.println(social_list.size());
+        System.out.println(enter_list.size());
+        System.out.println(sports_list.size());
 
-        result.addAll(selectTwoWithoutKeywordOverlap(politic_list, 4));
-        result.addAll(selectTwoWithoutKeywordOverlap(economy_list, 4));
-        result.addAll(selectTwoWithoutKeywordOverlap(social_list, 4));
-        result.addAll(selectTwoWithoutKeywordOverlap(enter_list, 4));
-        result.addAll(selectTwoWithoutKeywordOverlap(sports_list, 4));
+        if(politic_list.size() >= 2){
+            result.addAll(selectTwoWithoutKeywordOverlap(politic_list, 4));
+        } else{
+            result.addAll(politic_list);
+        }
+        if(economy_list.size() >= 2){
+            result.addAll(selectTwoWithoutKeywordOverlap(economy_list, 4));
+        } else{
+            result.addAll(economy_list);
+        }
+        if(social_list.size() >= 2){
+            result.addAll(selectTwoWithoutKeywordOverlap(social_list, 4));
+        } else{
+            result.addAll(social_list);
+        }
+        if(enter_list.size() >= 2){
+            result.addAll(selectTwoWithoutKeywordOverlap(enter_list, 4));
+        } else{
+            result.addAll(enter_list);
+        }
+        if(sports_list.size() >= 2){
+            result.addAll(selectTwoWithoutKeywordOverlap(sports_list, 4));
+        } else{
+            result.addAll(sports_list);
+        }
         return result;
     }
 
@@ -158,7 +183,7 @@ public class MainPageSevice {
             MainBlockDTO first = list.get(i);
             for (int j = i + 1; j < n; j++) {
                 MainBlockDTO second = list.get(j);
-                if (countKeywordOverlap(first, second) < k) {
+                if (checkKeywordOverlap(first, second, k)) {
                     return Arrays.asList(first, second);
                 }
             }
@@ -167,10 +192,10 @@ public class MainPageSevice {
         return Arrays.asList(list.get(0), list.get(1));
     }
 
-    private int countKeywordOverlap(MainBlockDTO a, MainBlockDTO b) {
-        Set<String> keywordsA = new HashSet<>(a.getKeywords());
-        Set<String> keywordsB = new HashSet<>(b.getKeywords());
+    private boolean checkKeywordOverlap(MainBlockDTO a, MainBlockDTO b, int k) {
+        Set<String> keywordsA = new HashSet<>(a.getKeywords().subList(0, k));
+        Set<String> keywordsB = new HashSet<>(b.getKeywords().subList(0, k));
         keywordsA.retainAll(keywordsB);  // 교집합
-        return keywordsA.size();
+        return keywordsA.size() < k/2;
     }
 }

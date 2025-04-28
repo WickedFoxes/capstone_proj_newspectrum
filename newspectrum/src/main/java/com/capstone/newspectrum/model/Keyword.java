@@ -30,6 +30,9 @@ public class Keyword {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @Column(name = "score")
+    private float score;
+
     public Keyword() {
     }
 
@@ -71,5 +74,13 @@ public class Keyword {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
     }
 }

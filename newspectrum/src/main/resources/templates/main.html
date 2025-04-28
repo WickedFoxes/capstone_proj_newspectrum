@@ -131,18 +131,42 @@
             font-weight: bold;
             margin-bottom: 10px;
         }
-        .domain-nav {
-            text-align: center;
-            margin-top: 20px;
+
+        .wordcloud-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-top: 30px;
         }
-        .domain-nav button {
+
+        .wordcloud-box {
+            width: 500px;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .arrow {
             background-color: #007bff;
             color: white;
             border: none;
-            margin: 0 10px;
-            padding: 8px 16px;
+            padding: 10px 15px;
+            font-size: 24px;
+            font-weight: bold;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 50%;
+            margin: 0 10px;
+            z-index: 2;
+            transition: background-color 0.3s ease;
+        }
+
+        .arrow:hover {
+            background-color: #0056b3;
         }
         .pagination-buttons {
             text-align: center;
@@ -186,14 +210,19 @@
 <!--    <p th:text="${today_issues[0].keywords}">키워드 디버그</p>-->
 <!--</div>-->
 
-<div class="domain-nav">
-    <button onclick="prevDomain()">이전</button>
-    <span id="domainTitle" class="domain-title">정치</span>
-    <button onclick="nextDomain()">다음</button>
-</div>
+<!--<div class="domain-nav">-->
+<!--    <button onclick="prevDomain()">이전</button>-->
+<!--    <span id="domainTitle" class="domain-title">정치</span>-->
+<!--    <button onclick="nextDomain()">다음</button>-->
+<!--</div>-->
 
-<div class="slider-container">
+<div class="wordcloud-container">
+    <button class="arrow left" onclick="prevDomain()">&lt;</button>
+
     <div id="wordCloudSlide" class="wordcloud-box"></div>
+
+    <button class="arrow right" onclick="nextDomain()">&gt;</button>
+
     <div id="newsListContainer" class="news-list-container"></div>
 </div>
 
@@ -332,13 +361,13 @@
 
     function nextDomain() {
         currentIndex = (currentIndex + 1) % domains.length;
-        domainTitle.textContent = domains[currentIndex];
+<!--        domainTitle.textContent = domains[currentIndex];-->
         renderWordCloud(domains[currentIndex]);
     }
 
     function prevDomain() {
         currentIndex = (currentIndex - 1 + domains.length) % domains.length;
-        domainTitle.textContent = domains[currentIndex];
+<!--        domainTitle.textContent = domains[currentIndex];-->
         renderWordCloud(domains[currentIndex]);
     }
 
