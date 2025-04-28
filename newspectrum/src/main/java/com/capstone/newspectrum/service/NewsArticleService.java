@@ -2,6 +2,7 @@ package com.capstone.newspectrum.service;
 
 import com.capstone.newspectrum.dto.FocusKeywordItemDTO;
 import com.capstone.newspectrum.dto.NewsArticleDTO;
+import com.capstone.newspectrum.dto.RelatedNewsArticleAndScoreDTO;
 import com.capstone.newspectrum.model.Keyword;
 import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.model.NewsArticleRelation;
@@ -50,14 +51,19 @@ public class NewsArticleService {
         return result;
     }
 
-    public List<NewsArticleDTO> get_related_news_articles_by_id(Long news_article_id){
+    public List<RelatedNewsArticleAndScoreDTO> get_related_news_articles_by_id(Long news_article_id){
         Optional<NewsArticle> news_article = newsArticleRepo.findById(news_article_id);
         List<NewsArticleRelation> relations = news_article.get().getRelated_news_articles();
         relations.sort((r1, r2) -> Double.compare(r2.getSimilarity(), r1.getSimilarity()));
 
-        List<NewsArticleDTO> result = new ArrayList<>();
+        List<RelatedNewsArticleAndScoreDTO> result = new ArrayList<>();
         for(NewsArticleRelation relation : relations){
-            result.add(new NewsArticleDTO(relation.getRelated_news_article()));
+            result.add(
+                    new RelatedNewsArticleAndScoreDTO(
+                            new NewsArticleDTO(relation.getRelated_news_article()),
+                            relation.getSimilarity()
+                    )
+            );
         }
         return result;
     }

@@ -23,7 +23,7 @@ public class MainPageServiceTest {
         get_main_block_list
         ###########################################################################################
         """);
-        LocalDateTime today = LocalDateTime.of(2025, 3, 1, 0, 0);
+        LocalDateTime today = LocalDateTime.of(2025, 2, 28, 0, 0);
         List<MainBlockDTO> items = mainPageSevice.get_main_block_list(today);
         System.out.println(items.size());
         for(MainBlockDTO item : items){
@@ -44,6 +44,9 @@ public class MainPageServiceTest {
                     .getStart_time());
             System.out.println("가장 빈도수가 높은 키워드의 첫 주의 연관 키워드 : "+ item.getMain_block_top_keywords().get(0)
                     .getRelated_keywords_timelines().get(0)
+                    .getRelated_keywords());
+            System.out.println("가장 빈도수가 높은 키워드의 둘째 주의 연관 키워드 : "+ item.getMain_block_top_keywords().get(0)
+                    .getRelated_keywords_timelines().get(1)
                     .getRelated_keywords());
         }
     }

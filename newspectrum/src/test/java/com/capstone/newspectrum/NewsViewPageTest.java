@@ -3,6 +3,7 @@ package com.capstone.newspectrum;
 import com.capstone.newspectrum.dto.FocusKeywordItemDTO;
 import com.capstone.newspectrum.dto.MainBlockDTO;
 import com.capstone.newspectrum.dto.NewsArticleDTO;
+import com.capstone.newspectrum.dto.RelatedNewsArticleAndScoreDTO;
 import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.service.MainPageSevice;
 import com.capstone.newspectrum.service.NewsArticleService;
@@ -27,7 +28,7 @@ public class NewsViewPageTest {
         get_news_article_by_id
         ###########################################################################################
         """);
-        Long news_id = 3845L;
+        Long news_id = 5162L;
         NewsArticleDTO news_article = newsArticleService.get_news_article_by_id(news_id);
         System.out.println("########### news_article ##############");
         System.out.println("Domain : "+ news_article.getDomain());
@@ -42,7 +43,7 @@ public class NewsViewPageTest {
         get_focus_keyword_items_by_id
         ###########################################################################################
         """);
-        Long news_id = 3845L;
+        Long news_id = 5162L;
         List<FocusKeywordItemDTO> items = newsArticleService.get_focus_keyword_items_by_id(news_id);
         for(FocusKeywordItemDTO item : items){
             System.out.println("########### FocusKeywordItemDTO ##############");
@@ -62,13 +63,14 @@ public class NewsViewPageTest {
         get_related_news_articles_by_id
         ###########################################################################################
         """);
-        Long news_id = 3845L;
-        List<NewsArticleDTO> items = newsArticleService.get_related_news_articles_by_id(news_id);
-        for(NewsArticleDTO item : items){
+        Long news_id = 5162L;
+        List<RelatedNewsArticleAndScoreDTO> items = newsArticleService.get_related_news_articles_by_id(news_id);
+        for(RelatedNewsArticleAndScoreDTO item : items){
             System.out.println("########### news_article ##############");
-            System.out.println("Domain : "+ item.getDomain());
-            System.out.println("title : "+ item.getTitle().replace("\n", ""));
-            System.out.println("createdDate "+ item.getCreatedDate());
+            System.out.println("Domain : "+ item.getNews_article().getDomain());
+            System.out.println("score : "+ item.getScore());
+            System.out.println("title : "+ item.getNews_article().getTitle().replace("\n", ""));
+            System.out.println("createdDate "+ item.getNews_article().getCreatedDate());
         }
     }
 }

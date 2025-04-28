@@ -26,7 +26,7 @@ public class NewsViewController {
                                   @PathVariable("news_article_id") Long news_article_id) {
         NewsArticleDTO news_article = newsArticleService.get_news_article_by_id(news_article_id);
         List<FocusKeywordItemDTO> focus_keyword_items = newsArticleService.get_focus_keyword_items_by_id(news_article_id);
-        List<NewsArticleDTO> related_news_articles = newsArticleService.get_related_news_articles_by_id(news_article_id);
+        List<RelatedNewsArticleAndScoreDTO> related_news_articles = newsArticleService.get_related_news_articles_by_id(news_article_id);
 
         model.addAttribute("news_article", news_article);
         model.addAttribute("focus_keyword_items", focus_keyword_items);
