@@ -8,17 +8,11 @@ from datetime import datetime, timedelta
 from keybert import KeyBERT
 from transformers import AutoModel, AutoTokenizer, AutoModelForTokenClassification, pipeline
 from konlpy.tag import Okt, Komoran, Kkma
-from gliner import GLiNER
 
 # KoSimCSE-roberta 모델 불러오기
 koSimCSE_model = AutoModel.from_pretrained("BM-K/KoSimCSE-roberta")
 # KeyBERT에 KoBERT 모델 연결
 kw_model = KeyBERT(model=koSimCSE_model)
-
-# taeminlee/gliner_ko 모델 불러오기
-ner_model = GLiNER.from_pretrained("taeminlee/gliner_ko")
-tta_labels = ["PERSON"]
-# tta_labels = ["ARTIFACTS", "ANIMAL", "CIVILIZATION", "DATE", "EVENT", "STUDY_FIELD", "LOCATION", "MATERIAL", "ORGANIZATION", "PERSON", "PLANT", "QUANTITY", "TIME", "TERM", "THEORY"]
 
 # tokenizer
 # tag = Okt()
@@ -36,23 +30,13 @@ korean_stopwords = [
     '라고', '으로서', '로서', '였다', '이었다', '토요와이드'
 ]
 
-def extract_keywords(title, content, top_n=5):
-    print(title.replace("\n", ""))
-    
-    ner_results = ner_model.predict_entities(content, tta_labels)
-    people_keywords = [(entity['text'], entity['score']) 
-                       for entity in ner_results 
-                       if entity['label'] == 'PERSON' 
-                       and len(entity['text']) > 1
-                       and len(entity['text']) < 10
-                       and entity['score'] > 0.9]
+def extract_keywords_from_article(title, content, top_n=7):
+    title = title.replace("\n", "")
+    content = content.replace("\n", "")
+    input = title+" "+content[:700]
 
-    # title_nouns = tag.nouns(title)
-    title_nouns = [word for word, word_tag in tag.pos(title) if word_tag.startswith('NN')]
-    edited_title = " ".join(title_nouns)
-
-    title_keywords = kw_model.extract_keywords(
-            edited_title,
+    content_keywords = kw_model.extract_keywords(
+            input,
             top_n=top_n, 
             stop_words=korean_stopwords,
             keyphrase_ngram_range=(1, 1),
@@ -60,16 +44,7 @@ def extract_keywords(title, content, top_n=5):
             diversity=0.7
     )
     
-    result = []
-    people = []
-
-    for item, _ in people_keywords:
-        result.append(item)
-        people.append(item)
-    for item, _ in title_keywords:
-        if any(item in person for person in people): continue
-        result.append(item)
-    return list(set(result))
+    return content_keywords
 
 def get_48_hours_before(load_date_str):
     # 문자열을 datetime 객체로 변환
@@ -106,10 +81,11 @@ while current_end <= end_date:
         
         # 뉴스 키워드 생성
         for article in articles:
-            keywords = extract_keywords(article.title, article.content, top_n=5)
-            for keyword in keywords:
+            items = extract_keywords_from_article(article.title, article.content, top_n=7)
+            for keyword, score in items:
                 keyword_item = Keyword(id=None,
                                     keyword=keyword,
+                                    score=score,
                                     created_date=current_end,
                                     news_article_id=article.id)
                 create_news_keyword(keyword_item)    

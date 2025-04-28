@@ -31,8 +31,9 @@ def read_news_articles_by_domain(date_str = "2025-03-01 00:00:00",
             print("✅ 데이터 가져오기 성공")
 
             for row in rows:
-                article = NewsArticle(**row)
-                articles.append(article)
+                if row.get('content') and len(row['content']) >= 400:
+                    article = NewsArticle(**row)
+                    articles.append(article)
     except pymysql.MySQLError as e:
         print("❌ 데이터베이스 오류 발생:", e)
     except Exception as e:
@@ -66,8 +67,9 @@ def read_news_articles(date_str = "2025-03-01 00:00:00",
             print("✅ 데이터 가져오기 성공")
 
             for row in rows:
-                article = NewsArticle(**row)
-                articles.append(article)
+                if row.get('content') and len(row['content']) >= 400:
+                    article = NewsArticle(**row)
+                    articles.append(article)
     except pymysql.MySQLError as e:
         print("❌ 데이터베이스 오류 발생:", e)
     except Exception as e:
@@ -245,7 +247,10 @@ def create_news_article(news_article:NewsArticle):
 
         # 변경사항 커밋
         conn.commit()
-        print("✅ 데이터 삽입 성공")
+        # 삽입된 id 가져오기
+        inserted_id = cur.lastrowid
+        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        return inserted_id
 
     except pymysql.MySQLError as e:
         print("❌ 데이터베이스 오류 발생:", e)
@@ -301,7 +306,10 @@ def create_news_cluster(news_cluster:NewsCluster):
         
         # 변경사항 커밋
         conn.commit()
-        print("✅ 데이터 삽입 성공")
+        # 삽입된 id 가져오기
+        inserted_id = cur.lastrowid
+        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        return inserted_id
 
     except pymysql.MySQLError as e:
         print("❌ 데이터베이스 오류 발생:", e)
@@ -357,7 +365,10 @@ def create_news_keyword(keyword:Keyword):
         
         # 변경사항 커밋
         conn.commit()
-        print("✅ 데이터 삽입 성공")
+        # 삽입된 id 가져오기
+        inserted_id = cur.lastrowid
+        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        return inserted_id
 
     except pymysql.MySQLError as e:
         print("❌ 데이터베이스 오류 발생:", e)
@@ -413,7 +424,10 @@ def create_keyword_relation(keyword_relation:KeywordRelation):
         
         # 변경사항 커밋
         conn.commit()
-        print("✅ 데이터 삽입 성공")
+        # 삽입된 id 가져오기
+        inserted_id = cur.lastrowid
+        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        return inserted_id
 
     except pymysql.MySQLError as e:
         print("❌ 데이터베이스 오류 발생:", e)
@@ -469,7 +483,10 @@ def create_news_article_relation(news_article_relation:NewsArticleRelation):
         
         # 변경사항 커밋
         conn.commit()
-        print("✅ 데이터 삽입 성공")
+        # 삽입된 id 가져오기
+        inserted_id = cur.lastrowid
+        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        return inserted_id
 
     except pymysql.MySQLError as e:
         print("❌ 데이터베이스 오류 발생:", e)
