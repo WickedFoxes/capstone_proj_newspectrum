@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
     <title>메인페이지</title>
     <style>
+        /* 상단 타이틀 바 */
         .title-bar {
             text-align: center;
             background-color: #007bff;
@@ -14,11 +16,14 @@
             font-size: 24px;
             font-weight: bold;
         }
+
         .title-bar a {
             text-decoration: none;
             color: white;
             transition: 0.3s;
         }
+
+        /* 검색 바 */
         .search-bar-container {
             display: flex;
             justify-content: flex-end;
@@ -26,12 +31,14 @@
             background-color: #f1f1f1;
             border-bottom: 1px solid #ddd;
         }
+
         .search-bar-container input[type="text"] {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
         }
+
         .search-bar-container button {
             margin-left: 10px;
             padding: 8px 12px;
@@ -41,6 +48,8 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
+        /* 메뉴 바 */
         .menu-bar {
             display: flex;
             justify-content: space-around;
@@ -48,73 +57,49 @@
             padding: 10px 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
         .menu-bar a {
             text-decoration: none;
             color: #333;
             padding: 10px 20px;
             font-size: 16px;
         }
+
+        /* 슬라이더 컨테이너 */
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
         .slider-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            margin-top: 30px;
+            transition: transform 0.5s ease;
         }
-
-        .slider-content {
-            width: 100%;
-            text-align: center;
-            position: relative;
+        .wordcloud-box {
+            width: 45%;
+            height: 500px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 10px;
         }
-
-        .slider-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 123, 255, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            z-index: 10;
-        }
-
-        .slider-button.left {
-            left: -60px; /* 버튼 간격 여유 */
-        }
-
-        .slider-button.right {
-            right: -60px;
-        }
-
-        .slider-button:hover {
-            background-color: rgba(0, 123, 255, 1);
-            transform: translateY(-50%) scale(1.1);
-        }
-        .slider-button:focus {
-            outline: none;
-        }
-
-        .domain-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #007bff;
-        }
-
         .news-list-container {
-            margin-top: 20px;
+            width: 45%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 20px;
-            border-top: 1px solid #ccc;
+            display: none;
         }
-
+        .news-list-container.show {
+            display: block;
+        }
         .news-item {
             display: flex;
             align-items: center;
@@ -123,37 +108,60 @@
             padding-bottom: 10px;
             cursor: pointer;
         }
-
         .news-item img {
-            width: 120px;
-            height: 80px;
+            width: 100px;
+            height: 70px;
             object-fit: cover;
             margin-right: 16px;
             border-radius: 4px;
         }
-
-        .news-item-content {
-            display: flex;
-            flex-direction: column;
-        }
-
         .news-item-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            color: #007bff;
-            margin-bottom: 6px;
+            color: #333;
+            margin-bottom: 4px;
         }
-
         .news-item-media {
-            font-size: 14px;
-            color: #666;
+            font-size: 12px;
+            color: #999;
         }
-        .section-title {
+        .domain-title {
+            text-align: center;
             font-size: 20px;
             font-weight: bold;
-            color: #007bff;
             margin-bottom: 10px;
+        }
+        .domain-nav {
             text-align: center;
+            margin-top: 20px;
+        }
+        .domain-nav button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            margin: 0 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .pagination-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination-buttons button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .pagination-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: default;
         }
     </style>
 </head>
@@ -178,108 +186,110 @@
 <!--    <p th:text="${today_issues[0].keywords}">키워드 디버그</p>-->
 <!--</div>-->
 
-<div class="slider-container">
-    <button class="slider-button left" onclick="prevSlide()">&#10094;</button> <!-- 왼쪽 버튼 -->
-
-    <div class="slider-content">
-        <div id="wordCloudSlide" class="wordcloud-box"></div>
-        <div id="domainTitle" class="domain-title"></div>
-    </div>
-
-    <button class="slider-button right" onclick="nextSlide()">&#10095;</button> <!-- 오른쪽 버튼 -->
+<div class="domain-nav">
+    <button onclick="prevDomain()">이전</button>
+    <span id="domainTitle" class="domain-title">정치</span>
+    <button onclick="nextDomain()">다음</button>
 </div>
 
-<div id="newsListContainer" class="news-list-container"></div>
+<div class="slider-container">
+    <div id="wordCloudSlide" class="wordcloud-box"></div>
+    <div id="newsListContainer" class="news-list-container"></div>
+</div>
 
 <script th:inline="javascript">
     const issuesByDomain = JSON.parse(/*[[${issuesByDomainJson}]]*/ '');
-
     const domains = ["정치", "경제", "사회", "연예", "스포츠"];
-    let currentIndex = 0; // 정치부터 시작
-    let globalCurrentNewsArticles = []; // 현재 도메인의 뉴스 기사 저장
+    let currentIndex = 0;
+    let currentNewsArticles = [];
+    let currentPage = 0;
+    const pageSize = 5;
 
-    function renderCurrentSlide() {
-        let domain = domains[currentIndex];
-        let wordCloudData = [];
-        globalCurrentNewsArticles = []; // 새로운 슬라이드에 맞게 초기화
+    const wordCloudSlide = d3.select("#wordCloudSlide");
+    const newsListContainer = document.getElementById("newsListContainer");
+    const domainTitle = document.getElementById("domainTitle");
 
-        if (!issuesByDomain[domain]) {
-            console.warn(`도메인 ${domain}에 데이터 없음`);
-            return;
-        }
+    function renderWordCloud(domain) {
+        const words = [];
+        currentNewsArticles = [];
+        currentPage = 0;
 
-        // 키워드와 뉴스 데이터 수집
         issuesByDomain[domain].forEach(block => {
             block.keywords.forEach((kw, idx) => {
-                wordCloudData.push({
-                    text: kw,
-                    count: block.keywords_cnt[idx]
-                });
+                words.push({ text: kw, count: block.keywords_cnt[idx] });
             });
-
-            globalCurrentNewsArticles.push(...block.news_articles); // 뉴스 기사 저장
+            currentNewsArticles.push(...block.news_articles);
         });
 
-        // 숫자 키워드 제거 및 정렬
-        wordCloudData = wordCloudData
-            .filter(item => !/^\d+$/.test(item.text.trim()))
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 50);
+        const maxCount = Math.max(...words.map(w => w.count));
+        const minCount = Math.min(...words.map(w => w.count));
 
-        // 워드 클라우드 렌더링
-        zingchart.render({
-            id: 'wordCloudSlide',
-            data: {
-                type: 'wordcloud',
-                options: {
-                    text: wordCloudData.map(item => item.text + ' ' + item.count).join(','),
-                    minLength: 2,
-                    maxItems: 40,
-                    aspect: 'spiral',
-                    rotate: false,
-                    colorType: 'palette',
-                    palette: ['#007bff', '#00bcd4', '#4caf50', '#ff9800', '#e91e63'],
-                    style: {
-                        fontFamily: 'Arial',
-                        hoverState: { backgroundColor: '#D32F2F', borderRadius: 2, fontColor: 'white' },
-                        tooltip: { text: '%text: %hits' }
-                    }
-                }
-            },
-            height: 500,
-            width: '100%',
-            events: {
-                'load': function () {
-                    // 중복 방지 후 클릭 이벤트 바인딩
-                    zingchart.unbind('wordCloudSlide', 'node_click');
-                    zingchart.bind('wordCloudSlide', 'node_click', function(p) {
-                        console.log("클릭된 키워드:", p.text);
-                        renderNewsList(globalCurrentNewsArticles);
-                    });
-                }
-            }
-        });
+        const normalizedWords = words.map(w => ({
+            text: w.text,
+            size: ((w.count - minCount) / (maxCount - minCount)) * 50 + 20
+        }));
 
-        // 도메인 타이틀 업데이트
-        document.getElementById("domainTitle").textContent = domain;
+        const topWords = normalizedWords.sort((a, b) => b.size - a.size).slice(0, 40);
 
-        // 슬라이드 변경 시 자동 뉴스 렌더링
-        renderNewsList(globalCurrentNewsArticles);
+        d3.select("#wordCloudSlide svg").remove();
+
+        const layout = d3.layout.cloud()
+            .size([500, 500])
+            .words(topWords)
+            .padding(5)
+            .rotate(() => 0)
+            .spiral("archimedean")  // 더 자연스럽게 분포되도록 변경
+            .font("Impact")
+            .fontSize(d => d.size)
+            .on("end", draw);
+
+        layout.start();
+
+        function draw(words) {
+            const containerWidth = document.getElementById("wordCloudSlide").clientWidth;
+            const containerHeight = document.getElementById("wordCloudSlide").clientHeight;
+
+            const svg = d3.select("#wordCloudSlide").append("svg")
+                .attr("width", containerWidth)
+                .attr("height", containerHeight)
+                .append("g")
+                .attr("transform", `translate(${containerWidth / 2}, ${containerHeight / 2})`);
+
+            svg.selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", d => d.size + "px")
+                .style("font-family", "Impact")
+                .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
+                .attr("text-anchor", "middle")
+                .attr("transform", d => "translate(" + [d.x, d.y] + ")")
+                .text(d => d.text)
+                .on("click", function(event, d) {
+                    console.log("클릭된 키워드:", d.text);
+                    currentPage = 0;
+                    showPaginatedNews(currentPage);
+                });
+        }
+        clearNews();
     }
 
-    function renderNewsList(newsArticles) {
-        const container = document.getElementById("newsListContainer");
-        container.innerHTML = ""; // 기존 뉴스 비우기
+    function clearNews() {
+        newsListContainer.innerHTML = "";
+        newsListContainer.classList.remove("show");
+    }
 
-        if (newsArticles.length === 0) {
-            container.innerHTML = "<p>뉴스 기사가 없습니다.</p>";
-            return;
-        }
+    function showPaginatedNews(page) {
+        newsListContainer.innerHTML = "";
+        newsListContainer.classList.add("show");
 
-        newsArticles.forEach(news => {
+        const startIdx = page * pageSize;
+        const endIdx = startIdx + pageSize;
+        const paginatedNews = currentNewsArticles.slice(startIdx, endIdx);
+
+        paginatedNews.forEach(news => {
             const item = document.createElement("div");
             item.className = "news-item";
-            item.onclick = () => window.location.href = news.href; // 현재 탭 이동
+            item.onclick = () => window.location.href = '/view/' + news.id;
 
             item.innerHTML = `
                 <img src="${news.img_url}" alt="뉴스 이미지">
@@ -288,24 +298,51 @@
                     <div class="news-item-media">${news.media}</div>
                 </div>
             `;
-            container.appendChild(item);
+            newsListContainer.appendChild(item);
         });
+
+        renderPaginationButtons();
     }
 
-    function nextSlide() {
+    function renderPaginationButtons() {
+        const paginationDiv = document.createElement("div");
+        paginationDiv.className = "pagination-buttons";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "이전";
+        prevBtn.disabled = currentPage === 0;
+        prevBtn.onclick = () => {
+            currentPage--;
+            showPaginatedNews(currentPage);
+        };
+
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "다음";
+        nextBtn.disabled = (currentPage + 1) * pageSize >= currentNewsArticles.length || currentPage >= 4;
+        nextBtn.onclick = () => {
+            currentPage++;
+            showPaginatedNews(currentPage);
+        };
+
+        paginationDiv.appendChild(prevBtn);
+        paginationDiv.appendChild(nextBtn);
+
+        newsListContainer.appendChild(paginationDiv);
+    }
+
+    function nextDomain() {
         currentIndex = (currentIndex + 1) % domains.length;
-        renderNewsList([]); // 뉴스 리스트 초기화
-        renderCurrentSlide();
+        domainTitle.textContent = domains[currentIndex];
+        renderWordCloud(domains[currentIndex]);
     }
 
-    function prevSlide() {
+    function prevDomain() {
         currentIndex = (currentIndex - 1 + domains.length) % domains.length;
-        renderNewsList([]); // 뉴스 리스트 초기화
-        renderCurrentSlide();
+        domainTitle.textContent = domains[currentIndex];
+        renderWordCloud(domains[currentIndex]);
     }
 
-    // 초기 슬라이드 렌더링 (정치부터)
-    renderCurrentSlide();
+    renderWordCloud(domains[currentIndex]);
 </script>
 
 </body>
