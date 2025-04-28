@@ -219,7 +219,15 @@
 <div class="wordcloud-container">
     <button class="arrow left" onclick="prevDomain()">&lt;</button>
 
-    <div id="wordCloudSlide" class="wordcloud-box"></div>
+    <div>
+        <!-- 몇 번째 워드 클라우드 상태 텍스트 -->
+        <div class="wordcloud-status" style="text-align:center; font-size:18px; font-weight:bold; margin-bottom: 10px;">
+            <span id="currentDomainText"></span> |
+            <span id="currentIndexText"></span>
+        </div>
+
+        <div id="wordCloudSlide" class="wordcloud-box"></div>
+    </div>
 
     <button class="arrow right" onclick="nextDomain()">&gt;</button>
 
@@ -358,20 +366,27 @@
 
         newsListContainer.appendChild(paginationDiv);
     }
+    function updateStatusText() {
+        document.getElementById("currentDomainText").textContent = "분야: " + domains[currentIndex];
+        document.getElementById("currentIndexText").textContent = (currentIndex + 1) + " / " + domains.length;
+    }
 
     function nextDomain() {
         currentIndex = (currentIndex + 1) % domains.length;
 <!--        domainTitle.textContent = domains[currentIndex];-->
         renderWordCloud(domains[currentIndex]);
+        updateStatusText();
     }
 
     function prevDomain() {
         currentIndex = (currentIndex - 1 + domains.length) % domains.length;
 <!--        domainTitle.textContent = domains[currentIndex];-->
         renderWordCloud(domains[currentIndex]);
+        updateStatusText();
     }
 
     renderWordCloud(domains[currentIndex]);
+    updateStatusText();
 </script>
 
 </body>
