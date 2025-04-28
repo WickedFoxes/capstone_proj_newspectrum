@@ -167,6 +167,8 @@ public class SectionPageService {
                         .toList();      // List<String>으로 수집
 //                    System.out.println("관련 있는 키워드 리스트 : "+top10_related_Keywords);
 
+                // 중복 제거를 위해 ID에 Set 적용
+                Set<Long> articleIdSet = new HashSet<>();
                 List<NewsArticleDTO> total_related_articles = new ArrayList<>();
                 for(String related_keyword : top_related_Keywords){
                     List<NewsArticle> related_articles = news_article_repo.findNewsArticlesWithBothKeywords(
@@ -177,7 +179,10 @@ public class SectionPageService {
                             domain
                     );
                     for(NewsArticle article :related_articles){
-                        total_related_articles.add(new NewsArticleDTO(article));
+                        if (!articleIdSet.contains(article.getId())) {
+                            articleIdSet.add(article.getId());
+                            total_related_articles.add(new NewsArticleDTO(article)); // 중복 방지
+                        }
                     }
                 }
                 total_related_articles.sort(Comparator.comparing(NewsArticleDTO::getCreatedDate).reversed());

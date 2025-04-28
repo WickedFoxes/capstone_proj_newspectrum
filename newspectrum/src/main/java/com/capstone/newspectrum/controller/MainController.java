@@ -4,15 +4,17 @@ import com.capstone.newspectrum.dto.*;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.enumeration.Media;
 import com.capstone.newspectrum.service.MainPageSevice;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -20,11 +22,23 @@ public class MainController {
     private MainPageSevice mainPageSevice;
 
     @GetMapping("/")
-    public String main(Model model) {
+    public String main(Model model) throws JsonProcessingException, JsonProcessingException {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
-        List<MainBlockDTO> today_issues = mainPageSevice.get_main_block_list(today);
 
-        model.addAttribute("today_issues", today_issues);
+        Map<String, List<MainBlockDTO>> issuesByDomain = new HashMap<>();
+        issuesByDomain.put("정치", mainPageSevice.get_main_block_list_by_domain(today, Domain.정치));
+        issuesByDomain.put("경제", mainPageSevice.get_main_block_list_by_domain(today, Domain.경제));
+        issuesByDomain.put("사회", mainPageSevice.get_main_block_list_by_domain(today, Domain.사회));
+        issuesByDomain.put("연예", mainPageSevice.get_main_block_list_by_domain(today, Domain.연예));
+        issuesByDomain.put("스포츠", mainPageSevice.get_main_block_list_by_domain(today, Domain.스포츠));
+
+        // JSON 변환
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        String issuesByDomainJson = mapper.writeValueAsString(issuesByDomain);
+
+        model.addAttribute("issuesByDomainJson", issuesByDomainJson);
         return "main";
     }
 
