@@ -520,7 +520,7 @@ WOODZ	NNP
 오선민	NNP
 오세훈	NNP
 오스틴 굴스비	NNP
-오요안	NNP
+오요안나	NNP
 오원석	NNP
 오인태	NNP
 오재현	NNP
