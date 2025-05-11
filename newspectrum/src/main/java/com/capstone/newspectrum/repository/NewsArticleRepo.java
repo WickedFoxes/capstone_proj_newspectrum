@@ -15,10 +15,10 @@ public interface NewsArticleRepo extends JpaRepository<NewsArticle, Long> {
     NewsArticle findById(long id);
 
     // keyword를 포함하는 본문을 가지고 있는 List<NewsArticle>
-    List<NewsArticle> findByContentContaining(String keyword);
+    List<NewsArticle> findAllByContentContaining(String keyword);
 
     // keyword을 포함하는 제목을 가지고 있는 List<NewsArticle>
-    List<NewsArticle> findByTitleContaining(String keyword);
+    List<NewsArticle> findAllByTitleContaining(String keyword);
 
     // created_date가 start_date와 end_date 사이에 있는 List<NewsArticle>
     List<NewsArticle> findByCreatedDateBetween(LocalDateTime startDate,
