@@ -19,7 +19,7 @@ tag = Komoran(userdic='user_dict.txt')
 
 def compute_tfidf_embedding(contents: list[str]):
     vectorizer = TfidfVectorizer(
-        tokenizer=tag.nouns,
+        tokenizer=tag.morphs,
         max_df=0.9,
         min_df=2,
     )
@@ -55,8 +55,8 @@ def get_48_hours_before(load_date_str):
 
 
 ################# 사용자 입력 필요 #################
-end_date_str = "2025-03-02 18:00:00"
-start_date_str = "2025-02-01 18:00:00"
+end_date_str = "2025-03-02 00:00:00"
+start_date_str = "2025-02-01 00:00:00"
 domains = ['정치','경제','사회','스포츠','연예']
 ################# 입력 끝 ###########################
 
@@ -74,8 +74,8 @@ while current_end < end_date:
         articles = read_news_articles_by_domain(domain=domain,
                                                 date_str=current_start.strftime("%Y-%m-%d %H:%M:%S"),
                                                 date_end=current_end.strftime("%Y-%m-%d %H:%M:%S"))
-        titles = [article.title for article in articles]
-        contents = [article.content for article in articles]
+        titles = [article.title.replace("\n", " ") for article in articles]
+        contents = [article.content.replace("\n", " ") for article in articles]
         created_dates = [article.created_date for article in articles]
         print(f"  📰 [{domain}] 문서 개수: {len(contents)}")
 
@@ -88,7 +88,7 @@ while current_end < end_date:
         labels = cluster_articles(embeddings, n_clusters=cluster_n)
         label_counts = Counter(labels)
 
-        for label in label_counts:
+        for label in label_counts.most_common(10):
             if(label_counts[label] < 3): continue
             print(f"Cluster {label}: {label_counts[label]}개")
             

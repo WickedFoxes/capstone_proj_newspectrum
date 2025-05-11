@@ -2,6 +2,7 @@ package com.capstone.newspectrum.dto;
 
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.enumeration.Media;
+import com.capstone.newspectrum.model.Keyword;
 import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.model.NewsArticleRelation;
 import com.capstone.newspectrum.model.NewsHyperlink;
@@ -22,7 +23,7 @@ public class NewsArticleDTO {
     private String img_url;
     private LocalDateTime createdDate;
     private List<Long> related_news_articles;
-    private List<NewsHyperlinkDTO> news_hyperlinks;
+    private List<String> keywords;
 
     public NewsArticleDTO() {
     }
@@ -36,13 +37,13 @@ public class NewsArticleDTO {
         this.img_url = news_article.getImg_url();
         this.createdDate = news_article.getCreatedDate();
         this.related_news_articles = new ArrayList<>();
-        this.news_hyperlinks = new ArrayList<>();
+        this.keywords = new ArrayList<>();
 
         for (NewsArticleRelation news_article_relation : news_article.getRelated_news_articles()){
             related_news_articles.add(news_article_relation.getNews_article().getId());
         }
-        for (NewsHyperlink news_hyperlink : news_article.getNews_hyperlinks()){
-            news_hyperlinks.add(new NewsHyperlinkDTO(news_hyperlink));
+        for (Keyword keyword : news_article.getKeywords()){
+            this.keywords.add(keyword.getKeyword());
         }
     }
 
@@ -118,11 +119,11 @@ public class NewsArticleDTO {
         this.related_news_articles = related_news_articles;
     }
 
-    public List<NewsHyperlinkDTO> getNews_hyperlinks() {
-        return news_hyperlinks;
+    public List<String> getKeywords() {
+        return keywords;
     }
 
-    public void setNews_hyperlinks(List<NewsHyperlinkDTO> news_hyperlinks) {
-        this.news_hyperlinks = news_hyperlinks;
+    public void setKeywords(List<String> keywords) {
+        this.keywords = keywords;
     }
 }

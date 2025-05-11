@@ -3,13 +3,12 @@ package com.capstone.newspectrum.dto;
 import java.util.List;
 
 public class MainBlockTopKeywordDTO {
-    String keyword;
-    List<MainBlockRelatedKeywordsDTO> related_keywords_timelines;
+    private String keyword;
+    private List<NewsArticleDTO> news_articles;
 
-    public MainBlockTopKeywordDTO(String keyword,
-                                  List<MainBlockRelatedKeywordsDTO> related_keywords_timelines) {
+    public MainBlockTopKeywordDTO(String keyword, List<NewsArticleDTO> news_articles) {
         this.keyword = keyword;
-        this.related_keywords_timelines = related_keywords_timelines;
+        this.news_articles = news_articles;
     }
 
     public String getKeyword() {
@@ -20,11 +19,11 @@ public class MainBlockTopKeywordDTO {
         this.keyword = keyword;
     }
 
-    public List<MainBlockRelatedKeywordsDTO> getRelated_keywords_timelines() {
-        return related_keywords_timelines;
+    public List<NewsArticleDTO> getNews_articles() {
+        return news_articles;
     }
 
-    public void setRelated_keywords_timelines(List<MainBlockRelatedKeywordsDTO> related_keywords_timelines) {
-        this.related_keywords_timelines = related_keywords_timelines;
+    public void setNews_articles(List<NewsArticleDTO> news_articles) {
+        this.news_articles = news_articles;
     }
 }
