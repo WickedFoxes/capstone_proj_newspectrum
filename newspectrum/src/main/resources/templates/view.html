@@ -265,7 +265,7 @@
     </div>
 
     <!-- 같이 보면 좋은 기사 -->
-    <div class="section-title">같이 보면 좋은 기사</div>
+    <div class="section-title">연관 뉴스 추천</div>
     <div class="related-news-scroll" onwheel="scrollHorizontally(event)">
         <div class="related-news-item" th:each="related : ${related_news_articles}"
              th:href="@{/view/{id}(id=${related.news_article.id})}">
