@@ -110,6 +110,15 @@ public class MainPageSevice {
             clusterTopKeywords.add(top);
         }
 
+        if (clusterTopKeywords.size() < 2) {
+            // 클러스터가 2개 미만이면 빈 DTO라도 반환
+            return new MainBlockDTO(
+                    domain,
+                    new ArrayList<>(),
+                    new ArrayList<>(),
+                    new ArrayList<>()
+            );
+        }
         // 4-4 키워드가 겹치지 않는 클러스터 인덱스 구하기
         Map<String, Integer> cluster_keyword_0 = clusterTopKeywords.get(0);
         Map<String, Integer> cluster_keyword_1 = clusterTopKeywords.get(1);

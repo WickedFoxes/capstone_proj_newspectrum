@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
     <title>메인페이지</title>
@@ -234,28 +235,40 @@
     <div id="newsListContainer" class="news-list-container"></div>
 </div>
 
+<!--<p th:text="${issuesByDomainJson}"></p>-->
+
 <script th:inline="javascript">
-    const issuesByDomain = JSON.parse(/*[[${issuesByDomainJson}]]*/ '');
+    const issuesByDomain = [[${issuesByDomainJson}]];
     const domains = ["정치", "경제", "사회", "연예", "스포츠"];
     let currentIndex = 0;
-    let currentNewsArticles = [];
     let currentPage = 0;
+    let currentKeyword = '';
     const pageSize = 5;
+    let keywordNewsMap = {};
 
     const wordCloudSlide = d3.select("#wordCloudSlide");
     const newsListContainer = document.getElementById("newsListContainer");
-    const domainTitle = document.getElementById("domainTitle");
 
     function renderWordCloud(domain) {
+<!--        console.log("👉 renderWordCloud 호출됨 - 도메인:", domain);-->
+<!--        console.log("✅ issuesByDomain 전체 keys:", Object.keys(issuesByDomain));-->
+<!--        console.log("🧾 domainData 값:", issuesByDomain[domain]);-->
+        console.log("🧠 keywordNewsMap keys:", Object.keys(keywordNewsMap));
+
+        const domainData = issuesByDomain[domain];
         const words = [];
-        currentNewsArticles = [];
+        keywordNewsMap = {};
         currentPage = 0;
 
-        issuesByDomain[domain].forEach(block => {
-            block.keywords.forEach((kw, idx) => {
-                words.push({ text: kw, count: block.keywords_cnt[idx] });
-            });
-            currentNewsArticles.push(...block.news_articles);
+        domainData.main_block_top_keywords.forEach(keywordBlock => {
+            const keyword = keywordBlock.keyword;
+            const articles = keywordBlock.news_articles;
+
+            console.log("🔑 키워드:", keyword);
+            console.log("📰 기사 수:", articles?.length ?? "null");
+
+            words.push({ text: keyword, count: articles.length });
+            keywordNewsMap[keyword] = articles;
         });
 
         const maxCount = Math.max(...words.map(w => w.count));
@@ -275,10 +288,12 @@
             .words(topWords)
             .padding(5)
             .rotate(() => 0)
-            .spiral("archimedean")  // 더 자연스럽게 분포되도록 변경
+            .spiral("archimedean")
             .font("Impact")
             .fontSize(d => d.size)
-            .on("end", draw);
+            .on("end", function(words) {
+                draw(words);
+            });
 
         layout.start();
 
@@ -295,18 +310,25 @@
             svg.selectAll("text")
                 .data(words)
                 .enter().append("text")
+                .attr("class", "word")
                 .style("font-size", d => d.size + "px")
                 .style("font-family", "Impact")
                 .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
                 .attr("text-anchor", "middle")
                 .attr("transform", d => "translate(" + [d.x, d.y] + ")")
-                .text(d => d.text)
-                .on("click", function(event, d) {
-                    console.log("클릭된 키워드:", d.text);
-                    currentPage = 0;
-                    showPaginatedNews(currentPage);
-                });
+                .text(d => d.text);
+
+            // ✅ 여기서 jQuery 방식으로 클릭 이벤트 추가
+            $("#wordCloudSlide text").on("click", function () {
+                const keyword = d3.select(this).text();
+                console.log("🖱️ 클릭된 키워드(jQuery 방식):", keyword);
+
+                currentKeyword = keyword;
+                currentPage = 0;
+                showPaginatedNews(currentPage);
+            });
         }
+
         clearNews();
     }
 
@@ -319,9 +341,10 @@
         newsListContainer.innerHTML = "";
         newsListContainer.classList.add("show");
 
+        const articles = keywordNewsMap[currentKeyword] || [];
         const startIdx = page * pageSize;
         const endIdx = startIdx + pageSize;
-        const paginatedNews = currentNewsArticles.slice(startIdx, endIdx);
+        const paginatedNews = articles.slice(startIdx, endIdx);
 
         paginatedNews.forEach(news => {
             const item = document.createElement("div");
@@ -338,10 +361,10 @@
             newsListContainer.appendChild(item);
         });
 
-        renderPaginationButtons();
+        renderPaginationButtons(articles);
     }
 
-    function renderPaginationButtons() {
+    function renderPaginationButtons(articles) {
         const paginationDiv = document.createElement("div");
         paginationDiv.className = "pagination-buttons";
 
@@ -355,7 +378,7 @@
 
         const nextBtn = document.createElement("button");
         nextBtn.textContent = "다음";
-        nextBtn.disabled = (currentPage + 1) * pageSize >= currentNewsArticles.length || currentPage >= 4;
+        nextBtn.disabled = (currentPage + 1) * pageSize >= articles.length;
         nextBtn.onclick = () => {
             currentPage++;
             showPaginatedNews(currentPage);
@@ -363,9 +386,9 @@
 
         paginationDiv.appendChild(prevBtn);
         paginationDiv.appendChild(nextBtn);
-
         newsListContainer.appendChild(paginationDiv);
     }
+
     function updateStatusText() {
         document.getElementById("currentDomainText").textContent = "분야: " + domains[currentIndex];
         document.getElementById("currentIndexText").textContent = (currentIndex + 1) + " / " + domains.length;
@@ -373,14 +396,12 @@
 
     function nextDomain() {
         currentIndex = (currentIndex + 1) % domains.length;
-<!--        domainTitle.textContent = domains[currentIndex];-->
         renderWordCloud(domains[currentIndex]);
         updateStatusText();
     }
 
     function prevDomain() {
         currentIndex = (currentIndex - 1 + domains.length) % domains.length;
-<!--        domainTitle.textContent = domains[currentIndex];-->
         renderWordCloud(domains[currentIndex]);
         updateStatusText();
     }
@@ -388,6 +409,5 @@
     renderWordCloud(domains[currentIndex]);
     updateStatusText();
 </script>
-
 </body>
 </html>

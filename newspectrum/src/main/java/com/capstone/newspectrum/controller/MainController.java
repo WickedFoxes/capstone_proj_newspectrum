@@ -27,13 +27,7 @@ public class MainController {
 
         Map<String, MainBlockDTO> issuesByDomain = mainPageService.get_main_block_list(today);
 
-        // JSON 변환
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        String issuesByDomainJson = mapper.writeValueAsString(issuesByDomain);
-
-        model.addAttribute("issuesByDomainJson", issuesByDomainJson);
+        model.addAttribute("issuesByDomainJson", issuesByDomain);
         return "main";
     }
 
