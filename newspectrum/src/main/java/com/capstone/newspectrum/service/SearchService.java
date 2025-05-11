@@ -18,7 +18,7 @@ public class SearchService {
     private KeywordRepo keywordRepo;
 
     public List<NewsArticleDTO> get_news_article_by_title(String title){
-        List<NewsArticle> newsArticle = newsArticleRepo.findAllByTitleContaining(title);
+        List<NewsArticle> newsArticle = newsArticleRepo.findAllByTitleContainingOrderByCreatedDateDesc(title);
         List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
         for(NewsArticle news_article : newsArticle){
             newsArticleDTOList.add(new NewsArticleDTO(news_article));
@@ -26,7 +26,7 @@ public class SearchService {
         return newsArticleDTOList;
     }
     public List<NewsArticleDTO> get_news_article_by_content(String content){
-        List<NewsArticle> newsArticle = newsArticleRepo.findAllByContentContaining(content);
+        List<NewsArticle> newsArticle = newsArticleRepo.findAllByContentContainingOrderByCreatedDateDesc(content);
         List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
         for(NewsArticle news : newsArticle){
             newsArticleDTOList.add(new NewsArticleDTO(news));

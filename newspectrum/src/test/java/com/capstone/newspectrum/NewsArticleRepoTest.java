@@ -31,7 +31,7 @@ public class NewsArticleRepoTest {
         String keyword = "이재명";
 
         // when
-        List<NewsArticle> newsArticles = newsArticleRepo.findAllByTitleContaining(keyword);
+        List<NewsArticle> newsArticles = newsArticleRepo.findAllByTitleContainingOrderByCreatedDateDesc(keyword);
 
         // then
         for (NewsArticle article : newsArticles.subList(0, 10)) {

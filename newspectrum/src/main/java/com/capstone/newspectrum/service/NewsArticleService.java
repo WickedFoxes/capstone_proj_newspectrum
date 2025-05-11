@@ -1,6 +1,7 @@
 package com.capstone.newspectrum.service;
 
 import com.capstone.newspectrum.dto.FocusKeywordItemDTO;
+import com.capstone.newspectrum.dto.KeywordDTO;
 import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.dto.RelatedNewsArticleAndScoreDTO;
 import com.capstone.newspectrum.model.Keyword;
@@ -24,29 +25,14 @@ public class NewsArticleService {
         return news_article.map(NewsArticleDTO::new).orElse(null);
     }
 
-    public List<FocusKeywordItemDTO> get_focus_keyword_items_by_id(Long news_article_id){
-        Optional<NewsArticle> news_article = newsArticleRepo.findById(news_article_id);
-        List<Keyword> keywords = news_article.get().getKeywords();
+    public List<KeywordDTO> get_keyword_items_by_id(Long news_article_id){
+        NewsArticle news_article = newsArticleRepo.findById(news_article_id).get();
+        List<Keyword> keywords = news_article.getKeywords();
         keywords.sort((k1, k2) -> Double.compare(k2.getScore(), k1.getScore()));
 
-        List<FocusKeywordItemDTO> result = new ArrayList<>();
-
-        int keywords_num = 2;
-        for(int i=0; i<keywords_num; i++){
-            String keyword = keywords.get(i).getKeyword();
-            List<NewsArticle> news_articles = newsArticleRepo.findNewsArticlesByKeyword(
-                    keyword,
-                    news_article.get().getCreatedDate().minusDays(7),
-                    news_article.get().getCreatedDate(),
-                    news_article.get().getDomain()
-            );
-            List<NewsArticleDTO> news_article_dto_list = new ArrayList<>();
-            for(NewsArticle news : news_articles){
-                news_article_dto_list.add(new NewsArticleDTO(news));
-            }
-
-            FocusKeywordItemDTO focusKeywordItemDTO = new FocusKeywordItemDTO(keyword, news_article_dto_list);
-            result.add(focusKeywordItemDTO);
+        List<KeywordDTO> result = new ArrayList<>();
+        for(Keyword keyword : keywords){
+            result.add(new KeywordDTO(keyword));
         }
         return result;
     }
