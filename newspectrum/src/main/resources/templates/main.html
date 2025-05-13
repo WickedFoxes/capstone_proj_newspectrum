@@ -3,69 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인페이지</title>
+
+    <!-- 외부 스타일/스크립트 -->
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
-    <title>메인페이지</title>
+
     <style>
-        /* 상단 타이틀 바 */
-        .title-bar {
-            text-align: center;
-            background-color: #007bff;
-            color: white;
-            padding: 20px 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .title-bar a {
-            text-decoration: none;
-            color: white;
-            transition: 0.3s;
-        }
-
-        /* 검색 바 */
-        .search-bar-container {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 20px;
-            background-color: #f1f1f1;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .search-bar-container input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .search-bar-container button {
-            margin-left: 10px;
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* 메뉴 바 */
-        .menu-bar {
-            display: flex;
-            justify-content: space-around;
-            background-color: #f8f9fa;
-            padding: 10px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .menu-bar a {
-            text-decoration: none;
-            color: #333;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-
         /* 슬라이더 컨테이너 */
         body {
             font-family: Arial, sans-serif;
@@ -191,25 +138,9 @@
     </style>
 </head>
 <body>
-<div class="title-bar">
-    <a th:href="@{/}">NewSpectrum</a>
-</div>
-<!-- 검색창 -->
-<div class="search-bar-container">
-    <form th:action="@{/search}" method="get">
-        <input type="text" name="searchword" placeholder="검색어를 입력하세요" th:value="${param.searchword != null ? param.searchword : ''}">
-        <button type="submit">검색</button>
-    </form>
-</div>
 
-<div class="menu-bar">
-    <a th:href="@{/section/politics}">정치</a>
-    <a th:href="@{/section/economy}">경제</a>
-    <a th:href="@{/section/social}">사회</a>
-    <a th:href="@{/section/entertainment}">연예</a>
-    <a th:href="@{/section/sports}">스포츠</a>
-    <a th:href="@{/keyword/keyword}">키워드</a>
-</div>
+<!-- ✅ 공통 상단바 삽입 -->
+<div th:replace="layout/common/header :: header"></div>
 
 <!--<div>-->
 <!--    <p th:text="${today_issues[0].keywords}">키워드 디버그</p>-->
@@ -236,7 +167,9 @@
 
     <button class="arrow right" onclick="nextDomain()">&gt;</button>
 
-    <div id="newsListContainer" class="news-list-container"></div>
+    <div id="newsListContainer" class="news-list-container">
+        <div id="selectedKeywordTitle" style="font-size: 18px; font-weight: bold; margin-bottom: 15px;"></div>
+    </div>
 </div>
 
 <!--<p th:text="${issuesByDomainJson}"></p>-->
@@ -286,11 +219,11 @@
         d3.select("#wordCloudSlide svg").remove();
 
         const layout = d3.layout.cloud()
-            .size([550, 550])
+            .size([520, 520])
             .words(topWords)
             .padding(5)
             .rotate(() => 0)
-            .spiral("archimedean")
+//            .spiral("archimedean")
             .font("Impact")
             .fontSize(d => d.size)
             .on("end", function(words) {
@@ -342,6 +275,15 @@
     function showPaginatedNews(page) {
         newsListContainer.innerHTML = "";
         newsListContainer.classList.add("show");
+
+        // ✅ 선택된 키워드 제목 표시
+        const titleDiv = document.createElement("div");
+        titleDiv.id = "selectedKeywordTitle";
+        titleDiv.textContent = `🔍 선택된 키워드: ${currentKeyword}`;
+        titleDiv.style.fontSize = "18px";
+        titleDiv.style.fontWeight = "bold";
+        titleDiv.style.marginBottom = "15px";
+        newsListContainer.appendChild(titleDiv);
 
         const articles = keywordNewsMap[currentKeyword] || [];
         const startIdx = page * pageSize;

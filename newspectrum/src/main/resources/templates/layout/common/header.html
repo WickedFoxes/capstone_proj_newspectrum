@@ -1,6 +1,28 @@
+<!-- src/main/resources/templates/layout/common/header.html -->
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="header">
-    header 영역입니다.
+    <!-- 타이틀 바 -->
+    <div class="title-bar">
+        <a th:href="@{/}">NewSpectrum</a>
+    </div>
+
+    <!-- 검색 바 -->
+    <div class="search-bar-container">
+        <form th:action="@{/search}" method="get">
+            <input type="text" name="searchword" placeholder="검색어를 입력하세요" th:value="${param.searchword}">
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    <!-- 메뉴 바 -->
+    <div class="menu-bar">
+        <a th:href="@{/section/politics}">정치</a>
+        <a th:href="@{/section/economy}">경제</a>
+        <a th:href="@{/section/social}">사회</a>
+        <a th:href="@{/section/entertainment}">연예</a>
+        <a th:href="@{/section/sports}">스포츠</a>
+        <a th:href="@{/keyword/keyword}">키워드</a>
+    </div>
 </div>
 </html>

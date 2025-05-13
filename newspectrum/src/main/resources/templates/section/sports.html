@@ -5,84 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="'NewSpectrum - ' + ${sectionName}">NewSpectrum</title>
+
+    <!-- 외부 스타일/스크립트 -->
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+
     <style>
-        /* 최상단 제목 스타일 */
-        .title-bar {
-            text-align: center;
-            background-color: #007bff;
-            color: white;
-            padding: 20px 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .title-bar a {
-            text-decoration: none;
-            color: white;
-            transition: 0.3s;
-        }
-        /* 전체 컨테이너 스타일 */
-        .container {
-            padding: 0;
-            margin: 0;
-        }
-
-        /* 검색창 컨테이너 */
-        .search-bar-container {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 20px;
-            background-color: #f1f1f1;
-            border-bottom: 1px solid #ddd;
-        }
-        .search-bar-container input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .search-bar-container button {
-            margin-left: 10px;
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .search-bar-container button:hover {
-            background-color: #0056b3;
-        }
-
-        /* 메뉴 바 스타일 */
-        .menu-bar {
-            display: flex;
-            justify-content: space-around;
-            background-color: #f8f9fa;
-            padding: 10px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .menu-bar a {
-            text-decoration: none;
-            color: #333;
-            padding: 10px 20px;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-        .menu-bar a:hover {
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 5px;
-        }
-
-        .section-title {
-            font-size: 24px;
-            margin: 30px 20px 15px;
-            color: #333;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 5px;
-        }
-
         /* 오늘의 이슈 리스트 */
         .issue-list {
             display: flex;
@@ -297,26 +224,9 @@
     </style>
 </head>
 <body>
-<!-- 최상단 타이틀 -->
-<div class="title-bar">
-    <a th:href="@{/}">NewSpectrum</a>
-</div>
 
-<!-- 검색창 컴포넌트 -->
-<div class="search-bar-container">
-    <input type="text" placeholder="검색어를 입력하세요">
-    <button type="button">검색</button>
-</div>
-
-<!-- 메뉴 바 -->
-<div class="menu-bar">
-    <a th:href="@{/section/politics}">정치</a>
-    <a th:href="@{/section/economy}">경제</a>
-    <a th:href="@{/section/social}">사회</a>
-    <a th:href="@{/section/entertainment}">연예</a>
-    <a th:href="@{/section/sports}">스포츠</a>
-    <a th:href="@{/keyword/keyword}">키워드</a>
-</div>
+<!-- ✅ 공통 상단바 삽입 -->
+<div th:replace="layout/common/header :: header"></div>
 
 <h2 class="section-title" th:text="'오늘의 이슈 - ' + ${sectionName}">오늘의 이슈</h2>
 <div class="issue-list">
