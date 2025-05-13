@@ -250,10 +250,8 @@
     const newsListContainer = document.getElementById("newsListContainer");
 
     function renderWordCloud(domain) {
-<!--        console.log("👉 renderWordCloud 호출됨 - 도메인:", domain);-->
-<!--        console.log("✅ issuesByDomain 전체 keys:", Object.keys(issuesByDomain));-->
-<!--        console.log("🧾 domainData 값:", issuesByDomain[domain]);-->
-        console.log("🧠 keywordNewsMap keys:", Object.keys(keywordNewsMap));
+        console.log("🔍 도메인 데이터:", issuesByDomain[domain]);
+        console.log("🔍 main_block_top_keywords:", issuesByDomain[domain]?.main_block_top_keywords);
 
         const domainData = issuesByDomain[domain];
         const words = [];
@@ -276,7 +274,7 @@
 
         const normalizedWords = words.map(w => ({
             text: w.text,
-            size: ((w.count - minCount) / (maxCount - minCount)) * 50 + 20
+            size: ((w.count - minCount) / (maxCount - minCount)) * 50 + 30
         }));
 
         const topWords = normalizedWords.sort((a, b) => b.size - a.size).slice(0, 40);
@@ -284,7 +282,7 @@
         d3.select("#wordCloudSlide svg").remove();
 
         const layout = d3.layout.cloud()
-            .size([500, 500])
+            .size([550, 550])
             .words(topWords)
             .padding(5)
             .rotate(() => 0)
