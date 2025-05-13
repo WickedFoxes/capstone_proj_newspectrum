@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <style>
+        /* 최상단 제목 스타일 */
+        .title-bar {
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            padding: 20px 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .title-bar a {
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+
+        /* 검색창 컨테이너 */
+        .search-bar-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 20px;
+            background-color: #f1f1f1;
+            border-bottom: 1px solid #ddd;
+        }
+        .search-bar-container input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .search-bar-container button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .search-bar-container button:hover {
+            background-color: #0056b3;
+        }
+
+        /* 메뉴 바 스타일 */
+        .menu-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu-bar a {
+            text-decoration: none;
+            color: #333;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .menu-bar a:hover {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+        /* 섹션 스타일 */
+         .section {
+            padding: 50px;
+            height: 500px;
+            border: 1px solid #ddd;
+            margin: 20px;
+        }
+
+        /*검색 결과 뉴스 리스트*/
+        .news-list {
+          max-width: 900px;
+          margin: 30px auto;
+          padding: 0 20px;
+        }
+
+        .news-card {
+          display: flex;
+          align-items: center;
+          padding: 15px 0;
+          border-bottom: 1px solid #eee;
+          cursor: pointer;
+        }
+
+        .news-image {
+          width: 120px;
+          height: 80px;
+          object-fit: cover;
+          border-radius: 4px;
+          margin-right: 16px;
+        }
+
+        .news-item-content {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .news-title {
+          font-size: 16px;
+          font-weight: bold;
+          margin-bottom: 6px;
+          color: #333;
+        }
+
+        .news-media {
+          font-size: 13px;
+          color: #888;
+        }
+
+        .pagination {
+          text-align: center;
+          margin: 30px 0;
+        }
+
+        .pagination button {
+          margin: 0 4px;
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          background-color: white;
+          color: #007bff;
+          cursor: pointer;
+        }
+
+        .pagination button.active {
+          background-color: #007bff;
+          color: white;
+        }
+  </style>
+</head>
+<body>
+<!-- 최상단 타이틀 -->
+<div class="title-bar">
+  <a th:href="@{/}">NewSpectrum</a>
+</div>
+
+<!-- 검색창 -->
+<div class="search-bar-container">
+  <form th:action="@{/search}" method="get">
+    <input type="text" name="searchword" placeholder="검색어를 입력하세요" th:value="${param.searchword}">
+    <button type="submit">검색</button>
+  </form>
+</div>
+
+<!-- 메뉴 바 -->
+<div class="menu-bar">
+  <a th:href="@{/section/politics}">정치</a>
+  <a th:href="@{/section/economy}">경제</a>
+  <a th:href="@{/section/social}">사회</a>
+  <a th:href="@{/section/entertainment}">연예</a>
+  <a th:href="@{/section/sports}">스포츠</a>
+  <a th:href="@{/keyword/keyword}">키워드</a>
+</div>
+
+<!--<pre th:text="${news_articles}"></pre>-->
+
+<!-- ✅ 뉴스 리스트 -->
+<!--<div class="news-list" id="newsListContainer" th:data-news="${news_articles}">-->
+  <!-- JS로 렌더링됨 -->
+<!--</div>-->
+
+<!-- ✅ 뉴스 리스트 -->
+<!--<div class="news-list">-->
+<!--    <div th:if="${news_articles.totalElements == 0}">-->
+<!--        <p>검색 결과가 없습니다.</p>-->
+<!--    </div>-->
+
+<!--    <div th:each="article : ${news_articles.content}" class="news-card"-->
+<!--         th:onclick="|window.location.href='/view/' + ${article.id}|">-->
+<!--        <img class="news-image" th:src="${article.img_url}" alt="뉴스 이미지">-->
+<!--        <div class="news-item-content">-->
+<!--            <div class="news-title" th:text="${article.title}">제목</div>-->
+<!--            <div class="news-media" th:text="${article.media}">언론사</div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; ✅ 페이지네이션 &ndash;&gt;-->
+<!--<div class="pagination" th:if="${news_articles.totalPages > 1}">-->
+<!--    <a th:if="${news_articles.number >= 10}"-->
+<!--       th:href="@{/search(searchword=${searchword}, page=${(news_articles.number/10)*10 - 1})}">&laquo;</a>-->
+
+<!--    <a th:each="i : ${#numbers.sequence((news_articles.number/10)*10, T(java.lang.Math).min((news_articles.number/10)*10 + 9, news_articles.totalPages - 1))}"-->
+<!--       th:href="@{/search(searchword=${searchword}, page=${i})}"-->
+<!--       th:text="${i + 1}"-->
+<!--       th:classappend="${i == news_articles.number} ? 'active'">-->
+<!--    </a>-->
+
+<!--    <a th:if="${(news_articles.number/10 + 1)*10 < news_articles.totalPages}"-->
+<!--       th:href="@{/search(searchword=${searchword}, page=${(news_articles.number/10 + 1)*10})}">&raquo;</a>-->
+<!--</div>-->
+
+<div class="news-list" id="newsListContainer" th:data-news="${news_articles}"></div>
+<div class="pagination" id="paginationContainer"></div>
+
+<script th:inline="javascript">
+    const articles = /*[[${news_articles}]]*/ [];
+    const itemsPerPage = 10;
+    let currentPage = 0;
+
+    function renderNewsList(page) {
+      const listContainer = document.getElementById("newsListContainer");
+      listContainer.innerHTML = "";
+      const start = page * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageArticles = articles.slice(start, end);
+
+      pageArticles.forEach(article => {
+        if (!article || !article.title) return;
+
+        const div = document.createElement("div");
+        div.className = "news-card";
+        div.onclick = () => window.location.href = '/view/' + article.id;
+
+        div.innerHTML = `
+          <img class="news-image" src="${article.img_url || '/default.jpg'}" alt="뉴스 이미지">
+          <div class="news-item-content">
+            <div class="news-title">${article.title}</div>
+            <div class="news-media">${article.media || ''}</div>
+          </div>
+        `;
+        listContainer.appendChild(div);
+      });
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(articles.length / itemsPerPage);
+      const paginationContainer = document.getElementById("paginationContainer");
+      paginationContainer.innerHTML = "";
+
+      const groupSize = 10;
+      const currentGroup = Math.floor(currentPage / groupSize);
+      const startPage = currentGroup * groupSize;
+      const endPage = Math.min(startPage + groupSize, totalPages);
+
+      if (startPage > 0) {
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "◀";
+        prevBtn.onclick = () => {
+          currentPage = startPage - 1;
+          renderNewsList(currentPage);
+        };
+        paginationContainer.appendChild(prevBtn);
+      }
+
+      for (let i = startPage; i < endPage; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i + 1;
+        if (i === currentPage) btn.classList.add("active");
+        btn.onclick = () => {
+          currentPage = i;
+          renderNewsList(currentPage);
+        };
+        paginationContainer.appendChild(btn);
+      }
+
+      if (endPage < totalPages) {
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "▶";
+        nextBtn.onclick = () => {
+          currentPage = endPage;
+          renderNewsList(currentPage);
+        };
+        paginationContainer.appendChild(nextBtn);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderNewsList(currentPage);
+    });
+</script>
+
+</body>
+</html>

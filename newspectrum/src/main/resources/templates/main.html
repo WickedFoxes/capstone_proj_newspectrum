@@ -194,10 +194,14 @@
 <div class="title-bar">
     <a th:href="@{/}">NewSpectrum</a>
 </div>
+<!-- 검색창 -->
 <div class="search-bar-container">
-    <input type="text" placeholder="검색어를 입력하세요">
-    <button type="button">검색</button>
+    <form th:action="@{/search}" method="get">
+        <input type="text" name="searchword" placeholder="검색어를 입력하세요" th:value="${param.searchword != null ? param.searchword : ''}">
+        <button type="submit">검색</button>
+    </form>
 </div>
+
 <div class="menu-bar">
     <a th:href="@{/section/politics}">정치</a>
     <a th:href="@{/section/economy}">경제</a>
