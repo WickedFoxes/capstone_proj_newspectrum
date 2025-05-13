@@ -1,9 +1,6 @@
 package com.capstone.newspectrum;
 
-import com.capstone.newspectrum.dto.FocusKeywordItemDTO;
-import com.capstone.newspectrum.dto.MainBlockDTO;
-import com.capstone.newspectrum.dto.NewsArticleDTO;
-import com.capstone.newspectrum.dto.RelatedNewsArticleAndScoreDTO;
+import com.capstone.newspectrum.dto.*;
 import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.service.MainPageSevice;
 import com.capstone.newspectrum.service.NewsArticleService;
@@ -28,7 +25,7 @@ public class NewsViewPageTest {
         get_news_article_by_id
         ###########################################################################################
         """);
-        Long news_id = 5162L;
+        Long news_id = 28480L;
         NewsArticleDTO news_article = newsArticleService.get_news_article_by_id(news_id);
         System.out.println("########### news_article ##############");
         System.out.println("Domain : "+ news_article.getDomain());
@@ -37,22 +34,18 @@ public class NewsViewPageTest {
     }
 
     @Test
-    void test_get_focus_keyword_items_by_id() {
+    void test_get_keyword_items_by_id() {
         System.out.println("""
         ###########################################################################################
         get_focus_keyword_items_by_id
         ###########################################################################################
         """);
-        Long news_id = 5162L;
-        List<FocusKeywordItemDTO> items = newsArticleService.get_focus_keyword_items_by_id(news_id);
-        for(FocusKeywordItemDTO item : items){
+        Long news_id = 28480L;
+        List<KeywordDTO> items = newsArticleService.get_keyword_items_by_id(news_id);
+        for(KeywordDTO item : items){
             System.out.println("########### FocusKeywordItemDTO ##############");
             System.out.println("keyword : "+ item.getKeyword());
-            System.out.println("키워드 관련 뉴스들 : " + item.getKeyword_articles().size());
-            for(NewsArticleDTO article : item.getKeyword_articles()){
-                System.out.println(article.getCreatedDate()+" "+article.getTitle().replace("\n", ""));
-            }
-
+            System.out.println("score : "+ item.getScore());
         }
     }
 
@@ -63,7 +56,7 @@ public class NewsViewPageTest {
         get_related_news_articles_by_id
         ###########################################################################################
         """);
-        Long news_id = 5162L;
+        Long news_id = 28480L;
         List<RelatedNewsArticleAndScoreDTO> items = newsArticleService.get_related_news_articles_by_id(news_id);
         for(RelatedNewsArticleAndScoreDTO item : items){
             System.out.println("########### news_article ##############");

@@ -8,6 +8,7 @@ import java.util.List;
 public class FocusKeywordItemDTO {
     private String keyword;
     private List<NewsArticleDTO> keyword_articles;
+    private List<Float> scores;
 
     public FocusKeywordItemDTO(String keyword,
                                List<NewsArticleDTO> keyword_articles) {

@@ -31,7 +31,7 @@ public class Keyword {
     private LocalDateTime createdDate;
 
     @Column(name = "score")
-    private float score;
+    private Float score;
 
     public Keyword() {
     }

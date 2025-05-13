@@ -15,7 +15,7 @@ public class KeywordDTO {
     private String keyword;
     private Long news_article_id;  // ID만 보존
     private LocalDateTime createdDate;
-    private float score;
+    private Float score;
 
     public KeywordDTO() {}
 

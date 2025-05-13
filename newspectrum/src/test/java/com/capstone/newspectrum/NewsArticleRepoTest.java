@@ -22,7 +22,7 @@ public class NewsArticleRepoTest {
     private NewsArticleRepo newsArticleRepo;
 
     @Test
-    void testFindByTitle() {
+    void testFindAllByTitle() {
         System.out.println("""
         ###########################################################################################
         testFindByTitle
@@ -31,7 +31,7 @@ public class NewsArticleRepoTest {
         String keyword = "이재명";
 
         // when
-        List<NewsArticle> newsArticles = newsArticleRepo.findByTitleContaining(keyword);
+        List<NewsArticle> newsArticles = newsArticleRepo.findAllByTitleContainingOrderByCreatedDateDesc(keyword);
 
         // then
         for (NewsArticle article : newsArticles.subList(0, 10)) {
