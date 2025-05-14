@@ -50,6 +50,10 @@ public class NewsArticle {
 
     @OneToMany(mappedBy = "news_article")
     private List<Keyword> keywords;
+    @Column(name = "comics_url")
+    private String comics_url;
+    @Column(name = "summary")
+    private String summary;
 
     public NewsArticle() {
     }
@@ -140,5 +144,17 @@ public class NewsArticle {
 
     public void setKeywords(List<Keyword> keywords) {
         this.keywords = keywords;
+    }
+    public String getComics_url(){
+        return comics_url;
+    }
+    public void setComics_url(String comics_url){
+        this.comics_url = comics_url;
+    }
+    public String getSummary(){
+        return summary;
+    }
+    public void setSummary(String summary){
+        this.summary = summary;
     }
 }

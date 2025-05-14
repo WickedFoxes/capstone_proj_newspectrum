@@ -24,6 +24,8 @@ public class NewsArticleDTO {
     private LocalDateTime createdDate;
     private List<Long> related_news_articles;
     private List<String> keywords;
+    private String comics_url;
+    private String summary;
 
     public NewsArticleDTO() {
     }
@@ -38,6 +40,8 @@ public class NewsArticleDTO {
         this.createdDate = news_article.getCreatedDate();
         this.related_news_articles = new ArrayList<>();
         this.keywords = new ArrayList<>();
+        this.comics_url = news_article.getComics_url();
+        this.summary = news_article.getSummary();
 
         for (NewsArticleRelation news_article_relation : news_article.getRelated_news_articles()){
             related_news_articles.add(news_article_relation.getNews_article().getId());
@@ -125,5 +129,17 @@ public class NewsArticleDTO {
 
     public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
+    }
+    public String getComics_url(){
+        return comics_url;
+    }
+    public void setComics_url(String comics_url){
+        this.comics_url = comics_url;
+    }
+    public String getSummary(){
+        return summary;
+    }
+    public void setSummary(String summary){
+        this.summary = summary;
     }
 }
