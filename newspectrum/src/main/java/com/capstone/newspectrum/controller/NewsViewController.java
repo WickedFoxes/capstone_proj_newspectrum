@@ -28,7 +28,18 @@ public class NewsViewController {
         List<KeywordDTO> keyword_items = newsArticleService.get_keyword_items_by_id(news_article_id);
         List<RelatedNewsArticleAndScoreDTO> related_news_articles = newsArticleService.get_related_news_articles_by_id(news_article_id);
 
+        // AI 요약을 마침표로 분할
+        List<String> summaryLines = new ArrayList<>();
+        if (news_article.getSummary() != null) {
+            String[] split = news_article.getSummary().split("\\.\\s+");
+            for (String line : split) {
+                if (!line.isBlank()) summaryLines.add(line.trim() + ".");
+                if (summaryLines.size() == 3) break;
+            }
+        }
+
         model.addAttribute("news_article", news_article);
+        model.addAttribute("summaryLines", summaryLines);
         model.addAttribute("keyword_items", keyword_items);
         model.addAttribute("related_news_articles", related_news_articles);
 
