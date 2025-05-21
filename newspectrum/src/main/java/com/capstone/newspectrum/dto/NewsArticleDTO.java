@@ -1,11 +1,9 @@
 package com.capstone.newspectrum.dto;
 
+import com.capstone.newspectrum.enumeration.CheckType;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.enumeration.Media;
-import com.capstone.newspectrum.model.Keyword;
-import com.capstone.newspectrum.model.NewsArticle;
-import com.capstone.newspectrum.model.NewsArticleRelation;
-import com.capstone.newspectrum.model.NewsHyperlink;
+import com.capstone.newspectrum.model.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,6 +24,7 @@ public class NewsArticleDTO {
     private List<String> keywords;
     private String comics_url;
     private String summary;
+    private List<ContentCheck> contentCheck;
 
     public NewsArticleDTO() {
     }
@@ -48,6 +47,9 @@ public class NewsArticleDTO {
         }
         for (Keyword keyword : news_article.getKeywords()){
             this.keywords.add(keyword.getKeyword());
+        }
+        for(ContentCheck contentCheck : news_article.getContentCheck()){
+            this.contentCheck.add(contentCheck);
         }
     }
 
@@ -141,5 +143,11 @@ public class NewsArticleDTO {
     }
     public void setSummary(String summary){
         this.summary = summary;
+    }
+    public List<ContentCheck> getContentCheck(){
+        return contentCheck;
+    }
+    public void setContent_check_type(List<ContentCheck> contentCheck_type){
+        this.contentCheck = contentCheck_type;
     }
 }

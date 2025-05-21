@@ -1,8 +1,7 @@
 package com.capstone.newspectrum.enumeration;
 
 public enum CheckType {
-    copyNews,
-    poorTitle,
-    poorContent,
-    advertisement;
+    title_Content_Inconsistent,
+    spicyNews,
+    poorContent;
 }

@@ -18,6 +18,8 @@ public class ContentCheck {
     @Column(name = "content_check_type")
     @Enumerated(EnumType.STRING)
     private CheckType content_check_type;
+    @Column(name = "score")
+    private Float score;
 
     public ContentCheck() {
     }
@@ -45,12 +47,16 @@ public class ContentCheck {
     public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
-
     public CheckType getContent_check_type() {
         return content_check_type;
     }
-
     public void setContent_check_type(CheckType content_check_type) {
         this.content_check_type = content_check_type;
+    }
+    public Float getScore(){
+        return score;
+    }
+    public void setScore(Float score){
+        this.score = score;
     }
 }
