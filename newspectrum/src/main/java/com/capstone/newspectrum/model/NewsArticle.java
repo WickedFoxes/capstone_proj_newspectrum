@@ -1,6 +1,5 @@
 package com.capstone.newspectrum.model;
 
-import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.enumeration.Media;
 import jakarta.persistence.*;
@@ -54,6 +53,8 @@ public class NewsArticle {
     private String comics_url;
     @Column(name = "summary")
     private String summary;
+    @OneToMany(mappedBy = "news_article", cascade = CascadeType.ALL)
+    private List<ContentCheck> contentChecks;
 
     public NewsArticle() {
     }
@@ -156,5 +157,13 @@ public class NewsArticle {
     }
     public void setSummary(String summary){
         this.summary = summary;
+    }
+
+    public List<ContentCheck> getContentChecks() {
+        return contentChecks;
+    }
+
+    public void setContentChecks(List<ContentCheck> contentChecks) {
+        this.contentChecks = contentChecks;
     }
 }
