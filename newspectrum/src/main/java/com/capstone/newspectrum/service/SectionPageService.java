@@ -99,10 +99,8 @@ public class SectionPageService {
 
             // NewsArticleDTO 리스트로 변환
             List<NewsArticleDTO> newsArticleDTOList = clusters.stream()
-                    .map(c -> {
-                        NewsArticle article = c.getNews_article();
-                        return new NewsArticleDTO(article);
-                    })
+                    .map(c -> new NewsArticleDTO(c.getNews_article()))
+                    .sorted(Comparator.comparing(NewsArticleDTO::getCreatedDate).reversed())
                     .toList();
 
             // 대표 제목: 첫 번째 뉴스 제목
