@@ -3,6 +3,8 @@ package com.capstone.newspectrum.model;
 import com.capstone.newspectrum.enumeration.CheckType;
 import jakarta.persistence.*;
 
+@Entity
+@Table(name = "content_check")
 public class ContentCheck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

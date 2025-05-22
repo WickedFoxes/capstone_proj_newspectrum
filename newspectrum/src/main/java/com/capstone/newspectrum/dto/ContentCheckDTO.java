@@ -6,14 +6,14 @@ import com.capstone.newspectrum.model.NewsArticle;
 
 public class ContentCheckDTO {
     private Long id;
-    private NewsArticle news_article;
+    private Long news_article_id;
     private String keyword;
     private CheckType content_check_type;
     private Float score;
 
     public ContentCheckDTO(ContentCheck contentCheck){
         this.id = contentCheck.getId();
-        this.news_article = contentCheck.getNews_article();
+        this.news_article_id = contentCheck.getNews_article().getId();
         this.keyword = contentCheck.getKeyword();
         this.content_check_type = contentCheck.getContent_check_type();
         this.score = contentCheck.getScore();
@@ -24,11 +24,12 @@ public class ContentCheckDTO {
     public void setId(Long id){
         this.id = id;
     }
-    public NewsArticle getNewsArticle(){
-        return news_article;
+
+    public Long getNews_article_id() {
+        return news_article_id;
     }
-    public void setNews_article(NewsArticle news_article){
-        this.news_article = news_article;
+    public void setNews_article_id(Long news_article_id) {
+        this.news_article_id = news_article_id;
     }
     public String getKeyword(){
         return keyword;

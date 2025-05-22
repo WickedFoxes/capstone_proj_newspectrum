@@ -1,11 +1,8 @@
 package com.capstone.newspectrum.dto;
 
-import com.capstone.newspectrum.enumeration.CheckType;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.enumeration.Media;
 import com.capstone.newspectrum.model.*;
-import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public class NewsArticleDTO {
     private List<String> keywords;
     private String comics_url;
     private String summary;
-    private List<ContentCheck> contentCheck;
+    private List<ContentCheckDTO> contentChecks;
 
     public NewsArticleDTO() {
     }
@@ -41,6 +38,7 @@ public class NewsArticleDTO {
         this.keywords = new ArrayList<>();
         this.comics_url = news_article.getComics_url();
         this.summary = news_article.getSummary();
+        this.contentChecks = new ArrayList<>();
 
         for (NewsArticleRelation news_article_relation : news_article.getRelated_news_articles()){
             related_news_articles.add(news_article_relation.getNews_article().getId());
@@ -48,8 +46,8 @@ public class NewsArticleDTO {
         for (Keyword keyword : news_article.getKeywords()){
             this.keywords.add(keyword.getKeyword());
         }
-        for(ContentCheck contentCheck : news_article.getContentCheck()){
-            this.contentCheck.add(contentCheck);
+        for(ContentCheck contentCheck : news_article.getContentChecks()){
+            this.contentChecks.add(new ContentCheckDTO(contentCheck));
         }
     }
 
@@ -144,10 +142,12 @@ public class NewsArticleDTO {
     public void setSummary(String summary){
         this.summary = summary;
     }
-    public List<ContentCheck> getContentCheck(){
-        return contentCheck;
+
+    public List<ContentCheckDTO> getContentChecks() {
+        return contentChecks;
     }
-    public void setContent_check_type(List<ContentCheck> contentCheck_type){
-        this.contentCheck = contentCheck_type;
+
+    public void setContentChecks(List<ContentCheckDTO> contentChecks) {
+        this.contentChecks = contentChecks;
     }
 }
