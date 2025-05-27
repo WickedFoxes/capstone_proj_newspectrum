@@ -271,17 +271,24 @@
     <div class="news-slider-track" id="newsSliderTrack">
         <div class="news-main-container" th:each="issue : ${hotIssues}">
             <!-- 🔽 기존 news-main-container 내용 (왼쪽 + 오른쪽 UI) 여기에 포함됨 -->
-            <div class="news-left">
+            <div class="news-left" th:onclick="|window.location.href='/view/${issue.news_articles[0].id}'|" style="cursor: pointer;">
                 <img th:src="@{${issue.news_articles[0].img_url}}" />
                 <h2 th:text="${issue.news_articles[0].title}"></h2>
             </div>
             <div class="news-right">
-                <div class="thumbnail-news" th:each="news, iter : ${issue.news_articles}" th:if="${iter.index > 0 and iter.index <= 3}">
+                <div class="thumbnail-news" th:each="news, iter : ${issue.news_articles}"
+                     th:if="${iter.index > 0 and iter.index <= 3}"
+                     th:onclick="|window.location.href='/view/${news.id}'|"
+                     style="cursor: pointer;">
                     <img th:src="@{${news.img_url}}" />
                     <p th:text="${#strings.abbreviate(news.title, 50)}"></p>
                 </div>
                 <ul class="news-headlines">
-                    <li th:each="news, iter : ${issue.news_articles}" th:if="${iter.index >= 4 and iter.index < 8}" th:text="${#strings.abbreviate(news.title, 60)}"></li>
+                    <li th:each="news, iter : ${issue.news_articles}"
+                        th:if="${iter.index >= 4 and iter.index < 8}"
+                        th:text="${#strings.abbreviate(news.title, 60)}"
+                        th:onclick="|window.location.href='/view/${news.id}'|"
+                        style="cursor: pointer;"></li>
                 </ul>
             </div>
         </div>
@@ -374,9 +381,6 @@
     const newsListContainer = document.getElementById("newsListContainer");
 
     function renderWordCloud(domain) {
-        console.log("🔍 도메인 데이터:", issuesByDomain[domain]);
-        console.log("🔍 main_block_top_keywords:", issuesByDomain[domain]?.main_block_top_keywords);
-
         const domainData = issuesByDomain[domain];
         const words = [];
         keywordNewsMap = {};
@@ -385,9 +389,6 @@
         domainData.main_block_top_keywords.forEach(keywordBlock => {
             const keyword = keywordBlock.keyword;
             const articles = keywordBlock.news_articles;
-
-            console.log("🔑 키워드:", keyword);
-            console.log("📰 기사 수:", articles?.length ?? "null");
 
             words.push({ text: keyword, count: articles.length });
             keywordNewsMap[keyword] = articles;
@@ -457,16 +458,12 @@
             // 클릭 이벤트 연결
             $("#wordCloudSlide text").on("click", function () {
                 const keyword = d3.select(this).text();
-                console.log("🖱️ 클릭된 키워드(jQuery 방식):", keyword);
                 currentKeyword = keyword;
                 currentPage = 0;
                 showPaginatedNews(currentPage);
             });
         }
-
-
         clearNews();
-
     }
 
     function clearNews() {
