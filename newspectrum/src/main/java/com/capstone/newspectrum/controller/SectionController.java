@@ -1,6 +1,7 @@
 package com.capstone.newspectrum.controller;
 
 import com.capstone.newspectrum.dto.IssueDTO;
+import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.dto.TodayKeywordItemDTO;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.service.SectionPageService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,12 +27,8 @@ public class SectionController {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
         LocalDateTime startDate = today.minusDays(2);
 
-        List<IssueDTO> issues = sectionPageService.get_issue_by_domain(startDate, today, Domain.정치);
-        List<TodayKeywordItemDTO> keywords = sectionPageService.get_today_keyword_items_by_domain(startDate, today, Domain.정치);
-
-        model.addAttribute("issues", issues);
-        model.addAttribute("keywords", keywords);
-        model.addAttribute("sectionName", "정치");
+        List<NewsArticleDTO> news_article = sectionPageService.get_news_by_domain(startDate, today, Domain.정치);
+        model.addAttribute("news_article", news_article);
 
         return "section/politics"; // templates/section/politics.html
     }
@@ -40,12 +38,8 @@ public class SectionController {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
         LocalDateTime startDate = today.minusDays(2);
 
-        List<IssueDTO> issues = sectionPageService.get_issue_by_domain(startDate, today, Domain.경제);
-        List<TodayKeywordItemDTO> keywords = sectionPageService.get_today_keyword_items_by_domain(startDate, today, Domain.경제);
-
-        model.addAttribute("issues", issues);
-        model.addAttribute("keywords", keywords);
-        model.addAttribute("sectionName", "경제");
+        List<NewsArticleDTO> news_article = sectionPageService.get_news_by_domain(startDate, today, Domain.경제);
+        model.addAttribute("news_article", news_article);
 
         return "section/economy"; // templates/section/economy.html
     }
@@ -55,12 +49,8 @@ public class SectionController {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
         LocalDateTime startDate = today.minusDays(2);
 
-        List<IssueDTO> issues = sectionPageService.get_issue_by_domain(startDate, today, Domain.사회);
-        List<TodayKeywordItemDTO> keywords = sectionPageService.get_today_keyword_items_by_domain(startDate, today, Domain.사회);
-
-        model.addAttribute("issues", issues);
-        model.addAttribute("keywords", keywords);
-        model.addAttribute("sectionName", "사회");
+        List<NewsArticleDTO> news_article = sectionPageService.get_news_by_domain(startDate, today, Domain.사회);
+        model.addAttribute("news_article", news_article);
 
         return "section/social"; // templates/section/social.html
     }
@@ -70,12 +60,8 @@ public class SectionController {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
         LocalDateTime startDate = today.minusDays(2);
 
-        List<IssueDTO> issues = sectionPageService.get_issue_by_domain(startDate, today, Domain.연예);
-        List<TodayKeywordItemDTO> keywords = sectionPageService.get_today_keyword_items_by_domain(startDate, today, Domain.연예);
-
-        model.addAttribute("issues", issues);
-        model.addAttribute("keywords", keywords);
-        model.addAttribute("sectionName", "연예");
+        List<NewsArticleDTO> news_article = sectionPageService.get_news_by_domain(startDate, today, Domain.연예);
+        model.addAttribute("news_article", news_article);
 
         return "section/entertainment"; // templates/section/entertainment.html
     }
@@ -85,12 +71,8 @@ public class SectionController {
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
         LocalDateTime startDate = today.minusDays(2);
 
-        List<IssueDTO> issues = sectionPageService.get_issue_by_domain(startDate, today, Domain.스포츠);
-        List<TodayKeywordItemDTO> keywords = sectionPageService.get_today_keyword_items_by_domain(startDate, today, Domain.스포츠);
-
-        model.addAttribute("issues", issues);
-        model.addAttribute("keywords", keywords);
-        model.addAttribute("sectionName", "스포츠");
+        List<NewsArticleDTO> news_article = sectionPageService.get_news_by_domain(startDate, today, Domain.스포츠);
+        model.addAttribute("news_article", news_article);
 
         return "section/sports"; // templates/section/sports.html
     }

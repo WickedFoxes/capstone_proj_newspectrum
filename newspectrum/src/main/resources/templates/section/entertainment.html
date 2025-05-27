@@ -1,401 +1,333 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="'NewSpectrum - ' + ${sectionName}">NewSpectrum</title>
-
-    <!-- 외부 스타일/스크립트 -->
+    <title>정치 뉴스 - NewSpectrum</title>
     <link rel="stylesheet" th:href="@{/css/header.css}">
-
     <style>
-        /* 오늘의 이슈 리스트 */
-        .issue-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .issue-list h2 {
-            font-size: 24px;
-            color: #333;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-        .issue-item,
-        .news-item {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            transition: 0.3s;
-            padding: 10px;
+        body {
+          margin: 0;
+          font-family: sans-serif;
+          background: #f4f6f8;
         }
 
-        .issue-item:hover,
-        .news-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .issue-item img,
-        .news-item img {
-            width: 120px;
-            height: 80px;
-            object-fit: cover;
-            margin-right: 15px;
-            border-radius: 6px;
-        }
-
-        .issue-item-content,
-        .news-text {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .issue-item-content h3,
-        .news-text h4 {
-            font-size: 18px;
-            margin: 0;
-            color: #007bff;
-        }
-
-        .issue-item-content p,
-        .news-text p {
-            font-size: 14px;
-            margin-top: 5px;
-            color: #555;
-        }
-
-        .news-item-link {
-            text-decoration: none;
-            color: inherit;
-        }
-
-
-        /* 모달 전체 스타일 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background: #fff;
-            margin: 5% auto;
+        .news-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            width: 60%;
-            max-height: 80%;
-            overflow-y: auto;
-            border-radius: 10px;
-            position: relative;
+            box-sizing: border-box;
         }
 
-        #popupList {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        /* 오늘의 키워드 리스트 */
-        .keyword-wrapper {
-            margin: 0 20px 40px;
-            padding: 20px;
-            background-color: #f5f7fa;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-        }
-
-        .keyword-section {
-            display: flex;
+        .top-news-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
             gap: 30px;
+            margin-bottom: 40px;
         }
 
-        .keyword-list {
-            width: 20%;
+        /* 상단 대표 뉴스 */
+        .main-news {
+          background: #fff;
+          padding: 20px;
+          border-radius: 12px;
+<!--          box-shadow: 0 2px 6px rgba(0,0,0,0.05);-->
+          display: flex;
+          flex-direction: column;
         }
 
-        .keyword-list ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .keyword-list li {
-            background: #e0e0e0;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .keyword-detail {
-            flex: 1;
-            background-color: #f8f8f8;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
-
-         .date-buttons {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .date-entry {
-            text-align: center;
-        }
-
-        .date-label {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .keyword-summary {
-            background-color: #ddd;
-            border-radius: 4px;
-            padding: 8px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .keyword-summary:hover {
-            background-color: #bbb;
-        }
-
-        .tooltip {
-            display: none;
-            position: absolute;
-            bottom: 120%; /* 버튼 위에 뜨도록 변경 */
-            left: 50%;
-            transform: translateX(-50%);
-            background: #333;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 4px;
-            white-space: nowrap;
-            z-index: 10;
-            font-size: 13px;
-            pointer-events: none;
-        }
-
-        .keyword-summary:hover .tooltip {
-            display: block;
-        }
-
-        .related-news {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .related-news-item {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s;
-        }
-
-        .related-news-item:hover {
-            background-color: #f1f1f1;
-        }
-
-        .related-news-item img {
-            width: 100px;
-            height: 70px;
+        .main-news img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
             object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
 
-        /* 선택된 키워드 */
-        .keyword-list li.selected {
-            background-color: #007bff;
-            color: white;
-            font-weight: bold;
+        .main-news .text {
+          padding: 0 5px;
+        }
+
+        .main-news h2 {
+          font-size: 24px;
+          margin: 0;
+          color: #1a1a1a;
+        }
+
+        .main-news p {
+          color: #777;
+          margin-top: 10px;
+          font-size: 14px;
+        }
+
+        /* 오른쪽 2x2 카드 뉴스 */
+        .card-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 15px;
+        }
+
+        .card {
+          background: #fff;
+          border-radius: 10px;
+          overflow: hidden;
+<!--          box-shadow: 0 2px 6px rgba(0,0,0,0.08);-->
+          display: flex;
+          flex-direction: column;
+          padding: 15px;
+          box-sizing: border-box;
+        }
+
+        .card img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 6px;
+            border-bottom: 12px
+        }
+
+        .card .text {
+          padding: 0;
+        }
+
+        .card .content {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;  /* 최대 줄 수 (예: 2줄) */
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 13px;
+          color: #666;
+          line-height: 1.5em;
+          height: 3em;  /* 2줄 = line-height * 2 */
+          margin-top: 6px;
+        }
+
+        .card h4 {
+          font-size: 14px;
+          margin: 0;
+          color: #1a1a1a;
+        }
+
+        .card p {
+          font-size: 12px;
+          color: #888;
+          margin-top: 5px;
+        }
+
+        /* 하단 리스트 뉴스 */
+        .list-container {
+          margin: 30px;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .list-item {
+          background: #fff;
+          border-radius: 10px;
+          display: flex;
+          padding: 10px;
+          align-items: center;
+        }
+
+        .list-item img {
+          width: 180px;
+          height: 130px;
+          object-fit: cover;
+          border-radius: 6px;
+          margin-right: 15px;
+        }
+
+        .list-item .text {
+          flex: 1;
+        }
+
+        .list-item .content {
+          display: -webkit-box;
+          -webkit-line-clamp: 1; /* 한 줄만 표시 */
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 14px;
+          color: #555;
+          line-height: 1.4em;
+          height: 1.4em;
+          margin-top: 4px;
+        }
+
+        .list-item h5 {
+          font-size: 20px;
+          margin: 0;
+          color: #000000;
+        }
+
+        .list-item p {
+          font-size: 13px;
+          color: #666;
+          margin-top: 5px;
+        }
+
+        /* 공통 링크 밑줄 제거 */
+        .main-news a,
+        .card a,
+        .list-item a {
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .main-news a:hover,
+        .card a:hover,
+        .list-item a:hover {
+          text-decoration: none;
+        }
+
+        /* 페이지네이션 */
+        .pagination-container {
+          text-align: center;
+          margin: 30px 0;
+        }
+
+        .pagination-container button {
+          margin: 0 5px;
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          background: white;
+          cursor: pointer;
+        }
+
+        .pagination-container .active {
+          background-color: #007bff;
+          color: white;
+          font-weight: bold;
+          border-radius: 5px;
         }
     </style>
+
 </head>
 <body>
 
-<!-- ✅ 공통 상단바 삽입 -->
+<!--  공통 상단바 -->
 <div th:replace="layout/common/header :: header"></div>
 
-<h2 class="section-title" th:text="'오늘의 이슈 - ' + ${sectionName}">오늘의 이슈</h2>
-<div class="issue-list">
-    <p th:if="${#lists.isEmpty(issues)}">이슈 데이터 없음</p>
-    <div class="issue-item"
-         th:each="issue, iterStat : ${issues}"
-         th:attr="data-index=${iterStat.index}"
-         onclick="openPopup(this)">
-        <img th:src="${issue.news_articles[0].img_url}" alt="이슈 이미지">
-        <div class="issue-item-content">
-            <h3 th:text="${issue.cluster_title}">이슈 제목</h3>
-            <p th:text="${issue.news_articles[0].media}">대표 언론사</p>
-        </div>
-    </div>
-</div>
-
-<!-- 숨겨진 뉴스 목록: 각 이슈마다 하나씩 -->
-<div th:each="issue, iterStat : ${issues}"
-     th:attr="id='modal-data-' + ${iterStat.index}"
-     style="display: none;">
-    <a th:each="article : ${issue.news_articles}"
-       th:href="@{/view/{id}(id=${article.id})}"
-       class="news-item-link">
-        <div class="news-item">
-            <img th:src="${article.img_url}" alt="뉴스 이미지" />
-            <div class="news-text">
-                <h4 th:text="${article.title}">기사 제목</h4>
-                <p th:text="${article.media}">언론사</p>
-            </div>
-        </div>
-    </a>
-</div>
-
-<!-- 🔹 모달 -->
-<div id="popupModal" class="modal">
-    <div class="modal-content">
-        <div id="popupList"></div>
-    </div>
-</div>
-
-<h2 class="section-title">오늘의 키워드</h2>
-<div class="keyword-wrapper">
-    <div class="keyword-section">
-        <div class="keyword-list">
-            <ul>
-                <li th:each="keyword, kidx : ${keywords}"
-                    th:text="${keyword.today_keyword} + ' (' + ${keyword.today_keyword_cnt} + ')'"
-                    th:data-keyword-index="${kidx.index}"
-                    onclick="selectKeyword(this)">
-                </li>
-            </ul>
-        </div>
-        <div class="keyword-detail">
-            <div class="date-buttons" id="dateButtonContainer">
-                <div class="date-entry">
+<div class="news-wrapper">
+    <!--  상단 뉴스 5개 -->
+    <div class="top-news-grid">
+        <!-- 대표 뉴스 (왼쪽) -->
+        <div class="main-news" th:if="${news_article.size() > 0}">
+            <a th:href="@{/view/{id}(id=${news_article[0].id})}">
+                <img th:src="${news_article[0].img_url}" alt="대표 이미지">
+                <div class="text">
+                    <h2 th:text="${news_article[0].title}">대표 뉴스 제목</h2>
+                    <p th:text="${news_article[0].media}">언론사</p>
                 </div>
-            </div>
-            <div class="related-news" id="relatedNewsContainer">
+            </a>
+        </div>
 
+        <!-- 카드형 뉴스 4개 (오른쪽) -->
+        <div class="card-grid">
+            <div class="card"
+                 th:each="article, stat : ${news_article}"
+                 th:if="${stat.index >= 1 and stat.index <= 4}">
+                <a th:href="@{/view/{id}(id=${article.id})}">
+                    <img th:src="${article.img_url}" alt="카드 이미지">
+                    <div class="text">
+                        <h4 th:text="${article.title}">카드 뉴스 제목</h4>
+                        <p class="content" th:text="${article.content}">본문 요약 내용입니다. 이 내용은 2줄까지만 보여지고 이후는 ...으로 처리됩니다.</p>
+                        <p th:text="${article.media}">언론사</p>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
+
+    <!-- 리스트 뉴스 -->
+    <div class="bottom-news-list" id="newsContainer"></div>
+    <div class="pagination-container" id="paginationContainer" style="text-align:center; margin-bottom: 40px;"></div>
 </div>
 
-<!-- 🔹 오늘의 이슈 js -->
-<script>
-    function openPopup(el) {
-        const index = el.getAttribute("data-index");
-        const source = document.getElementById("modal-data-" + index);
-        const popupList = document.getElementById("popupList");
-
-        popupList.innerHTML = source.innerHTML;
-        document.getElementById("popupModal").style.display = "block";
-    }
-
-    function closePopup() {
-        document.getElementById("popupModal").style.display = "none";
-    }
-
-    // 🔹 ESC 키로 닫기
-    window.addEventListener("keydown", function(e) {
-        if (e.key === "Escape") {
-            closePopup();
-        }
-    });
-
-    // 🔹 모달 외부 클릭 시 닫기
-    window.addEventListener("click", function(e) {
-        const modal = document.getElementById("popupModal");
-        if (e.target === modal) {
-            closePopup();
-        }
-    });
-</script>
-
-<!-- 🔹 오늘의 키워드 js -->
+<!-- JavaScript 뉴스 리스트 페이징 -->
 <script th:inline="javascript">
     /*<![CDATA[*/
-        const keywordData = [[${keywords}]];
+    const allArticles = [[${news_article}]];
+    const articlesPerPage = 10;
+    let currentPage = 0;
 
-        document.addEventListener("DOMContentLoaded", function () {
-            window.selectKeyword = function(el) {
-                // 기존 선택된 항목에서 selected 클래스 제거
-                document.querySelectorAll('.keyword-list li').forEach(function(item) {
-                    item.classList.remove('selected');
-                });
+    function renderArticles() {
+      const container = document.getElementById("newsContainer");
+      container.innerHTML = "";
 
-                // 현재 클릭된 항목에 selected 클래스 추가
-                el.classList.add('selected');
+      const start = 5 + currentPage * articlesPerPage;
+      const end = Math.min(start + articlesPerPage, allArticles.length);
 
-                const index = el.getAttribute("data-keyword-index");
-                const keyword = keywordData[index];
-                const dateContainer = document.getElementById("dateButtonContainer");
-                const newsContainer = document.getElementById("relatedNewsContainer");
+      for (let i = start; i < end; i++) {
+        const article = allArticles[i];
+        const div = document.createElement("div");
+        div.className = "list-item";
+        div.innerHTML = `
+          <a href="/view/${article.id}" style="display: flex; align-items: center; text-decoration: none;">
+            <img src="${article.img_url}" alt="썸네일">
+            <div class="text">
+              <h5>${article.title}</h5>
+              <p class="content">${article.content}</p>
+              <p>${article.media}</p>
+            </div>
+          </a>
+        `;
+        container.appendChild(div);
+      }
+    }
 
-                dateContainer.innerHTML = '';
-                newsContainer.innerHTML = '';
+    function renderPagination() {
+      const totalPages = Math.ceil((allArticles.length - 5) / articlesPerPage);
+      const container = document.getElementById("paginationContainer");
+      container.innerHTML = "";
 
-                keyword.today_related_keywords.forEach((entry) => {
-                const entryDiv = document.createElement("div");
-                entryDiv.className = "date-entry";
+      const groupSize = 10;
+      const currentGroup = Math.floor(currentPage / groupSize);
+      const groupStart = currentGroup * groupSize;
+      const groupEnd = Math.min(groupStart + groupSize, totalPages);
 
-                const dateLabel = document.createElement("div");
-                dateLabel.className = "date-label";
-                dateLabel.innerText =
-                    new Date(entry.start_date).toLocaleDateString() + ' ~ ' + new Date(entry.end_date).toLocaleDateString();
-                entryDiv.appendChild(dateLabel);
+      if (currentGroup > 0) {
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "Prev";
+        prevBtn.onclick = () => {
+          currentPage = (currentGroup - 1) * groupSize;
+          renderArticles();
+          renderPagination();
+        };
+        container.appendChild(prevBtn);
+      }
 
-                const summaryDiv = document.createElement("div");
-                summaryDiv.className = "keyword-summary";
-                summaryDiv.innerText = "연관 키워드"; // 화면에 보여줄 키워드들
+      for (let i = groupStart; i < groupEnd; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i + 1;
+        btn.className = i === currentPage ? "active" : "";
+        btn.onclick = () => {
+          currentPage = i;
+          renderArticles();
+          renderPagination();
+        };
+        container.appendChild(btn);
+      }
 
-                // 툴팁 (전체 10개)
-                const tooltip = document.createElement("div");
-                tooltip.className = "tooltip";
-                tooltip.innerText = entry.keywords.slice(0, 10).join(", ");
-                summaryDiv.appendChild(tooltip);
+      if (groupEnd < totalPages) {
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Next";
+        nextBtn.onclick = () => {
+          currentPage = groupEnd;
+          renderArticles();
+          renderPagination();
+        };
+        container.appendChild(nextBtn);
+      }
+    }
 
-                summaryDiv.onclick = () => {
-                    newsContainer.innerHTML = '';
-
-                    entry.related_news.slice(0, 5).forEach(article => {
-                        const item = document.createElement("div");
-                        item.className = "related-news-item";
-
-                        const link = document.createElement("a");
-                        link.href = `/view/${article.id}`; // view.html로 이동
-                        link.target = "_self"; // 현재 탭에서 열기
-                        link.className = "news-item-link";
-
-                        link.innerHTML = `
-                            <div style="display: flex; align-items: center;">
-                                <img src="${article.img_url}" alt="뉴스 이미지" style="width: 100px; height: 70px; object-fit: cover; margin-right: 15px; border-radius: 6px;" />
-                                <div>
-                                    <div style="font-weight: bold; font-size: 16px; color: #007bff;">${article.title}</div>
-                                    <div style="font-size: 14px; color: #555; margin-top: 5px;">${article.media}</div>
-                                </div>
-                            </div>
-                        `;
-                        item.appendChild(link);
-                        newsContainer.appendChild(item);
-                    });
-                };
-                entryDiv.appendChild(summaryDiv);
-                dateContainer.appendChild(entryDiv);
-            });
-            };
-        });
+    document.addEventListener("DOMContentLoaded", () => {
+      renderArticles();
+      renderPagination();
+    });
     /*]]>*/
 </script>
+
 </body>
 </html>

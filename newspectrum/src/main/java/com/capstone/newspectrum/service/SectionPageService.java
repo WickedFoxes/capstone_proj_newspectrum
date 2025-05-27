@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 // get_total_news_cnt (완료)
@@ -207,6 +206,19 @@ public class SectionPageService {
             today_keyword_items.add(itemDTO);
         }
         return today_keyword_items;
+    }
+
+    public List<NewsArticleDTO> get_news_by_domain(LocalDateTime start_date,
+                                                LocalDateTime end_date,
+                                                Domain domain) {
+        List<NewsArticle> newsArticle = news_article_repo.findByCreatedDateBetweenAndDomain(start_date, end_date, domain);
+        List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
+
+        for(NewsArticle news_article : newsArticle){
+            newsArticleDTOList.add(new NewsArticleDTO(news_article));
+        }
+
+        return newsArticleDTOList;
     }
 
 }
