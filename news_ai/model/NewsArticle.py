@@ -11,4 +11,6 @@ class NewsArticle:
     href: str
     img_url: str
     created_date: datetime
+    comics_url: Optional[str] = None
+    summary: Optional[str] = None
     id: Optional[int] = field(default=None)
