@@ -38,10 +38,15 @@ public class NewsViewController {
             }
         }
 
+        //네컷만화
+        String comics_url = news_article.getComics_url();
+
+
         model.addAttribute("news_article", news_article);
         model.addAttribute("summaryLines", summaryLines);
         model.addAttribute("keyword_items", keyword_items);
         model.addAttribute("related_news_articles", related_news_articles);
+        model.addAttribute("news_article.comics_url", comics_url);
 
         return "view";
     }
