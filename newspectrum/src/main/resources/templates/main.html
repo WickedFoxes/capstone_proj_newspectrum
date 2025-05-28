@@ -16,7 +16,7 @@
         /* 슬라이더 컨테이너 */
         body {
             font-family: Arial, sans-serif;
-            background: #f8f9fa;
+            background: #f4f6f8;
             margin: 0;
             padding: 0;
         }
@@ -270,7 +270,7 @@
 <div class="news-slider-wrapper">
     <div class="news-slider-track" id="newsSliderTrack">
         <div class="news-main-container" th:each="issue : ${hotIssues}">
-            <!-- 🔽 기존 news-main-container 내용 (왼쪽 + 오른쪽 UI) 여기에 포함됨 -->
+            <!-- 기존 news-main-container 내용 (왼쪽 + 오른쪽 UI) 여기에 포함됨 -->
             <div class="news-left" th:onclick="|window.location.href='/view/${issue.news_articles[0].id}'|" style="cursor: pointer;">
                 <img th:src="@{${issue.news_articles[0].img_url}}" />
                 <h2 th:text="${issue.news_articles[0].title}"></h2>
