@@ -11,28 +11,31 @@
           background: #f4f6f8;
         }
 
-        .news-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
+        .top-news-section {
+            background-color: #d6eaff; /* 연한 파랑 전체 배경 */
+            padding: 40px 0;
         }
-
+        .top-news-wrapper {
+            max-width: 1200px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
         .top-news-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 30px;
-            margin-bottom: 40px;
         }
 
         /* 상단 대표 뉴스 */
         .main-news {
           background: #fff;
           padding: 20px;
-          border-radius: 12px;
-<!--          box-shadow: 0 2px 6px rgba(0,0,0,0.05);-->
+          border-radius: 0;
           display: flex;
           flex-direction: column;
+          border-right: 1px solid #e0e0e0;
         }
 
         .main-news img {
@@ -68,12 +71,13 @@
 
         .card {
           background: #fff;
-          border-radius: 10px;
+          border-radius: 0;
           overflow: hidden;
-<!--          box-shadow: 0 2px 6px rgba(0,0,0,0.08);-->
           display: flex;
           flex-direction: column;
-          padding: 15px;
+          border-bottom: 1px solid #e0e0e0;
+          padding: 5px;
+          margin-top: 15px;
           box-sizing: border-box;
         }
 
@@ -103,9 +107,16 @@
         }
 
         .card h4 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;  /* 최대 줄 수 (예: 2줄) */
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
           font-size: 14px;
           margin: 0;
           color: #1a1a1a;
+          line-height: 1.5em;
+          height: 3em;  /* 2줄 = line-height * 2 */
         }
 
         .card p {
@@ -115,19 +126,24 @@
         }
 
         /* 하단 리스트 뉴스 */
-        .list-container {
-          margin: 30px;
-          display: flex;
-          flex-direction: column;
-          gap: 15px;
+        .bottom-news-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-
-        .list-item {
+        .bottom-news-container {
           background: #fff;
           border-radius: 10px;
+          overflow: hidden;
+          margin: 30px 0;
+        }
+        .bottom-news-list .list-item {
           display: flex;
-          padding: 10px;
           align-items: center;
+          padding: 16px 20px;
+        }
+        .bottom-news-list .list-item + .list-item {
+          border-top: 1px solid #eee;
         }
 
         .list-item img {
@@ -144,14 +160,14 @@
 
         .list-item .content {
           display: -webkit-box;
-          -webkit-line-clamp: 1; /* 한 줄만 표시 */
+          -webkit-line-clamp: 2; /* 두 줄만 표시 */
           -webkit-box-orient: vertical;
           overflow: hidden;
           text-overflow: ellipsis;
           font-size: 14px;
           color: #555;
-          line-height: 1.4em;
-          height: 1.4em;
+          line-height: 1.5em;
+          height: 3.0em;
           margin-top: 4px;
         }
 
@@ -182,68 +198,87 @@
         }
 
         /* 페이지네이션 */
-        .pagination-container {
+        .pagination {
           text-align: center;
           margin: 30px 0;
         }
 
-        .pagination-container button {
-          margin: 0 5px;
+        .pagination button {
+          margin: 0 4px;
           padding: 6px 12px;
-          border: 1px solid #ccc;
-          background: white;
+          background-color: transparent;
+          color: #000;
+          border: none;
+          border-radius: 50%;
+          font-size: 14px;
+          width: 36px;
+          height: 36px;
+          line-height: 1;
           cursor: pointer;
+          transition: background-color 0.2s;
         }
 
-        .pagination-container .active {
-          background-color: #007bff;
-          color: white;
+        .pagination button:hover {
+          background-color: #e6f0ff; /* hover 시 옅은 파란색 */
+        }
+
+        .pagination button.active {
+          background-color: #d0e7ff; /* 활성화된 버튼: 옅은 파란색 */
+          color: #007bff;
           font-weight: bold;
-          border-radius: 5px;
         }
     </style>
-
 </head>
 <body>
 
 <!--  공통 상단바 -->
 <div th:replace="layout/common/header :: header"></div>
 
-<div class="news-wrapper">
-    <!--  상단 뉴스 5개 -->
-    <div class="top-news-grid">
-        <!-- 대표 뉴스 (왼쪽) -->
-        <div class="main-news" th:if="${news_article.size() > 0}">
-            <a th:href="@{/view/{id}(id=${news_article[0].id})}">
-                <img th:src="${news_article[0].img_url}" alt="대표 이미지">
-                <div class="text">
-                    <h2 th:text="${news_article[0].title}">대표 뉴스 제목</h2>
-                    <p th:text="${news_article[0].media}">언론사</p>
-                </div>
-            </a>
-        </div>
-
-        <!-- 카드형 뉴스 4개 (오른쪽) -->
-        <div class="card-grid">
-            <div class="card"
-                 th:each="article, stat : ${news_article}"
-                 th:if="${stat.index >= 1 and stat.index <= 4}">
-                <a th:href="@{/view/{id}(id=${article.id})}">
-                    <img th:src="${article.img_url}" alt="카드 이미지">
+<div class="top-news-section">
+    <div class="top-news-wrapper">
+        <!--  상단 뉴스 5개 -->
+        <div class="top-news-grid">
+            <!-- 대표 뉴스 (왼쪽) -->
+            <div class="main-news" th:if="${news_article.size() > 0}">
+                <a th:href="@{/view/{id}(id=${news_article[0].id})}">
+                    <img th:src="${news_article[0].img_url}" alt="대표 이미지">
                     <div class="text">
-                        <h4 th:text="${article.title}">카드 뉴스 제목</h4>
-                        <p class="content" th:text="${article.content}">본문 요약 내용입니다. 이 내용은 2줄까지만 보여지고 이후는 ...으로 처리됩니다.</p>
-                        <p th:text="${article.media}">언론사</p>
+                        <h2 th:text="${news_article[0].title}">대표 뉴스 제목</h2>
+                        <p th:text="${news_article[0].media}">언론사</p>
                     </div>
                 </a>
             </div>
+
+            <!-- 카드형 뉴스 4개 (오른쪽) -->
+            <div class="card-grid">
+                <div class="card"
+                     th:each="article, stat : ${news_article}"
+                     th:if="${stat.index >= 1 and stat.index <= 4}">
+                    <a th:href="@{/view/{id}(id=${article.id})}">
+                        <img th:src="${article.img_url}" alt="카드 이미지">
+                        <div class="text">
+                            <h4 th:text="${article.title}">카드 뉴스 제목</h4>
+                            <p class="content" th:text="${article.content}">본문 요약 내용입니다. 이 내용은 2줄까지만 보여지고 이후는 ...으로 처리됩니다.</p>
+                            <p th:text="${article.media}">언론사</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-
-    <!-- 리스트 뉴스 -->
-    <div class="bottom-news-list" id="newsContainer"></div>
-    <div class="pagination-container" id="paginationContainer" style="text-align:center; margin-bottom: 40px;"></div>
 </div>
+
+<!-- 리스트 뉴스 -->
+<div class="bottom-news-section">
+    <div class="bottom-news-wrapper">
+        <div class="bottom-news-container">
+            <div class="bottom-news-list" id="newsContainer"></div>
+        </div>
+    </div>
+</div>
+
+<!--페이지버튼-->
+<div class="pagination" id="paginationContainer"></div>
 
 <!-- JavaScript 뉴스 리스트 페이징 -->
 <script th:inline="javascript">
@@ -279,46 +314,46 @@
 
     function renderPagination() {
       const totalPages = Math.ceil((allArticles.length - 5) / articlesPerPage);
-      const container = document.getElementById("paginationContainer");
-      container.innerHTML = "";
+      const paginationContainer = document.getElementById("paginationContainer");
+      paginationContainer.innerHTML = "";
 
       const groupSize = 10;
       const currentGroup = Math.floor(currentPage / groupSize);
-      const groupStart = currentGroup * groupSize;
-      const groupEnd = Math.min(groupStart + groupSize, totalPages);
+      const startPage = currentGroup * groupSize;
+      const endPage = Math.min(startPage + groupSize, totalPages);
 
-      if (currentGroup > 0) {
+      if (startPage > 0) {
         const prevBtn = document.createElement("button");
-        prevBtn.textContent = "Prev";
+        prevBtn.textContent = "◀";
         prevBtn.onclick = () => {
-          currentPage = (currentGroup - 1) * groupSize;
+          currentPage -= 1;
           renderArticles();
           renderPagination();
         };
-        container.appendChild(prevBtn);
+        paginationContainer.appendChild(prevBtn);
       }
 
-      for (let i = groupStart; i < groupEnd; i++) {
+      for (let i = startPage; i < endPage; i++) {
         const btn = document.createElement("button");
         btn.textContent = i + 1;
-        btn.className = i === currentPage ? "active" : "";
+        if (i === currentPage) btn.classList.add("active");
         btn.onclick = () => {
           currentPage = i;
           renderArticles();
           renderPagination();
         };
-        container.appendChild(btn);
+        paginationContainer.appendChild(btn);
       }
 
-      if (groupEnd < totalPages) {
+      if (endPage < totalPages) {
         const nextBtn = document.createElement("button");
-        nextBtn.textContent = "Next";
+        nextBtn.textContent = "▶";
         nextBtn.onclick = () => {
-          currentPage = groupEnd;
+          currentPage += 1;
           renderArticles();
           renderPagination();
         };
-        container.appendChild(nextBtn);
+        paginationContainer.appendChild(nextBtn);
       }
     }
 
