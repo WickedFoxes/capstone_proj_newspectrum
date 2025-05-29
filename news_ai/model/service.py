@@ -1,3 +1,4 @@
+from datetime import datetime
 # mariadb 데이터 관련
 import pymysql
 from dataclasses import fields
@@ -28,7 +29,7 @@ def read_news_articles_by_domain(date_str = "2025-03-01 00:00:00",
             """
             cursor.execute(sql, (date_str, date_end, domain))
             rows = cursor.fetchall()            
-            print("✅ 데이터 가져오기 성공")
+            # print("✅ 데이터 가져오기 성공")
 
             for row in rows:
                 if row.get('content') and len(row['content']) >= 400:
@@ -64,7 +65,7 @@ def read_news_articles(date_str = "2025-03-01 00:00:00",
             """
             cursor.execute(sql, (date_str, date_end))
             rows = cursor.fetchall()            
-            print("✅ 데이터 가져오기 성공")
+            # print("✅ 데이터 가져오기 성공")
 
             for row in rows:
                 if row.get('content') and len(row['content']) >= 400:
@@ -106,7 +107,7 @@ def read_keywords_with_id_list(id_list):
             """
             cursor.execute(sql, id_list)
             rows = cursor.fetchall()            
-            print("✅ 데이터 가져오기 성공")
+            # print("✅ 데이터 가져오기 성공")
 
             for row in rows:
                 keyword = Keyword(**row)
@@ -147,7 +148,7 @@ def read_articles_with_id_in_cluster(news_article_id):
             """
             cursor.execute(sql, (news_article_id, news_article_id))
             rows = cursor.fetchall()            
-            print("✅ 데이터 가져오기 성공")
+            # print("✅ 데이터 가져오기 성공")
 
             for row in rows:
                 news_article = NewsArticle(**row)
@@ -198,7 +199,7 @@ def read_articles_with_clsuter_and_keyword(news_article_id, end_date, start_date
             """
             cursor.execute(sql, (news_article_id, news_article_id, start_date, end_date, domain, news_article_id))
             rows = cursor.fetchall()            
-            print("✅ 데이터 가져오기 성공")
+            # print("✅ 데이터 가져오기 성공")
 
             for row in rows:
                 news_article = NewsArticle(**row)
@@ -234,7 +235,7 @@ def read_news_articles_have_cluster(date_str = "2025-03-01 00:00:00",
             """
             cursor.execute(sql, (date_str, date_end))
             rows = cursor.fetchall()            
-            print("✅ 데이터 가져오기 성공")
+            # print("✅ 데이터 가져오기 성공")
 
             for row in rows:
                 if row.get('content') and len(row['content']) >= 400:
@@ -277,7 +278,7 @@ def read_top_articles_per_cluster(date_str="2025-03-01 00:00:00",
             """
             cursor.execute(sql, (date_str, date_end))
             rows = cursor.fetchall()
-            print("✅ 클러스터별 뉴스 가져오기 성공")
+            # print("✅ 클러스터별 뉴스 가져오기 성공")
 
             for row in rows:
                 cid = row['cluster_id']
@@ -333,7 +334,7 @@ def create_news_article(news_article:NewsArticle):
         conn.commit()
         # 삽입된 id 가져오기
         inserted_id = cur.lastrowid
-        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        # print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
         return inserted_id
 
     except pymysql.MySQLError as e:
@@ -349,7 +350,7 @@ def create_news_article(news_article:NewsArticle):
                 cur.close()
             if conn:
                 conn.close()
-            print("🔒 연결 종료")
+            # print("🔒 연결 종료")
         except:
             pass
 
@@ -392,7 +393,7 @@ def create_news_cluster(news_cluster:NewsCluster):
         conn.commit()
         # 삽입된 id 가져오기
         inserted_id = cur.lastrowid
-        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        # print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
         return inserted_id
 
     except pymysql.MySQLError as e:
@@ -408,7 +409,7 @@ def create_news_cluster(news_cluster:NewsCluster):
                 cur.close()
             if conn:
                 conn.close()
-            print("🔒 연결 종료")
+            # print("🔒 연결 종료")
         except:
             pass
 
@@ -451,7 +452,7 @@ def create_news_keyword(keyword:Keyword):
         conn.commit()
         # 삽입된 id 가져오기
         inserted_id = cur.lastrowid
-        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        # print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
         return inserted_id
 
     except pymysql.MySQLError as e:
@@ -467,7 +468,7 @@ def create_news_keyword(keyword:Keyword):
                 cur.close()
             if conn:
                 conn.close()
-            print("🔒 연결 종료")
+            # print("🔒 연결 종료")
         except:
             pass
 
@@ -510,7 +511,7 @@ def create_keyword_relation(keyword_relation:KeywordRelation):
         conn.commit()
         # 삽입된 id 가져오기
         inserted_id = cur.lastrowid
-        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        # print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
         return inserted_id
 
     except pymysql.MySQLError as e:
@@ -526,7 +527,7 @@ def create_keyword_relation(keyword_relation:KeywordRelation):
                 cur.close()
             if conn:
                 conn.close()
-            print("🔒 연결 종료")
+            # print("🔒 연결 종료")
         except:
             pass
 
@@ -569,7 +570,7 @@ def create_news_article_relation(news_article_relation:NewsArticleRelation):
         conn.commit()
         # 삽입된 id 가져오기
         inserted_id = cur.lastrowid
-        print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        # print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
         return inserted_id
 
     except pymysql.MySQLError as e:
@@ -585,7 +586,7 @@ def create_news_article_relation(news_article_relation:NewsArticleRelation):
                 cur.close()
             if conn:
                 conn.close()
-            print("🔒 연결 종료")
+            # print("🔒 연결 종료")
         except:
             pass
 
@@ -632,8 +633,15 @@ def update_articles(news_article: NewsArticle):
             values.append(news_article.img_url)
 
         if news_article.created_date is not None:
+            if isinstance(news_article.created_date, str):
+                # 문자열인 경우 datetime으로 변환
+                created_dt = datetime.strptime(news_article.created_date, '%Y-%m-%d %H:%M:%S')
+            else:
+                # 이미 datetime이면 그대로 사용
+                created_dt = news_article.created_date
+
             fields.append("created_date = %s")
-            values.append(news_article.created_date.strftime('%Y-%m-%d %H:%M:%S'))
+            values.append(created_dt.strftime('%Y-%m-%d %H:%M:%S'))
 
         if news_article.comics_url is not None:
             fields.append("comics_url = %s")
@@ -658,7 +666,178 @@ def update_articles(news_article: NewsArticle):
         """
         cur.execute(sql, tuple(values))
         conn.commit()
-        print(f"✅ news_article ID {news_article.id} 업데이트 완료")
+        # print(f"✅ news_article ID {news_article.id} 업데이트 완료")
+
+    except Exception as e:
+        print(f"❌ 업데이트 실패: {e}")
+        conn.rollback()
+
+    finally:
+        cur.close()
+        conn.close()
+
+def update_keywords(keyword: Keyword):
+    if keyword.id is None:
+        print("❌ 업데이트 실패: 'id'가 없습니다.")
+        return
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='root',
+        db='newspectrum',
+        charset='utf8mb4'
+    )
+    cur = conn.cursor()
+
+    try:
+        fields = []
+        values = []
+
+        if keyword.keyword is not None:
+            fields.append("keyword = %s")
+            values.append(keyword.keyword)
+
+        if keyword.created_date is not None:
+            if isinstance(keyword.created_date, str):
+                created_dt = datetime.strptime(keyword.created_date, '%Y-%m-%d %H:%M:%S')
+            else:
+                created_dt = keyword.created_date
+            fields.append("created_date = %s")
+            values.append(created_dt.strftime('%Y-%m-%d %H:%M:%S'))
+
+        if keyword.news_article_id is not None:
+            fields.append("news_article_id = %s")
+            values.append(keyword.news_article_id)
+
+        if keyword.score is not None:
+            fields.append("score = %s")
+            values.append(keyword.score)
+
+        if not fields:
+            print("⚠️ 업데이트할 필드가 없습니다.")
+            return
+
+        values.append(keyword.id)
+
+        sql = f"""
+            UPDATE keywords
+            SET {', '.join(fields)}
+            WHERE id = %s
+        """
+        cur.execute(sql, tuple(values))
+        conn.commit()
+        # print(f"✅ keyword ID {keyword.id} 업데이트 완료")
+
+    except Exception as e:
+        print(f"❌ 업데이트 실패: {e}")
+        conn.rollback()
+
+    finally:
+        cur.close()
+        conn.close()
+
+def update_clusters(cluster: NewsCluster):
+    if cluster.id is None:
+        print("❌ 업데이트 실패: 'id'가 없습니다.")
+        return
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='root',
+        db='newspectrum',
+        charset='utf8mb4'
+    )
+    cur = conn.cursor()
+
+    try:
+        fields = []
+        values = []
+
+        if cluster.cluster_id is not None:
+            fields.append("cluster_id = %s")
+            values.append(cluster.cluster_id)
+
+        if cluster.created_date is not None:
+            if isinstance(cluster.created_date, str):
+                created_dt = datetime.strptime(cluster.created_date, '%Y-%m-%d %H:%M:%S')
+            else:
+                created_dt = cluster.created_date
+            fields.append("created_date = %s")
+            values.append(created_dt.strftime('%Y-%m-%d %H:%M:%S'))
+
+        if cluster.news_article_id is not None:
+            fields.append("news_article_id = %s")
+            values.append(cluster.news_article_id)
+
+        if not fields:
+            print("⚠️ 업데이트할 필드가 없습니다.")
+            return
+
+        values.append(cluster.id)
+
+        sql = f"""
+            UPDATE news_cluster
+            SET {', '.join(fields)}
+            WHERE id = %s
+        """
+        cur.execute(sql, tuple(values))
+        conn.commit()
+        # print(f"✅ news_cluster ID {cluster.id} 업데이트 완료")
+
+    except Exception as e:
+        print(f"❌ 업데이트 실패: {e}")
+        conn.rollback()
+
+    finally:
+        cur.close()
+        conn.close()
+
+def update_article_relations(relation: NewsArticleRelation):
+    if relation.id is None:
+        print("❌ 업데이트 실패: 'id'가 없습니다.")
+        return
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='root',
+        db='newspectrum',
+        charset='utf8mb4'
+    )
+    cur = conn.cursor()
+
+    try:
+        fields = []
+        values = []
+
+        if relation.news_article_id is not None:
+            fields.append("news_article_id = %s")
+            values.append(relation.news_article_id)
+
+        if relation.related_news_article_id is not None:
+            fields.append("related_news_article_id = %s")
+            values.append(relation.related_news_article_id)
+
+        if relation.similarity is not None:
+            fields.append("similarity = %s")
+            values.append(relation.similarity)
+
+        if not fields:
+            print("⚠️ 업데이트할 필드가 없습니다.")
+            return
+
+        values.append(relation.id)
+
+        sql = f"""
+            UPDATE news_article_relation
+            SET {', '.join(fields)}
+            WHERE id = %s
+        """
+        cur.execute(sql, tuple(values))
+        conn.commit()
+        # print(f"✅ news_article_relation ID {relation.id} 업데이트 완료")
 
     except Exception as e:
         print(f"❌ 업데이트 실패: {e}")
