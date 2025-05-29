@@ -164,6 +164,7 @@
             padding: 20px;
             background: white;
             border-radius: 10px;
+            position: relative;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
@@ -247,6 +248,45 @@
             border-bottom: none;
         }
 
+<!--        슬라이딩 뉴스 페이지-->
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 30px;
+<!--            gap: 10px;-->
+        }
+
+        .slider-dots .dot {
+            height: 15px;
+            width: 15px;
+            margin: 0 6px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .dot-label {
+            font-size: 20px;
+            font-weight: 700;
+            color: black;
+            padding: 8px 18px;
+            border-radius: 24px;
+            background-color: #c6f0ff;
+            line-height: 1.2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dots .dot.active {
+            background-color: #007bff;
+        }
 
     </style>
 </head>
@@ -269,7 +309,8 @@
 <!-- 슬라이더 전체 영역 -->
 <div class="news-slider-wrapper">
     <div class="news-slider-track" id="newsSliderTrack">
-        <div class="news-main-container" th:each="issue : ${hotIssues}">
+        <div class="news-main-container" th:each="issue : ${hotIssues}"
+             th:attr="data-domain=${issue.news_articles[0].domain}">
             <!-- 기존 news-main-container 내용 (왼쪽 + 오른쪽 UI) 여기에 포함됨 -->
             <div class="news-left" th:onclick="|window.location.href='/view/${issue.news_articles[0].id}'|" style="cursor: pointer;">
                 <img th:src="@{${issue.news_articles[0].img_url}}" />
@@ -293,6 +334,7 @@
             </div>
         </div>
     </div>
+    <div class="slider-dots" id="sliderDots"></div>
 </div>
 
 <!--AI 만평 카드 뉴스 형태-->
@@ -330,9 +372,45 @@
     let slideInterval = null;
     let resumeTimeout = null;
 
+    function renderDots() {
+        const dotsContainer = document.getElementById("sliderDots");
+        dotsContainer.innerHTML = "";
+
+        for (let i = 0; i < totalSlides; i++) {
+            const slide = slides[i];
+            const domain = slide.dataset.domain || `슬라이드 ${i + 1}`;
+
+            if (i === currentSlide) {
+                // 현재 슬라이드는 텍스트로
+                const label = document.createElement("span");
+                label.className = "dot-label";
+                label.textContent = domain;
+                dotsContainer.appendChild(label);
+            } else {
+                // 나머지는 점으로
+                const dot = document.createElement("span");
+                dot.className = "dot";
+                dot.title = domain;
+
+                dot.addEventListener("click", () => {
+                    currentSlide = i;
+                    moveSlide(currentSlide);
+                    updateDots();
+                });
+
+                dotsContainer.appendChild(dot);
+            }
+        }
+    }
+
+    function updateDots() {
+        renderDots();
+    }
+
     function moveSlide(index) {
         const offset = -index * 100;
         slider.style.transform = `translateX(${offset}%)`;
+        updateDots();
     }
 
     function startAutoSlide() {
@@ -356,6 +434,8 @@
 
     // 초기 슬라이드 시작
     startAutoSlide();
+    renderDots();
+    updateDots();
 
     // 마우스 이벤트 감지
     const container = document.querySelector(".news-slider-wrapper");
