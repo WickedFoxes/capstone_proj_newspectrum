@@ -1,28 +1,32 @@
-<!-- src/main/resources/templates/layout/common/header.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="header">
-    <!-- 타이틀 바 -->
-    <div class="title-bar">
-        <a th:href="@{/}">NewSpectrum</a>
-    </div>
+    <div class="header-wrapper">
+        <!-- 왼쪽: 로고 -->
+        <div class="header-logo">
+            <a th:href="@{/}">
+                <img src="/img/logo.png" alt="로고" />
+            </a>
+        </div>
 
-    <!-- 검색 바 -->
-    <div class="search-bar-container">
-        <form th:action="@{/search}" method="get">
-            <input type="text" name="searchword" placeholder="검색어를 입력하세요" th:value="${param.searchword}">
-            <button type="submit">검색</button>
-        </form>
-    </div>
+        <!-- 가운데: 분야 메뉴 -->
+        <div class="header-menu">
+            <a th:href="@{/section/politics}">정치</a>
+            <a th:href="@{/section/economy}">경제</a>
+            <a th:href="@{/section/social}">사회</a>
+            <a th:href="@{/section/sports}">스포츠</a>
+            <a th:href="@{/section/entertainment}">연예</a>
+        </div>
 
-    <!-- 메뉴 바 -->
-    <div class="menu-bar">
-        <a th:href="@{/section/politics}">정치</a>
-        <a th:href="@{/section/economy}">경제</a>
-        <a th:href="@{/section/social}">사회</a>
-        <a th:href="@{/section/entertainment}">연예</a>
-        <a th:href="@{/section/sports}">스포츠</a>
-<!--        <a th:href="@{/keyword/keyword}">키워드</a>-->
+        <!-- 오른쪽: 검색 아이콘 -->
+        <div class="header-search">
+            <form th:action="@{/search}" method="get">
+                <input type="text" name="searchword" placeholder="검색어를 입력하세요" th:value="${param.searchword}">
+                <button type="submit">
+                    <img src="/img/search-icon.png" alt="검색" />
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 </html>

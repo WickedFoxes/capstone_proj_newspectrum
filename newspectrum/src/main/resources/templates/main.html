@@ -16,7 +16,7 @@
         /* 슬라이더 컨테이너 */
         body {
             font-family: Arial, sans-serif;
-            background: #f8f9fa;
+            background: #f4f6f8;
             margin: 0;
             padding: 0;
         }
@@ -89,8 +89,8 @@
         }
 
         .wordcloud-box {
-            width: 500px;
-            height: 500px;
+            width: 520px;
+            height: 520px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -135,6 +135,159 @@
             background-color: #cccccc;
             cursor: default;
         }
+
+        /*핫이슈 자동 슬라이드*/
+        .news-slider-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .news-slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            width: 100%;
+        }
+
+        .news-main-container {
+            flex: 0 0 100%;
+            box-sizing: border-box;
+        }
+
+        .news-main-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .news-left {
+            width: 65%;
+        }
+
+        .news-left img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .news-left h2 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .news-right {
+            width: 35%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .thumbnail-news {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0; /* 구분선 추가 */
+        }
+
+        .thumbnail-news:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .thumbnail-news img {
+            width: 100px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .thumbnail-news p {
+            font-size: 14px;
+            font-weight: bold;
+            color: #111;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+
+        .news-headlines {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 20px;
+        }
+
+        .news-headlines li {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0e0e0; /* 얇은 회색 선 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .news-headlines li:last-child {
+            border-bottom: none;
+        }
+
+<!--        슬라이딩 뉴스 페이지-->
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 30px;
+<!--            gap: 10px;-->
+        }
+
+        .slider-dots .dot {
+            height: 15px;
+            width: 15px;
+            margin: 0 6px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .dot-label {
+            font-size: 20px;
+            font-weight: 700;
+            color: black;
+            padding: 8px 18px;
+            border-radius: 24px;
+            background-color: #c6f0ff;
+            line-height: 1.2;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dots .dot.active {
+            background-color: #007bff;
+        }
+
     </style>
 </head>
 <body>
@@ -152,6 +305,41 @@
 <!--    <button onclick="nextDomain()">다음</button>-->
 <!--</div>-->
 
+<!--오늘의 이슈 자동 슬라이드-->
+<!-- 슬라이더 전체 영역 -->
+<div class="news-slider-wrapper">
+    <div class="news-slider-track" id="newsSliderTrack">
+        <div class="news-main-container" th:each="issue : ${hotIssues}"
+             th:attr="data-domain=${issue.news_articles[0].domain}">
+            <!-- 기존 news-main-container 내용 (왼쪽 + 오른쪽 UI) 여기에 포함됨 -->
+            <div class="news-left" th:onclick="|window.location.href='/view/${issue.news_articles[0].id}'|" style="cursor: pointer;">
+                <img th:src="@{${issue.news_articles[0].img_url}}" />
+                <h2 th:text="${issue.news_articles[0].title}"></h2>
+            </div>
+            <div class="news-right">
+                <div class="thumbnail-news" th:each="news, iter : ${issue.news_articles}"
+                     th:if="${iter.index > 0 and iter.index <= 3}"
+                     th:onclick="|window.location.href='/view/${news.id}'|"
+                     style="cursor: pointer;">
+                    <img th:src="@{${news.img_url}}" />
+                    <p th:text="${#strings.abbreviate(news.title, 50)}"></p>
+                </div>
+                <ul class="news-headlines">
+                    <li th:each="news, iter : ${issue.news_articles}"
+                        th:if="${iter.index >= 4 and iter.index < 8}"
+                        th:text="${#strings.abbreviate(news.title, 60)}"
+                        th:onclick="|window.location.href='/view/${news.id}'|"
+                        style="cursor: pointer;"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="slider-dots" id="sliderDots"></div>
+</div>
+
+<!--AI 만평 카드 뉴스 형태-->
+
+<!--워드 클라우드 형태의 오늘의 키워드-->
 <div class="wordcloud-container">
     <button class="arrow left" onclick="prevDomain()">&lt;</button>
 
@@ -175,6 +363,92 @@
 <!--<p th:text="${issuesByDomainJson}"></p>-->
 
 <script th:inline="javascript">
+<!--    오늘의 이슈 자동 슬라이드-->
+    let currentSlide = 0;
+    const slideIntervalTime = 5000; // 5초
+    const slider = document.getElementById("newsSliderTrack");
+    const slides = document.querySelectorAll(".news-main-container");
+    const totalSlides = slides.length;
+    let slideInterval = null;
+    let resumeTimeout = null;
+
+    function renderDots() {
+        const dotsContainer = document.getElementById("sliderDots");
+        dotsContainer.innerHTML = "";
+
+        for (let i = 0; i < totalSlides; i++) {
+            const slide = slides[i];
+            const domain = slide.dataset.domain || `슬라이드 ${i + 1}`;
+
+            if (i === currentSlide) {
+                // 현재 슬라이드는 텍스트로
+                const label = document.createElement("span");
+                label.className = "dot-label";
+                label.textContent = domain;
+                dotsContainer.appendChild(label);
+            } else {
+                // 나머지는 점으로
+                const dot = document.createElement("span");
+                dot.className = "dot";
+                dot.title = domain;
+
+                dot.addEventListener("click", () => {
+                    currentSlide = i;
+                    moveSlide(currentSlide);
+                    updateDots();
+                });
+
+                dotsContainer.appendChild(dot);
+            }
+        }
+    }
+
+    function updateDots() {
+        renderDots();
+    }
+
+    function moveSlide(index) {
+        const offset = -index * 100;
+        slider.style.transform = `translateX(${offset}%)`;
+        updateDots();
+    }
+
+    function startAutoSlide() {
+        slideInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            moveSlide(currentSlide);
+        }, slideIntervalTime);
+    }
+
+    function stopAutoSlide() {
+        clearInterval(slideInterval);
+        slideInterval = null;
+    }
+
+    function delayRestartAutoSlide() {
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+        resumeTimeout = setTimeout(() => {
+            startAutoSlide();
+        }, slideIntervalTime); // 3초 후 재시작
+    }
+
+    // 초기 슬라이드 시작
+    startAutoSlide();
+    renderDots();
+    updateDots();
+
+    // 마우스 이벤트 감지
+    const container = document.querySelector(".news-slider-wrapper");
+    container.addEventListener("mouseenter", () => {
+        stopAutoSlide();
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+    });
+
+    container.addEventListener("mouseleave", () => {
+        delayRestartAutoSlide();
+    });
+
+<!--    워드 클라우드-->
     const issuesByDomain = [[${issuesByDomainJson}]];
     const domains = ["정치", "경제", "사회", "연예", "스포츠"];
     let currentIndex = 0;
@@ -187,9 +461,6 @@
     const newsListContainer = document.getElementById("newsListContainer");
 
     function renderWordCloud(domain) {
-        console.log("🔍 도메인 데이터:", issuesByDomain[domain]);
-        console.log("🔍 main_block_top_keywords:", issuesByDomain[domain]?.main_block_top_keywords);
-
         const domainData = issuesByDomain[domain];
         const words = [];
         keywordNewsMap = {};
@@ -198,9 +469,6 @@
         domainData.main_block_top_keywords.forEach(keywordBlock => {
             const keyword = keywordBlock.keyword;
             const articles = keywordBlock.news_articles;
-
-            console.log("🔑 키워드:", keyword);
-            console.log("📰 기사 수:", articles?.length ?? "null");
 
             words.push({ text: keyword, count: articles.length });
             keywordNewsMap[keyword] = articles;
@@ -211,7 +479,7 @@
 
         const normalizedWords = words.map(w => ({
             text: w.text,
-            size: ((w.count - minCount) / (maxCount - minCount)) * 50 + 30
+            size: ((w.count - minCount) / (maxCount - minCount)) * 55 + 30
         }));
 
         const topWords = normalizedWords.sort((a, b) => b.size - a.size).slice(0, 40);
@@ -236,6 +504,14 @@
             const containerWidth = document.getElementById("wordCloudSlide").clientWidth;
             const containerHeight = document.getElementById("wordCloudSlide").clientHeight;
 
+            // 키워드 빈도 기준 정렬
+            const sortedWords = [...words].sort((a, b) => b.size - a.size);
+            const total = sortedWords.length;
+            const topThird = Math.floor(total / 3);
+            const middleThird = Math.floor((total * 2) / 3);
+
+            d3.select("#wordCloudSlide svg").remove(); // 기존 클라우드 제거
+
             const svg = d3.select("#wordCloudSlide").append("svg")
                 .attr("width", containerWidth)
                 .attr("height", containerHeight)
@@ -247,23 +523,26 @@
                 .enter().append("text")
                 .attr("class", "word")
                 .style("font-size", d => d.size + "px")
-                .style("font-family", "Impact")
-                .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
+                .style("font-family", "'Segoe UI Semibold', 'Arial', sans-serif") // 자연스러운 두께
+                .style("font-weight", "600") // 너무 굵지 않게
+                .style("fill", d => {
+                    const rank = sortedWords.findIndex(w => w.text === d.text);
+                    if (rank < topThird) return "#FF7F0E";       // 상위: 주황
+                    else if (rank < middleThird) return "#1F77B4"; // 중위: 파랑
+                    else return "#A6A6A6";                         // 하위: 회색
+                })
                 .attr("text-anchor", "middle")
                 .attr("transform", d => "translate(" + [d.x, d.y] + ")")
                 .text(d => d.text);
 
-            // ✅ 여기서 jQuery 방식으로 클릭 이벤트 추가
+            // 클릭 이벤트 연결
             $("#wordCloudSlide text").on("click", function () {
                 const keyword = d3.select(this).text();
-                console.log("🖱️ 클릭된 키워드(jQuery 방식):", keyword);
-
                 currentKeyword = keyword;
                 currentPage = 0;
                 showPaginatedNews(currentPage);
             });
         }
-
         clearNews();
     }
 
@@ -276,7 +555,7 @@
         newsListContainer.innerHTML = "";
         newsListContainer.classList.add("show");
 
-        // ✅ 선택된 키워드 제목 표시
+        // 선택된 키워드 제목 표시
         const titleDiv = document.createElement("div");
         titleDiv.id = "selectedKeywordTitle";
         titleDiv.textContent = `🔍 선택된 키워드: ${currentKeyword}`;
