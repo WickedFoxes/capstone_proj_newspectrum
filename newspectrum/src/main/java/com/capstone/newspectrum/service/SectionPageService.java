@@ -221,4 +221,18 @@ public class SectionPageService {
         return newsArticleDTOList;
     }
 
+    public List<NewsArticleDTO> get_news_have_cluster_by_domain(LocalDateTime start_date,
+                                                   LocalDateTime end_date,
+                                                   Domain domain) {
+        List<NewsArticle> newsArticle = news_article_repo.findNewsArticlesHaveCluster(start_date, end_date, domain);
+        List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
+
+        for(NewsArticle news_article : newsArticle){
+            newsArticleDTOList.add(new NewsArticleDTO(news_article));
+        }
+
+        return newsArticleDTOList;
+    }
+
+
 }

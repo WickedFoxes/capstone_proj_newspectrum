@@ -19,34 +19,13 @@ public class MainController {
     @Autowired
     private SectionPageService sectionPageService;
 
+    private LocalDateTime today = LocalDateTime.of(2025, 3, 1, 00, 00);
+
     @GetMapping("/")
     public String main(Model model) {
-        System.out.println("테스트 실행 Java 버전: " + System.getProperty("java.version"));
-
-        LocalDateTime today = LocalDateTime.of(2025, 2, 28, 23, 59);
-        LocalDateTime start = today.minusDays(1);
+        LocalDateTime start = today.minusDays(2);
 
         Map<String, MainBlockDTO> issuesByDomain = mainPageService.get_main_block_list(today);
-
-//        System.out.println("""
-//        ###########################################################################################
-//        get_main_block_list
-//        ###########################################################################################
-//        """);
-//        Map<String, MainBlockDTO> items = mainPageService.get_main_block_list(today);
-//        System.out.println(items.size());
-//        items.forEach((domain, item) -> {
-//            System.out.println("############## " + item.getDomain() +" ##############");
-//            System.out.println("keywords : "+ item.getKeywords());
-//            System.out.println("keywords cnt : "+ item.getKeywords_cnt());
-//            int index = 0;
-//            System.out.println(
-//                    "keyword " +index +"번째 [" + item.getMain_block_top_keywords().get(index).getKeyword() + "] 연관 뉴스 : "
-//            );
-//            for(NewsArticleDTO newsArticleDTO : item.getMain_block_top_keywords().get(index).getNews_articles()){
-//                System.out.println(" - " + newsArticleDTO.getTitle().replace("\n", ""));
-//            }
-//        });
 
         model.addAttribute("issuesByDomainJson", issuesByDomain);
 
