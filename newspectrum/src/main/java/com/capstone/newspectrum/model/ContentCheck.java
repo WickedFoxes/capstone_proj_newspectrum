@@ -14,7 +14,7 @@ public class ContentCheck {
     @JoinColumn(name = "news_article_id")
     private NewsArticle news_article;
 
-    @Column(name = "keyword")
+    @Column(name = "keyword", columnDefinition = "LONGTEXT")
     private String keyword;
 
     @Column(name = "content_check_type")

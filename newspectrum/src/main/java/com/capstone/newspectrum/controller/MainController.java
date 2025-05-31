@@ -19,7 +19,7 @@ public class MainController {
     @Autowired
     private SectionPageService sectionPageService;
 
-    private LocalDateTime today = LocalDateTime.of(2025, 3, 1, 00, 00);
+    private LocalDateTime today = LocalDateTime.of(2025, 5, 27, 00, 00);
 
     @GetMapping("/")
     public String main(Model model) {
