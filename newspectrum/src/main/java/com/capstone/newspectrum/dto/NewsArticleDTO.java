@@ -31,7 +31,7 @@ public class NewsArticleDTO {
     }
     public NewsArticleDTO(NewsArticle news_article){
         this.id = news_article.getId();
-        this.title = news_article.getTitle();
+        this.title = news_article.getTitle().replace("\n", "");
         this.content = news_article.getContent();
         this.media = news_article.getMedia();
         this.domain = news_article.getDomain();
@@ -61,7 +61,7 @@ public class NewsArticleDTO {
                 this.title_checks.add(new ContentCheckDTO(contentCheck));
             }
             else{
-                String keyword = contentCheck.getKeyword();
+                String keyword = contentCheck.getKeyword().replace("\n", "");
                 ContentCheckDTO dto = new ContentCheckDTO(contentCheck); // 필요에 따라 생성자 사용
 
                 content_checks
