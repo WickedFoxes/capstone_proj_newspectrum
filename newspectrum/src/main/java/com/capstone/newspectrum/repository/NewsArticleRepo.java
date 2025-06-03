@@ -59,6 +59,18 @@ public interface NewsArticleRepo extends JpaRepository<NewsArticle, Long> {
             @Param("domain") Domain domain
     );
 
+    @Query("""
+    SELECT nc.news_article
+    FROM NewsCluster nc
+    WHERE nc.news_article.domain = :domain
+        AND nc.news_article.createdDate BETWEEN :startDate AND :endDate
+    ORDER BY nc.news_article.createdDate DESC
+    """)
+    List<NewsArticle> findNewsArticlesHaveCluster(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            @Param("domain") Domain domain
+    );
 
 }
 

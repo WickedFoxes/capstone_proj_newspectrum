@@ -167,44 +167,22 @@
         }
 
         /*  고정 버튼 */
-        #ai-summary-btn,
-         .quality-summary-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            margin: 0;
-            cursor: pointer;
-            border-radius: 12px;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-
-            width: 60px;   /* 필요 시 조절 */
-            height: 60px;
-
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .section-title {
+            font-size: 20px;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            color: #333;
         }
 
-        #ai-summary-btn img,
-         .quality-summary-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            border-radius: 12px;
+        .ai-summary-list li {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #444;
         }
 
-        #ai-summary-btn:hover,
-         .quality-summary-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 반응형 대응: 화면 너비가 768px 이하일 때 버튼 숨기기 */
-        @media (max-width: 768px) {
-            .floating-ai-button-wrapper {
-                display: none;
-            }
+        .ai-image-wrapper {
+            text-align: center;
+            margin: 15px 0 30px 0;
         }
 
         /*  모달 영역 */
@@ -238,57 +216,6 @@
             color: #333;
         }
 
-        .ai-summary-list {
-            padding-left: 20px;
-            font-size: 16px;
-            line-height: 1.8;
-            color: #444;
-            margin-bottom: 25px;
-        }
-
-        .ai-summary-list li {
-            margin-bottom: 10px;
-        }
-
-        .ai-image-wrapper {
-            text-align: center;
-        }
-
-        .ai-image-wrapper img {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            object-fit: contain;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-        /*뉴스 퀄리티 분석 버튼*/
-        .quality-summary-box {
-    width: 150px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    color: white;
-    padding: 16px;
-    text-align: center;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    margin-top: 15px;
-}
-
-.quality-summary-box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    background: linear-gradient(135deg, #3b8efc 0%, #00e5ff 100%);
-}
-
-.quality-summary-box p {
-    margin: 4px 0;
-    font-size: 14px;
-}
-
-
         /* 닫기 버튼 */
         .close {
               color: #aaa;
@@ -308,26 +235,6 @@
 <!-- ✅ 공통 상단바 삽입 -->
 <div th:replace="layout/common/header :: header"></div>
 
-<!--  AI 요약 버튼 (오른쪽 고정) -->
-<div class="floating-ai-button-wrapper">
-    <button id="ai-summary-btn" onclick="openModal()">
-        <img src="/img/AI_summary.png" alt="AI 요약 버튼 아이콘">
-    </button>
-
-    <button class="quality-summary-btn"
-            th:onclick="|window.location.href='/contentcheck/${news_article.id}'|">
-        <img src="/img/quality_check.png" alt="퀄리티 요약">
-    </button>
-    <!-- 퀄리티 평가 박스 버튼 추가 -->
-<!--    <div class="quality-summary-box"-->
-<!--         th:onclick="|window.location.href='/contentcheck/${news_article.id}'|">-->
-<!--        <p>기사 퀄리티 평가</p>-->
-<!--        <p>1번 : 통과</p>-->
-<!--        <p>2번 : 통과</p>-->
-<!--        <p>3번 : 문제 있음</p>-->
-<!--    </div>-->
-</div>
-
 <!--item.onclick = () => window.location.href = '/view/' + news.id;-->
 
 <!-- 뉴스 기사 컨테이너 -->
@@ -337,6 +244,7 @@
       <span th:text="${news_article.media}">언론사</span> |
       <span th:text="${#temporals.format(news_article.createdDate, 'yyyy-MM-dd HH:mm')}">날짜</span>
     </div>
+
     <!--  키워드 리스트 강조 출력 -->
     <div class="news-meta" style="margin-top: 5px;">
       <span th:each="kw, stat : ${keyword_items}" th:if="${stat.index < 5}"
@@ -345,9 +253,18 @@
         #키워드
       </span>
     </div>
+
+    <!-- AI 뉴스 요약 -->
+    <div class="section-title">🧠 AI 뉴스 요약</div>
+    <ol class="ai-summary-list">
+        <li th:each="line : ${summaryLines}" th:text="${line}">요약 문장</li>
+    </ol>
+    <div class="ai-image-wrapper">
+        <img th:src="@{'/img/' + ${news_article.comics_url}}" alt="AI 요약 이미지">
+    </div>
+
     <!-- 뉴스 이미지 추가 -->
     <img class="news-img" th:src="${news_article.img_url}" alt="뉴스 이미지">
-
 
     <div class="news-content" th:utext="${news_article.content}">
       <!-- 본문 내용 (focus keyword는 서버에서 이미 강조 처리된 상태로 전달) -->
@@ -407,56 +324,7 @@
 
 
 <script>
-    const floatingButton = document.querySelector('.floating-ai-button-wrapper');
 
-    const defaultTop = 200;   // 버튼 원래 위치
-    let currentTop = defaultTop;
-    let targetTop = defaultTop;
-    let lastScrollTime = Date.now();
-
-    // 스크롤 이벤트: 버튼 위치를 잠깐 아래로 이동
-    window.addEventListener('scroll', () => {
-        lastScrollTime = Date.now();
-        targetTop = defaultTop + 100; // 아래로 50px 잠깐 이동
-    });
-
-    // 애니메이션 루프
-    function animateFloatingButton() {
-        const now = Date.now();
-
-        // 스크롤한 후 일정 시간(0.3초) 지나면 다시 원위치로
-        if (now - lastScrollTime > 300) {
-            targetTop = defaultTop;
-        }
-
-        // 부드럽게 이동
-        currentTop += (targetTop - currentTop) * 0.1;
-        floatingButton.style.top = `${currentTop}px`;
-
-        requestAnimationFrame(animateFloatingButton);
-    }
-
-    // 시작
-    animateFloatingButton();
-
-  function openModal() {
-      document.getElementById("ai-modal").style.display = "block";
-  }
-
-  function closeModal() {
-      document.getElementById("ai-modal").style.display = "none";
-  }
-
-  // ESC 키로 모달 닫기
-  window.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeModal();
-  });
-
-  // 바깥 클릭 시 닫기
-  window.onclick = function(event) {
-      const modal = document.getElementById("ai-modal");
-      if (event.target === modal) closeModal();
-  }
 </script>
 </body>
 </html>

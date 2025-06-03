@@ -38,6 +38,7 @@ public class NewsViewController {
             }
         }
 
+
         model.addAttribute("news_article", news_article);
         model.addAttribute("summaryLines", summaryLines);
         model.addAttribute("keyword_items", keyword_items);

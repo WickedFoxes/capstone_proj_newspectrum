@@ -1,5 +1,7 @@
 package com.capstone.newspectrum;
 
+import com.capstone.newspectrum.dto.ContentCheckDTO;
+import com.capstone.newspectrum.dto.NewsArticleDTO;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +12,9 @@ import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.enumeration.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -84,6 +88,47 @@ public class NewsArticleRepoTest {
                     "날짜 범위를 벗어남: " + article.getCreatedDate()
             );
             assertEquals(domain, article.getDomain(), "도메인이 다름: " + article.getDomain());
+        }
+    }
+
+    @Test
+    void testfindNewsArticlesHaveCluster(){
+        System.out.println("""
+        ###########################################################################################
+        testfindNewsArticlesHaveCluster
+        ###########################################################################################
+        """);
+        LocalDateTime start = LocalDateTime.of(2025, 5, 25, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2025, 5, 27, 23, 59);
+        Domain domain = Domain.정치;
+
+        List<NewsArticle> newsArticles = newsArticleRepo.findNewsArticlesHaveCluster(start, end, domain);
+
+        for (NewsArticle article : newsArticles.subList(0, 5)){
+            NewsArticleDTO dto = new NewsArticleDTO(article);
+            if(!dto.getTitle_checks().isEmpty()){
+                System.out.println("title : "+dto.getTitle());
+                ContentCheckDTO contentCheckDTO1 = dto.getTitle_checks().get(0);
+                ContentCheckDTO contentCheckDTO2 = dto.getTitle_checks().get(1);
+                ContentCheckDTO contentCheckDTO3 = dto.getTitle_checks().get(2);
+                System.out.println(contentCheckDTO1.getContent_check_type() + ":" + String.format("%.2f", contentCheckDTO1.getScore()));
+                System.out.println(contentCheckDTO2.getContent_check_type() + ":" + String.format("%.2f", contentCheckDTO2.getScore()));
+                System.out.println(contentCheckDTO3.getContent_check_type() + ":" + String.format("%.2f", contentCheckDTO3.getScore()));
+            }
+            Map<String, List<ContentCheckDTO>> content_checks = dto.getContent_checks();
+            int count = 0;
+            for (Map.Entry<String, List<ContentCheckDTO>> entry : content_checks.entrySet()) {
+                if (count >= 5) break;
+
+                String keyword = entry.getKey().replace("\n", " ");
+                List<ContentCheckDTO> dtoList = entry.getValue();
+
+                System.out.println("🔑 문장: " + keyword);
+                for (ContentCheckDTO dtoItem : dtoList) {
+                    System.out.printf("  - %s: %.1f\n", dtoItem.getContent_check_type(), dtoItem.getScore());
+                }
+                count++;
+            }
         }
     }
 }
