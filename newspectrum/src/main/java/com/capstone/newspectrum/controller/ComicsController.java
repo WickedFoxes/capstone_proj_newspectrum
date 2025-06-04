@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,8 @@ public class ComicsController {
     @Autowired
     private NewsArticleService newsArticleService;
 
-    @GetMapping("")
-    public String mainPage_comics(Model model, Domain domain){
+    @GetMapping("/{domain}")
+    public String mainPage_comics(Model model, @PathVariable("domain") Domain domain){
         List<NewsArticleDTO> newsArticleDTOList = newsArticleService.get_news_article_by_domain_for_comics(domain);
         List<String> comics_url = new ArrayList<>();
         for(int i = 0; i < newsArticleDTOList.size(); i++){
