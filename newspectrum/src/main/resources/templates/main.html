@@ -314,6 +314,79 @@
             background-color: #007bff;
         }
 
+<!--    AI 이미지 뉴스 리스트    -->
+        .ai-news-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .ai-summary-scroll {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px 20px;
+            scroll-behavior: smooth;
+            background-color: #f4f6f8;
+            border-radius: 8px;
+        }
+
+        .ai-summary-item {
+            flex: 0 0 auto;
+            width: 200px;
+            margin-right: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .ai-summary-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .ai-summary-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .ai-summary-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .ai-summary-item .title {
+            font-size: 14px;
+            padding: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+<!--        .ai-summary-scroll {-->
+<!--    display: flex !important;-->
+<!--    flex-wrap: nowrap !important;-->
+<!--    overflow-x: auto !important;-->
+<!--    overflow-y: hidden;-->
+<!--    padding: 10px 20px;-->
+<!--    scroll-behavior: smooth;-->
+<!--    background-color: #f4f6f8;-->
+<!--    border: 2px dashed red; /* 경계 시각화 */-->
+<!--}-->
+
+<!--.ai-summary-item {-->
+<!--    flex: 0 0 auto !important;-->
+<!--    width: 200px;-->
+<!--    margin-right: 20px;-->
+<!--    background: yellow;-->
+<!--}-->
     </style>
 </head>
 <body>
@@ -364,6 +437,19 @@
 </div>
 
 <!--AI 만평 카드 뉴스 형태-->
+<div class="ai-news-wrapper">
+    <div class="section-title">🧠 AI 요약 카드 뉴스</div>
+    <div class="ai-summary-scroll" onwheel="scrollHorizontally(event)">
+        <div class="ai-summary-item"
+             th:each="news, iter : ${hotIssues[0].news_articles}"
+             th:if="${iter.index < 10}">
+            <a th:href="@{/view/{id}(id=${news.id})}">
+                <img th:src="@{${news.img_url}}" alt="뉴스 이미지">
+                <div class="title" th:text="${news.title}">뉴스 제목</div>
+            </a>
+        </div>
+    </div>
+</div>
 
 <!--워드 클라우드 형태의 오늘의 키워드-->
 <div class="wordcloud-container">
@@ -474,6 +560,13 @@
     container.addEventListener("mouseleave", () => {
         delayRestartAutoSlide();
     });
+
+<!--    AI 요약 이미지-->
+    function scrollHorizontally(e) {
+        const container = e.currentTarget;
+        container.scrollLeft += e.deltaY;
+        e.preventDefault();
+    }
 
 <!--    워드 클라우드-->
     const issuesByDomain = [[${issuesByDomainJson}]];
