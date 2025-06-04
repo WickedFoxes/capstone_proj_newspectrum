@@ -212,6 +212,90 @@ def read_articles_with_clsuter_and_keyword(news_article_id, end_date, start_date
     return news_articles
 
 
+def read_news_articles_have_cluster(date_str = "2025-03-01 00:00:00", 
+                                    date_end = "2025-03-02 23:59:59") -> list[NewsArticle]:
+    # DB 연결
+    conn = pymysql.connect(host='localhost',
+                        user='root',
+                        password='root',
+                        db='newspectrum',
+                        charset='utf8mb4',
+                        cursorclass=pymysql.cursors.DictCursor)
+    articles = []
+    try:
+        with conn.cursor() as cursor:
+            # item_fields = ", ".join([f.name for f in fields(NewsArticle)])
+            
+            sql = f"""
+                SELECT na.*
+                FROM news_cluster nc
+                JOIN news_article na ON nc.news_article_id = na.id
+                WHERE na.created_date BETWEEN %s AND %s
+            """
+            cursor.execute(sql, (date_str, date_end))
+            rows = cursor.fetchall()            
+            print("✅ 데이터 가져오기 성공")
+
+            for row in rows:
+                if row.get('content') and len(row['content']) >= 400:
+                    article = NewsArticle(**row)
+                    articles.append(article)
+    except pymysql.MySQLError as e:
+        print("❌ 데이터베이스 오류 발생:", e)
+    except Exception as e:
+        print("❌ 기타 예외 발생:", e)
+    finally:
+        conn.close()
+    
+    return articles
+
+def read_top_articles_per_cluster(date_str="2025-03-01 00:00:00", 
+                                  date_end="2025-03-02 23:59:59",
+                                  topk = 2) -> dict[str, list[NewsArticle]]:
+    import pymysql
+    from collections import defaultdict
+
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='root',
+        db='newspectrum',
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+
+    cluster_articles = defaultdict(list)
+
+    try:
+        with conn.cursor() as cursor:
+            sql = """
+                SELECT nc.cluster_id, na.*
+                FROM news_cluster nc
+                JOIN news_article na ON nc.news_article_id = na.id
+                WHERE na.created_date BETWEEN %s AND %s
+                ORDER BY nc.cluster_id, na.created_date DESC
+            """
+            cursor.execute(sql, (date_str, date_end))
+            rows = cursor.fetchall()
+            print("✅ 클러스터별 뉴스 가져오기 성공")
+
+            for row in rows:
+                cid = row['cluster_id']
+                if len(cluster_articles[cid]) < topk:
+                    article_data = {k: v for k, v in row.items() if k != 'cluster_id'}
+                    article = NewsArticle(**article_data)
+                    cluster_articles[cid].append(article)
+
+    except pymysql.MySQLError as e:
+        print("❌ 데이터베이스 오류 발생:", e)
+    except Exception as e:
+        print("❌ 기타 예외 발생:", e)
+    finally:
+        conn.close()
+
+    return dict(cluster_articles)
+   
+
 # CREATE
 def create_news_article(news_article:NewsArticle):
     try:
@@ -504,3 +588,82 @@ def create_news_article_relation(news_article_relation:NewsArticleRelation):
             print("🔒 연결 종료")
         except:
             pass
+
+
+# update
+def update_articles(news_article: NewsArticle):
+    # DB 연결
+    conn = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='root',
+        db='newspectrum',
+        charset='utf8mb4'
+    )
+    cur = conn.cursor(pymysql.cursors.DictCursor)
+
+    try:
+        # 동적으로 SET 절 구성
+        fields = []
+        values = []
+
+        if news_article.title is not None:
+            fields.append("title = %s")
+            values.append(news_article.title)
+
+        if news_article.content is not None:
+            fields.append("content = %s")
+            values.append(news_article.content)
+
+        if news_article.domain is not None:
+            fields.append("domain = %s")
+            values.append(news_article.domain)
+
+        if news_article.media is not None:
+            fields.append("media = %s")
+            values.append(news_article.media)
+
+        if news_article.href is not None:
+            fields.append("href = %s")
+            values.append(news_article.href)
+
+        if news_article.img_url is not None:
+            fields.append("img_url = %s")
+            values.append(news_article.img_url)
+
+        if news_article.created_date is not None:
+            fields.append("created_date = %s")
+            values.append(news_article.created_date.strftime('%Y-%m-%d %H:%M:%S'))
+
+        if news_article.comics_url is not None:
+            fields.append("comics_url = %s")
+            values.append(news_article.comics_url)
+
+        if news_article.summary is not None:
+            fields.append("summary = %s")
+            values.append(news_article.summary)
+
+        # 아무 필드도 업데이트할 게 없으면 종료
+        if not fields:
+            return
+
+        # id는 항상 필요
+        values.append(news_article.id)
+
+        # 쿼리 구성 및 실행
+        sql = f"""
+            UPDATE news_article
+            SET {', '.join(fields)}
+            WHERE id = %s
+        """
+        cur.execute(sql, tuple(values))
+        conn.commit()
+        print(f"✅ news_article ID {news_article.id} 업데이트 완료")
+
+    except Exception as e:
+        print(f"❌ 업데이트 실패: {e}")
+        conn.rollback()
+
+    finally:
+        cur.close()
+        conn.close()
