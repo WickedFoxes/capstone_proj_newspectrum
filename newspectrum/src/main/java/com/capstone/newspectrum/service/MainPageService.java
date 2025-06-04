@@ -3,7 +3,6 @@ package com.capstone.newspectrum.service;
 import com.capstone.newspectrum.dto.*;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.model.Keyword;
-import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.model.NewsCluster;
 import com.capstone.newspectrum.repository.KeywordRepo;
 import com.capstone.newspectrum.repository.NewsArticleRepo;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 // get_total_news_cnt, get_total_cluster_cnt, get_total_news_cnt_by_domain, get_total_cluster_cnt_by_domain 구현
 
 @Service
-public class MainPageSevice {
+public class MainPageService {
     @Autowired
     private NewsArticleRepo news_article_repo;
     @Autowired
@@ -180,7 +179,6 @@ public class MainPageSevice {
         );
 
     }
-
     private boolean checkKeywordOverlap(List<String> a, List<String> b, int k) {
         Set<String> keywordsA = new HashSet<>(a);
         Set<String> keywordsB = new HashSet<>(b.subList(0, k));

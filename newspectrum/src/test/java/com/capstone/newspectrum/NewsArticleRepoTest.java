@@ -1,5 +1,6 @@
 package com.capstone.newspectrum;
 
+import com.capstone.newspectrum.dto.NewsArticleDTO;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +11,7 @@ import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.enumeration.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,5 +87,27 @@ public class NewsArticleRepoTest {
             );
             assertEquals(domain, article.getDomain(), "도메인이 다름: " + article.getDomain());
         }
+    }
+@Test
+    void testFindNewsArticleByDomain(){
+        System.out.println("""
+        ###########################################################################################
+        test_FindNewsArticle_ByDomain
+        ###########################################################################################
+        """);
+
+        Domain domain = Domain.정치;
+        List<NewsArticle> news_article = newsArticleRepo.findAllByDomain(domain);
+        List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
+        for(NewsArticle newsArticle : news_article){
+            newsArticleDTOList.add(new NewsArticleDTO(newsArticle));
+        }
+        for(NewsArticleDTO news : newsArticleDTOList){
+            System.out.println("########### news_article_DTO_By_Doamin##############");
+            System.out.println("Title : "+ news.getTitle().replace("\n", ""));
+            System.out.println("Domain : "+ news.getDomain());
+            System.out.println("createdDate "+ news.getCreatedDate());
+        }
+        System.out.println("########### 조회된 기사 수 : " + newsArticleDTOList.size() + " 개 ##############");
     }
 }

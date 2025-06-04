@@ -1,13 +1,7 @@
 package com.capstone.newspectrum.controller;
 
 import com.capstone.newspectrum.dto.*;
-import com.capstone.newspectrum.enumeration.Domain;
-import com.capstone.newspectrum.enumeration.Media;
-import com.capstone.newspectrum.service.MainPageSevice;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.capstone.newspectrum.service.MainPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +13,7 @@ import java.util.*;
 @Controller
 public class MainController {
     @Autowired
-    private MainPageSevice mainPageService;
+    private MainPageService mainPageService;
 
     @GetMapping("/")
     public String main(Model model) {

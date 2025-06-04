@@ -28,6 +28,7 @@ public interface NewsArticleRepo extends JpaRepository<NewsArticle, Long> {
     List<NewsArticle> findByCreatedDateBetweenAndDomain(LocalDateTime startDate,
                                                         LocalDateTime endDate,
                                                         Domain domain);
+    List<NewsArticle> findAllByDomain(Domain domain);
 
     @Query("""
     SELECT k.news_article
