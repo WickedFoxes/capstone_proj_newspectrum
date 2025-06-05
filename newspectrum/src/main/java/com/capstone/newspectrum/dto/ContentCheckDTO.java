@@ -14,7 +14,7 @@ public class ContentCheckDTO {
     public ContentCheckDTO(ContentCheck contentCheck){
         this.id = contentCheck.getId();
         this.news_article_id = contentCheck.getNews_article().getId();
-        this.keyword = contentCheck.getKeyword();
+        this.keyword = contentCheck.getKeyword().replace("\n", "");
         this.content_check_type = contentCheck.getContent_check_type();
         this.score = contentCheck.getScore();
     }
