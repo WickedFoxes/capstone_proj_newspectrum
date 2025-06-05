@@ -15,18 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/contentCheck")
 public class ContentCheckPageController {
     @Autowired
     NewsArticleService newsArticleService;
-
-    @GetMapping("/contentcheck/{news_article_id}")
+    @GetMapping("/{news_Article_id}")
     public String contentCheck(Model model,
                                @PathVariable("news_article_id") Long news_article_id){
-    NewsArticleDTO news_article = newsArticleService.get_news_article_by_id(news_article_id);
-    List<ContentCheckDTO> news_article_content_check = news_article.getContentChecks();
+        NewsArticleDTO news_article = newsArticleService.get_news_article_by_id(news_article_id);
 
-    model.addAttribute("news_article", news_article);
-    model.addAttribute("content_check", news_article_content_check);
-    return "news_article_contentCheck";
+        model.addAttribute("news_article", news_article);
+        return "news_article_contentCheck";
     }
 }
