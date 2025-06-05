@@ -1,17 +1,9 @@
 package com.capstone.newspectrum;
 
 import com.capstone.newspectrum.dto.IssueDTO;
-import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.dto.TodayKeywordItemDTO;
 import com.capstone.newspectrum.dto.TodayRelatedKeywordDTO;
 import com.capstone.newspectrum.enumeration.Domain;
-import com.capstone.newspectrum.model.Keyword;
-import com.capstone.newspectrum.model.NewsArticle;
-import com.capstone.newspectrum.model.NewsCluster;
-import com.capstone.newspectrum.repository.KeywordRepo;
-import com.capstone.newspectrum.repository.NewsArticleRepo;
-import com.capstone.newspectrum.repository.NewsClusterRepo;
-import com.capstone.newspectrum.service.MainPageSevice;
 import com.capstone.newspectrum.service.SectionPageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 @Transactional
