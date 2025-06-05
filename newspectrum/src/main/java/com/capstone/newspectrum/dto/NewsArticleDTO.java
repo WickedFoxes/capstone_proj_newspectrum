@@ -57,6 +57,8 @@ public class NewsArticleDTO {
                     || contentCheck.getContent_check_type().equals(CheckType.title_hidden_2)
                     || contentCheck.getContent_check_type().equals(CheckType.title_intentional_distortion)
                     || contentCheck.getContent_check_type().equals(CheckType.title_over_representation)
+                    || contentCheck.getContent_check_type().equals(CheckType.title_slang)
+                    || contentCheck.getContent_check_type().equals(CheckType.title_sensation)
             ) {
                 this.title_checks.add(new ContentCheckDTO(contentCheck));
             }
