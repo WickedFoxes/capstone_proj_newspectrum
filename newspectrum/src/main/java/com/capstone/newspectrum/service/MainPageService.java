@@ -3,6 +3,7 @@ package com.capstone.newspectrum.service;
 import com.capstone.newspectrum.dto.*;
 import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.model.Keyword;
+import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.model.NewsCluster;
 import com.capstone.newspectrum.repository.KeywordRepo;
 import com.capstone.newspectrum.repository.NewsArticleRepo;
@@ -184,5 +185,39 @@ public class MainPageService {
         Set<String> keywordsB = new HashSet<>(b.subList(0, k));
         keywordsA.retainAll(keywordsB);  // 교집합
         return keywordsA.size() < k/2;
+    }
+
+    // 뉴스 NewsArticleDTO 10개 랜덤으로 가져오기
+    public List<NewsArticleDTO> get_news_article_for_comics(LocalDateTime today){
+        List<NewsArticleDTO> newsArticle_for_comics = new ArrayList<>();
+
+        List<NewsArticleDTO> n1 = get_news_have_cluster_by_domain(today.minusHours(48), today, Domain.정치);
+        List<NewsArticleDTO> n2 = get_news_have_cluster_by_domain(today.minusHours(48), today, Domain.사회);
+        List<NewsArticleDTO> n3 = get_news_have_cluster_by_domain(today.minusHours(48), today, Domain.경제);
+        List<NewsArticleDTO> n4 = get_news_have_cluster_by_domain(today.minusHours(48), today, Domain.연예);
+        List<NewsArticleDTO> n5 = get_news_have_cluster_by_domain(today.minusHours(48), today, Domain.스포츠);
+
+        // 도메인별로 섞고 최대 2개씩 선택
+        List<List<NewsArticleDTO>> allLists = List.of(n1, n2, n3, n4, n5);
+        for (List<NewsArticleDTO> list : allLists) {
+            Collections.shuffle(list);  // 리스트 무작위 섞기
+            int limit = Math.min(2, list.size());  // 최대 2개 또는 리스트 크기
+            newsArticle_for_comics.addAll(list.subList(0, limit));
+        }
+
+        return newsArticle_for_comics;
+    }
+
+    public List<NewsArticleDTO> get_news_have_cluster_by_domain(LocalDateTime start_date,
+                                                                LocalDateTime end_date,
+                                                                Domain domain) {
+        List<NewsArticle> newsArticle = news_article_repo.findNewsArticlesHaveCluster(start_date, end_date, domain);
+        List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
+
+        for(NewsArticle news_article : newsArticle){
+            newsArticleDTOList.add(new NewsArticleDTO(news_article));
+        }
+
+        return newsArticleDTOList;
     }
 }

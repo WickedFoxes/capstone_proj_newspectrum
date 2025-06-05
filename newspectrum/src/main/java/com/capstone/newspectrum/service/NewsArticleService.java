@@ -61,15 +61,4 @@ public class NewsArticleService {
         }
         return result;
     }
-    //도메인별 뉴스만화 NewsArticleDTO 10개씩 가져오기
-    public List<NewsArticleDTO> get_news_article_by_domain_for_comics(Domain domain){
-        List<NewsArticleDTO> newsArticle_for_comics = new ArrayList<>();
-        List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
-        newsArticleDTOList = get_news_Article_by_domain(domain);
-        for(int i = 0; i < 10; i++){
-            int rand_num = (int)Math.random();
-            newsArticle_for_comics.add(newsArticleDTOList.get(rand_num));
-        }
-        return newsArticle_for_comics;
-    }
 }
