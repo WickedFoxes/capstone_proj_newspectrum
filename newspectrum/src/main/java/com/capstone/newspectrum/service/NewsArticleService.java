@@ -4,6 +4,7 @@ import com.capstone.newspectrum.dto.FocusKeywordItemDTO;
 import com.capstone.newspectrum.dto.KeywordDTO;
 import com.capstone.newspectrum.dto.NewsArticleDTO;
 import com.capstone.newspectrum.dto.RelatedNewsArticleAndScoreDTO;
+import com.capstone.newspectrum.enumeration.Domain;
 import com.capstone.newspectrum.model.Keyword;
 import com.capstone.newspectrum.model.NewsArticle;
 import com.capstone.newspectrum.model.NewsArticleRelation;
@@ -24,6 +25,14 @@ public class NewsArticleService {
         Optional<NewsArticle> news_article = newsArticleRepo.findById(news_article_id);
         return news_article.map(NewsArticleDTO::new).orElse(null);
     }
+    public List<NewsArticleDTO> get_news_Article_by_domain(Domain domain){
+        List<NewsArticle> newsArticleList = newsArticleRepo.findAllByDomain(domain);
+        List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
+        for(NewsArticle newsArticle : newsArticleList){
+            newsArticleDTOList.add(new NewsArticleDTO(newsArticle));
+        }
+        return newsArticleDTOList;
+    }
 
     public List<KeywordDTO> get_keyword_items_by_id(Long news_article_id){
         NewsArticle news_article = newsArticleRepo.findById(news_article_id).get();
@@ -36,7 +45,6 @@ public class NewsArticleService {
         }
         return result;
     }
-
     public List<RelatedNewsArticleAndScoreDTO> get_related_news_articles_by_id(Long news_article_id){
         Optional<NewsArticle> news_article = newsArticleRepo.findById(news_article_id);
         List<NewsArticleRelation> relations = news_article.get().getRelated_news_articles();
@@ -52,5 +60,16 @@ public class NewsArticleService {
             );
         }
         return result;
+    }
+    //도메인별 뉴스만화 NewsArticleDTO 10개씩 가져오기
+    public List<NewsArticleDTO> get_news_article_by_domain_for_comics(Domain domain){
+        List<NewsArticleDTO> newsArticle_for_comics = new ArrayList<>();
+        List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
+        newsArticleDTOList = get_news_Article_by_domain(domain);
+        for(int i = 0; i < 10; i++){
+            int rand_num = (int)Math.random();
+            newsArticle_for_comics.add(newsArticleDTOList.get(rand_num));
+        }
+        return newsArticle_for_comics;
     }
 }

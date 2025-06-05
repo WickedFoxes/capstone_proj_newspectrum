@@ -1,9 +1,6 @@
 package com.capstone.newspectrum.controller;
 
 import com.capstone.newspectrum.dto.*;
-import com.capstone.newspectrum.enumeration.Domain;
-import com.capstone.newspectrum.enumeration.Media;
-import com.capstone.newspectrum.service.MainPageSevice;
 import com.capstone.newspectrum.service.NewsArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,10 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Controller
 public class NewsViewController {
