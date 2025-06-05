@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-cloud/1.2.5/d3.layout.cloud.min.js"></script>
 
     <style>
-        /* 슬라이더 컨테이너 */
+        /* 기본 스타일 */
         body {
             font-family: Arial, sans-serif;
             background: #f4f6f8;
@@ -21,128 +21,31 @@
             padding: 0;
         }
 
-        .slider-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 30px;
-            margin-top: 30px;
-            transition: transform 0.5s ease;
-        }
-        .wordcloud-box {
-            width: 45%;
-            height: 500px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 10px;
-        }
-        .news-list-container {
-            width: 45%;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 20px;
-            display: none;
-        }
-        .news-list-container.show {
-            display: block;
-        }
-        .news-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-            cursor: pointer;
-        }
-        .news-item img {
-            width: 100px;
-            height: 70px;
-            object-fit: cover;
-            margin-right: 16px;
-            border-radius: 4px;
-        }
-        .news-item-title {
-            font-size: 16px;
+        /* 섹션 제목 스타일 */
+        .section-title {
+            text-align: center;
+            font-size: 28px;
             font-weight: bold;
+            margin: 40px 0 20px 0;
             color: #333;
-            margin-bottom: 4px;
-        }
-        .news-item-media {
-            font-size: 12px;
-            color: #999;
-        }
-        .domain-title {
-            text-align: center;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        .wordcloud-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* ===== 오늘의 이슈 슬라이더 영역 ===== */
+        .hot-issues-section {
             position: relative;
-            margin-top: 30px;
+            max-width: 1360px; /* 버튼 공간 포함한 전체 너비 */
+            margin: 0 auto;
+            padding: 0 40px; /* 버튼 공간을 줄임 (80px -> 60px) */
         }
 
-        .wordcloud-box {
-            width: 520px;
-            height: 520px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            padding: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .arrow {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 50%;
-            margin: 0 10px;
-            z-index: 2;
-            transition: background-color 0.3s ease;
-        }
-
-        .arrow:hover {
-            background-color: #0056b3;
-        }
-        .pagination-buttons {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .pagination-buttons button {
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-
-        .pagination-buttons button:disabled {
-            background-color: #cccccc;
-            cursor: default;
-        }
-
-        /*핫이슈 자동 슬라이드*/
         .news-slider-wrapper {
-            width: 100%;
-            overflow: hidden;
-            position: relative;
             max-width: 1200px;
-            margin: auto;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden; /* 슬라이더 콘텐츠만 숨김 */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .news-slider-track {
@@ -154,18 +57,10 @@
         .news-main-container {
             flex: 0 0 100%;
             box-sizing: border-box;
-        }
-
-        .news-main-container {
             display: flex;
             gap: 30px;
-            max-width: 1200px;
-            margin: 40px auto;
             padding: 20px;
             background: white;
-            border-radius: 10px;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .news-left {
@@ -201,7 +96,7 @@
             gap: 10px;
             margin-bottom: 10px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0e0; /* 구분선 추가 */
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .thumbnail-news:last-of-type {
@@ -239,24 +134,59 @@
             color: #333;
             margin-bottom: 6px;
             padding-bottom: 6px;
-            border-bottom: 1px solid #e0e0e0; /* 얇은 회색 선 */
+            border-bottom: 1px solid #e0e0e0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .news-headlines li:last-child {
             border-bottom: none;
         }
 
-<!--        슬라이딩 뉴스 페이지-->
+        /* 통일된 좌우 슬라이딩 버튼 스타일 */
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            background-color: #888;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .nav-left {
+            left: 0; /* hot-issues-section 기준 왼쪽 끝 */
+        }
+
+        .nav-right {
+            right: 0; /* hot-issues-section 기준 오른쪽 끝 */
+        }
+
+        /* 슬라이더 점 표시 */
         .slider-dots {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
-            margin-top: 0;
-            margin-bottom: 30px;
-<!--            gap: 10px;-->
+            margin: 20px 0 30px 0;
         }
 
         .slider-dots .dot {
@@ -269,6 +199,7 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         .dot-label {
             font-size: 20px;
             font-weight: 700;
@@ -288,82 +219,273 @@
             background-color: #007bff;
         }
 
+        /* ===== AI 요약 카드 뉴스 영역 ===== */
+        .ai-news-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .ai-news-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .ai-summary-scroll {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 10px 20px;
+            scroll-behavior: smooth;
+            background-color: #f4f6f8;
+            border-radius: 8px;
+        }
+
+        .ai-summary-item {
+            flex: 0 0 auto;
+            width: 200px;
+            margin-right: 20px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .ai-summary-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .ai-summary-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .ai-summary-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        .ai-summary-item .title {
+            font-size: 14px;
+            padding: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* ===== 오늘의 키워드 워드클라우드 영역 ===== */
+        .wordcloud-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 20px;
+            position: relative;
+        }
+
+        .wordcloud-box {
+            width: 520px;
+            height: 520px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .news-list-container {
+            width: 45%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            display: none;
+        }
+
+        .news-list-container.show {
+            display: block;
+        }
+
+        .news-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .news-item img {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            margin-right: 16px;
+            border-radius: 4px;
+        }
+
+        .news-item-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .news-item-media {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .arrow-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow-button:hover {
+            background-color: #888;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .arrow-left {
+            left: -70px;
+        }
+
+        .arrow-right {
+            right: -70px;
+        }
+
+        .pagination-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination-buttons button {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .pagination-buttons button:disabled {
+            background-color: #cccccc;
+            cursor: default;
+        }
     </style>
 </head>
 <body>
 
 <!-- ✅ 공통 상단바 삽입 -->
-<div th:replace="layout/common/header :: header"></div>
+<div th:replace="~{layout/common/header :: header}"></div>
 
-<!--<div>-->
-<!--    <p th:text="${today_issues[0].keywords}">키워드 디버그</p>-->
-<!--</div>-->
+<!-- ===== 오늘의 이슈 섹션 ===== -->
+<div class="section-title">🔥 오늘의 이슈</div>
 
-<!--<div class="domain-nav">-->
-<!--    <button onclick="prevDomain()">이전</button>-->
-<!--    <span id="domainTitle" class="domain-title">정치</span>-->
-<!--    <button onclick="nextDomain()">다음</button>-->
-<!--</div>-->
+<div class="hot-issues-section">
+    <!-- 좌우 버튼을 슬라이더 래퍼 바깥에 배치 -->
+    <button class="nav-button nav-left" onclick="manualPrevSlide()">❰</button>
+    <button class="nav-button nav-right" onclick="manualNextSlide()">❱</button>
 
-<!--오늘의 이슈 자동 슬라이드-->
-<!-- 슬라이더 전체 영역 -->
-<div class="news-slider-wrapper">
-    <div class="news-slider-track" id="newsSliderTrack">
-        <div class="news-main-container" th:each="issue : ${hotIssues}"
-             th:attr="data-domain=${issue.news_articles[0].domain}">
-            <!-- 기존 news-main-container 내용 (왼쪽 + 오른쪽 UI) 여기에 포함됨 -->
-            <div class="news-left" th:onclick="|window.location.href='/view/${issue.news_articles[0].id}'|" style="cursor: pointer;">
-                <img th:src="@{${issue.news_articles[0].img_url}}" />
-                <h2 th:text="${issue.news_articles[0].title}"></h2>
-            </div>
-            <div class="news-right">
-                <div class="thumbnail-news" th:each="news, iter : ${issue.news_articles}"
-                     th:if="${iter.index > 0 and iter.index <= 3}"
-                     th:onclick="|window.location.href='/view/${news.id}'|"
-                     style="cursor: pointer;">
-                    <img th:src="@{${news.img_url}}" />
-                    <p th:text="${#strings.abbreviate(news.title, 50)}"></p>
+    <div class="news-slider-wrapper">
+        <div class="news-slider-track" id="newsSliderTrack">
+            <div class="news-main-container" th:each="issue : ${hotIssues}"
+                 th:attr="data-domain=${issue.news_articles[0].domain}">
+                <div class="news-left" th:onclick="|window.location.href='/view/${issue.news_articles[0].id}'|" style="cursor: pointer;">
+                    <img th:src="@{${issue.news_articles[0].img_url}}" />
+                    <h2 th:text="${issue.news_articles[0].title}"></h2>
                 </div>
-                <ul class="news-headlines">
-                    <li th:each="news, iter : ${issue.news_articles}"
-                        th:if="${iter.index >= 4 and iter.index < 8}"
-                        th:text="${#strings.abbreviate(news.title, 60)}"
-                        th:onclick="|window.location.href='/view/${news.id}'|"
-                        style="cursor: pointer;"></li>
-                </ul>
+                <div class="news-right">
+                    <div class="thumbnail-news" th:each="news, iter : ${issue.news_articles}"
+                         th:if="${iter.index > 0 and iter.index <= 3}"
+                         th:onclick="|window.location.href='/view/${news.id}'|"
+                         style="cursor: pointer;">
+                        <img th:src="@{${news.img_url}}" />
+                        <p th:text="${#strings.abbreviate(news.title, 50)}"></p>
+                    </div>
+                    <ul class="news-headlines">
+                        <li th:each="news, iter : ${issue.news_articles}"
+                            th:if="${iter.index >= 4 and iter.index < 8}"
+                            th:text="${#strings.abbreviate(news.title, 60)}"
+                            th:onclick="|window.location.href='/view/${news.id}'|"
+                            style="cursor: pointer;"></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+
     <div class="slider-dots" id="sliderDots"></div>
 </div>
 
-<!--AI 만평 카드 뉴스 형태-->
+<!-- ===== AI 요약 카드 뉴스 섹션 ===== -->
+<div class="section-title">🧠 AI 요약 만화 뉴스</div>
 
-<!--워드 클라우드 형태의 오늘의 키워드-->
+<div class="ai-news-wrapper">
+    <div class="ai-news-container">
+        <div class="ai-summary-scroll" onwheel="scrollHorizontally(event)">
+            <div class="ai-summary-item"
+                 th:each="news, iter : ${hotIssues[0].news_articles}"
+                 th:if="${iter.index < 10}">
+                <a th:href="@{/view/{id}(id=${news.id})}">
+                    <img th:src="@{${news.img_url}}" alt="뉴스 이미지">
+                    <div class="title" th:text="${news.title}">뉴스 제목</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 오늘의 키워드 섹션 ===== -->
+<div class="section-title">🔍 오늘의 키워드</div>
+
 <div class="wordcloud-container">
-    <button class="arrow left" onclick="prevDomain()">&lt;</button>
+    <button class="arrow-button arrow-left" onclick="prevDomain()">❰</button>
 
     <div>
-        <!-- 몇 번째 워드 클라우드 상태 텍스트 -->
         <div class="wordcloud-status" style="text-align:center; font-size:18px; font-weight:bold; margin-bottom: 10px;">
             <span id="currentDomainText"></span> |
             <span id="currentIndexText"></span>
         </div>
-
         <div id="wordCloudSlide" class="wordcloud-box"></div>
     </div>
-
-    <button class="arrow right" onclick="nextDomain()">&gt;</button>
 
     <div id="newsListContainer" class="news-list-container">
         <div id="selectedKeywordTitle" style="font-size: 18px; font-weight: bold; margin-bottom: 15px;"></div>
     </div>
+
+    <button class="arrow-button arrow-right" onclick="nextDomain()">❱</button>
 </div>
 
-<!--<p th:text="${issuesByDomainJson}"></p>-->
-
 <script th:inline="javascript">
-<!--    오늘의 이슈 자동 슬라이드-->
+    // 오늘의 이슈 자동 슬라이드 - 변수 선언 먼저
     let currentSlide = 0;
     const slideIntervalTime = 5000; // 5초
     const slider = document.getElementById("newsSliderTrack");
@@ -371,6 +493,19 @@
     const totalSlides = slides.length;
     let slideInterval = null;
     let resumeTimeout = null;
+
+    // 수동 슬라이드 이동 함수들을 먼저 정의
+    function manualNextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        moveSlide(currentSlide);
+        resetAutoSlide();
+    }
+
+    function manualPrevSlide() {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        moveSlide(currentSlide);
+        resetAutoSlide();
+    }
 
     function renderDots() {
         const dotsContainer = document.getElementById("sliderDots");
@@ -381,13 +516,11 @@
             const domain = slide.dataset.domain || `슬라이드 ${i + 1}`;
 
             if (i === currentSlide) {
-                // 현재 슬라이드는 텍스트로
                 const label = document.createElement("span");
                 label.className = "dot-label";
                 label.textContent = domain;
                 dotsContainer.appendChild(label);
             } else {
-                // 나머지는 점으로
                 const dot = document.createElement("span");
                 dot.className = "dot";
                 dot.title = domain;
@@ -396,6 +529,7 @@
                     currentSlide = i;
                     moveSlide(currentSlide);
                     updateDots();
+                    resetAutoSlide();
                 });
 
                 dotsContainer.appendChild(dot);
@@ -425,11 +559,12 @@
         slideInterval = null;
     }
 
-    function delayRestartAutoSlide() {
+    function resetAutoSlide() {
+        stopAutoSlide();
         if (resumeTimeout) clearTimeout(resumeTimeout);
         resumeTimeout = setTimeout(() => {
             startAutoSlide();
-        }, slideIntervalTime); // 3초 후 재시작
+        }, slideIntervalTime);
     }
 
     // 초기 슬라이드 시작
@@ -445,10 +580,17 @@
     });
 
     container.addEventListener("mouseleave", () => {
-        delayRestartAutoSlide();
+        resetAutoSlide();
     });
 
-<!--    워드 클라우드-->
+    // AI 요약 이미지 스크롤
+    function scrollHorizontally(e) {
+        const container = e.currentTarget;
+        container.scrollLeft += e.deltaY;
+        e.preventDefault();
+    }
+
+    // 워드 클라우드
     const issuesByDomain = [[${issuesByDomainJson}]];
     const domains = ["정치", "경제", "사회", "연예", "스포츠"];
     let currentIndex = 0;
@@ -491,7 +633,6 @@
             .words(topWords)
             .padding(5)
             .rotate(() => 0)
-//            .spiral("archimedean")
             .font("Impact")
             .fontSize(d => d.size)
             .on("end", function(words) {
@@ -504,13 +645,12 @@
             const containerWidth = document.getElementById("wordCloudSlide").clientWidth;
             const containerHeight = document.getElementById("wordCloudSlide").clientHeight;
 
-            // 키워드 빈도 기준 정렬
             const sortedWords = [...words].sort((a, b) => b.size - a.size);
             const total = sortedWords.length;
             const topThird = Math.floor(total / 3);
             const middleThird = Math.floor((total * 2) / 3);
 
-            d3.select("#wordCloudSlide svg").remove(); // 기존 클라우드 제거
+            d3.select("#wordCloudSlide svg").remove();
 
             const svg = d3.select("#wordCloudSlide").append("svg")
                 .attr("width", containerWidth)
@@ -523,39 +663,40 @@
                 .enter().append("text")
                 .attr("class", "word")
                 .style("font-size", d => d.size + "px")
-                .style("font-family", "'Segoe UI Semibold', 'Arial', sans-serif") // 자연스러운 두께
-                .style("font-weight", "600") // 너무 굵지 않게
+                .style("font-family", "'Segoe UI Semibold', 'Arial', sans-serif")
+                .style("font-weight", "600")
                 .style("fill", d => {
                     const rank = sortedWords.findIndex(w => w.text === d.text);
-                    if (rank < topThird) return "#FF7F0E";       // 상위: 주황
-                    else if (rank < middleThird) return "#1F77B4"; // 중위: 파랑
-                    else return "#A6A6A6";                         // 하위: 회색
+                    if (rank < topThird) return "#FF7F0E";
+                    else if (rank < middleThird) return "#1F77B4";
+                    else return "#A6A6A6";
                 })
                 .attr("text-anchor", "middle")
                 .attr("transform", d => "translate(" + [d.x, d.y] + ")")
                 .text(d => d.text);
 
-            // 클릭 이벤트 연결
             $("#wordCloudSlide text").on("click", function () {
                 const keyword = d3.select(this).text();
                 currentKeyword = keyword;
                 currentPage = 0;
                 showPaginatedNews(currentPage);
             });
+
+            currentKeyword = sortedWords[0].text;
+            showPaginatedNews(0);
         }
         clearNews();
     }
 
     function clearNews() {
-        newsListContainer.innerHTML = "";
-        newsListContainer.classList.remove("show");
+        // newsListContainer.innerHTML = "";
+        // newsListContainer.classList.remove("show");
     }
 
     function showPaginatedNews(page) {
         newsListContainer.innerHTML = "";
         newsListContainer.classList.add("show");
 
-        // 선택된 키워드 제목 표시
         const titleDiv = document.createElement("div");
         titleDiv.id = "selectedKeywordTitle";
         titleDiv.textContent = `🔍 선택된 키워드: ${currentKeyword}`;
