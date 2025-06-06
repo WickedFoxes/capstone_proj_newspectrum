@@ -123,6 +123,135 @@
             border-radius: 8px;
         }
 
+        /* AI 요약 컨테이너 스타일 */
+        .ai-summary-container {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            border: 2px solid #e3f2fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-summary-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2196f3, #21cbf3, #2196f3);
+            animation: aiGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes aiGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .ai-summary-content {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .ai-image-section,
+        .ai-text-section {
+            flex: 1;
+        }
+
+        .ai-image-header,
+        .ai-text-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #2196f3, #21cbf3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+        }
+
+        .ai-image-label,
+        .ai-text-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        .ai-image-wrapper {
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e3f2fd;
+        }
+
+        .ai-summary-list {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e3f2fd;
+            padding-left: 50px; /* 왼쪽 여백 추가 */
+        }
+
+        .ai-summary-list li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        /* 구분선 스타일 */
+        .content-divider {
+            display: flex;
+            align-items: center;
+            margin: 40px 0 30px 0;
+            gap: 15px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+        }
+
+        .divider-text {
+            background: #f8f9fa;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            border: 2px solid #e9ecef;
+            white-space: nowrap;
+        }
+
+        /* 뉴스 이미지 섹션 스타일 */
+        .news-image-section {
+            margin-bottom: 30px;
+        }
+
+        .news-img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+<!--            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);-->
+            border: 2px solid #e9ecef;
+        }
+
         /* 품질 점수 그래프 - 더 작은 크기 */
         .quality-graph-wrapper {
             position: fixed;
@@ -540,24 +669,43 @@
 
     <!-- AI 뉴스 요약 - 2열 레이아웃으로 변경 -->
     <div class="section-title">🧠 AI 뉴스 요약</div>
-    <div style="display: flex; gap: 30px; margin-bottom: 30px;">
-        <!-- 왼쪽: AI 이미지 -->
-        <div style="flex: 1;">
-            <div class="ai-image-wrapper" style="margin: 0;">
-                <img th:src="@{'/img/' + ${news_article.comics_url}}" alt="AI 요약 이미지">
+    <div class="ai-summary-container">
+        <div class="ai-summary-content">
+            <!-- 왼쪽: AI 이미지 -->
+            <div class="ai-image-section">
+                <div class="ai-image-header">
+                    <span class="ai-badge">AI 생성</span>
+                    <span class="ai-image-label">AI 만화 요약</span>
+                </div>
+                <div class="ai-image-wrapper">
+                    <img th:src="@{'/img/' + ${news_article.comics_url}}" alt="AI 요약 이미지">
+                </div>
             </div>
-        </div>
 
-        <!-- 오른쪽: AI 요약 텍스트 -->
-        <div style="flex: 1;">
-            <ol class="ai-summary-list" style="margin: 0; padding-left: 20px;">
-                <li th:each="line : ${summaryLines}" th:text="${line}">요약 문장</li>
-            </ol>
+            <!-- 오른쪽: AI 요약 텍스트 -->
+            <div class="ai-text-section">
+                <div class="ai-text-header">
+                    <span class="ai-badge">AI 요약</span>
+                    <span class="ai-text-label">핵심 내용 정리</span>
+                </div>
+                <ol class="ai-summary-list">
+                    <li th:each="line : ${summaryLines}" th:text="${line}">요약 문장</li>
+                </ol>
+            </div>
         </div>
     </div>
 
-    <!-- 뉴스 이미지 추가 -->
-    <img class="news-img" th:src="${news_article.img_url}" alt="뉴스 이미지">
+    <!-- 구분선 -->
+    <div class="content-divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">📰 원본 기사</div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- 뉴스 이미지 -->
+    <div class="news-image-section">
+        <img class="news-img" th:src="${news_article.img_url}" alt="뉴스 이미지">
+    </div>
 
     <div class="news-content" th:utext="${news_article.content}">
         <!-- 본문 내용 -->
