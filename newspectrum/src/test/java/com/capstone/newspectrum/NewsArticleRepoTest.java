@@ -115,19 +115,24 @@ public class NewsArticleRepoTest {
                 System.out.println(contentCheckDTO2.getContent_check_type() + ":" + String.format("%.2f", contentCheckDTO2.getScore()));
                 System.out.println(contentCheckDTO3.getContent_check_type() + ":" + String.format("%.2f", contentCheckDTO3.getScore()));
             }
-            Map<String, List<ContentCheckDTO>> content_checks = dto.getContent_checks();
-            int count = 0;
-            for (Map.Entry<String, List<ContentCheckDTO>> entry : content_checks.entrySet()) {
-                if (count >= 5) break;
+            Map<String, Map<String, List<ContentCheckDTO>>> content_checks = dto.getContent_checks();
+            for (Map.Entry<String, Map<String, List<ContentCheckDTO>>> parent : content_checks.entrySet()) {
+                String type = parent.getKey().replace("\n", " ");
+                Map<String, List<ContentCheckDTO>> contents = parent.getValue();
+                System.out.println("[type :"+type+"]" + contents.size());
 
-                String keyword = entry.getKey().replace("\n", " ");
-                List<ContentCheckDTO> dtoList = entry.getValue();
+                int cnt = 5;
+                for(Map.Entry<String, List<ContentCheckDTO>> child : contents.entrySet()){
+                    if(cnt <= 0) break;
+                    cnt -= 1;
+                    String keyword = child.getKey();
+                    List<ContentCheckDTO> dtoList = child.getValue();
 
-                System.out.println("🔑 문장: " + keyword);
-                for (ContentCheckDTO dtoItem : dtoList) {
-                    System.out.printf("  - %s: %.1f\n", dtoItem.getContent_check_type(), dtoItem.getScore());
+                    System.out.println("🔑 문장: " + keyword);
+                    for (ContentCheckDTO dtoItem : dtoList) {
+                        System.out.printf("  - %s: %.1f\n", dtoItem.getContent_check_type(), dtoItem.getScore());
+                    }
                 }
-                count++;
             }
         }
     }

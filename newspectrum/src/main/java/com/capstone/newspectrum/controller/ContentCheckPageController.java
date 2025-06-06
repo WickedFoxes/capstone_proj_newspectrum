@@ -20,9 +20,9 @@ public class ContentCheckPageController {
     @GetMapping("/{news_Article_id}")
     public String contentCheck(Model model,
                                @PathVariable("news_article_id") Long news_article_id){
-        NewsArticleDTO news_article = newsArticleService.get_news_article_by_id(news_article_id);
+    NewsArticleDTO news_article = newsArticleService.get_news_article_by_id(news_article_id);
 
-        model.addAttribute("news_article", news_article);
-        return "news_article_contentCheck";
+    model.addAttribute("news_article", news_article);
+    return "news_article_contentCheck";
     }
 }

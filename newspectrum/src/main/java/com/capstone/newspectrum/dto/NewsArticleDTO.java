@@ -25,7 +25,7 @@ public class NewsArticleDTO {
     private String comics_url;
     private String summary;
     private List<ContentCheckDTO> title_checks;
-    private Map<String, List<ContentCheckDTO>> content_checks;
+    private Map<String, Map<String, List<ContentCheckDTO>>> content_checks;
 
     public NewsArticleDTO() {
     }
@@ -51,33 +51,36 @@ public class NewsArticleDTO {
         for (Keyword keyword : news_article.getKeywords()){
             this.keywords.add(keyword.getKeyword());
         }
+
+        Map<String, List<ContentCheckDTO>> items = new HashMap<>();
         for(ContentCheck contentCheck : news_article.getContentChecks()){
-            if (contentCheck.getContent_check_type().equals(CheckType.title_normal)
-                    || contentCheck.getContent_check_type().equals(CheckType.title_hidden_1)
-                    || contentCheck.getContent_check_type().equals(CheckType.title_hidden_2)
-                    || contentCheck.getContent_check_type().equals(CheckType.title_intentional_distortion)
-                    || contentCheck.getContent_check_type().equals(CheckType.title_over_representation)
-                    || contentCheck.getContent_check_type().equals(CheckType.title_slang)
-                    || contentCheck.getContent_check_type().equals(CheckType.title_sensation)
-            ) {
+            String checkTypeName = contentCheck.getContent_check_type().name(); // enum 이름을 문자열로
+            if (checkTypeName.startsWith("title_")) {
                 this.title_checks.add(new ContentCheckDTO(contentCheck));
             }
             else{
                 String keyword = contentCheck.getKeyword().replace("\n", "");
                 ContentCheckDTO dto = new ContentCheckDTO(contentCheck); // 필요에 따라 생성자 사용
 
-                content_checks
-                        .computeIfAbsent(keyword, k -> new ArrayList<>())
-                        .add(dto);
+                items
+                    .computeIfAbsent(keyword, k -> new ArrayList<>())
+                    .add(dto);
             }
         }
         // title_check 내림차순 정렬
         title_checks.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
-        // content_check 내림차순 정렬
-        for (List<ContentCheckDTO> dtoList : content_checks.values()) {
+        // items 내림차순 정렬
+        for (List<ContentCheckDTO> dtoList : items.values()) {
             dtoList.sort((a, b) -> Double.compare(b.getScore(), a.getScore()));
         }
 
+        // content_checks 생성
+        for (List<ContentCheckDTO> dtoList : items.values()) {
+            ContentCheckDTO content = dtoList.get(0);
+            content_checks
+                    .computeIfAbsent(content.getContent_check_type().name(), t -> new HashMap<>()) // type 레벨 리스트 생성
+                    .computeIfAbsent(content.getKeyword(), k -> dtoList); // keyword 레벨 map 생성
+        }
     }
 
     public Long getId() {
@@ -180,11 +183,11 @@ public class NewsArticleDTO {
         this.title_checks = title_checks;
     }
 
-    public Map<String, List<ContentCheckDTO>> getContent_checks() {
+    public Map<String, Map<String, List<ContentCheckDTO>>> getContent_checks() {
         return content_checks;
     }
 
-    public void setContent_checks(Map<String, List<ContentCheckDTO>> content_checks) {
+    public void setContent_checks(Map<String, Map<String, List<ContentCheckDTO>>> content_checks) {
         this.content_checks = content_checks;
     }
 }

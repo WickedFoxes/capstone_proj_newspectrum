@@ -26,7 +26,7 @@ public class SearchService {
         return newsArticleDTOList;
     }
     public List<NewsArticleDTO> get_news_article_by_content(String content){
-        List<NewsArticle> newsArticle = newsArticleRepo.findAllByContentContainingOrderByCreatedDateDesc(content);
+        List<NewsArticle> newsArticle = newsArticleRepo.findArticlesByClusterWithKeywordInContent(content);
         List<NewsArticleDTO> newsArticleDTOList = new ArrayList<>();
         for(NewsArticle news : newsArticle){
             newsArticleDTOList.add(new NewsArticleDTO(news));
