@@ -23,6 +23,7 @@ public class NewsViewController {
         List<KeywordDTO> keyword_items = newsArticleService.get_keyword_items_by_id(news_article_id);
         List<RelatedNewsArticleAndScoreDTO> related_news_articles = newsArticleService.get_related_news_articles_by_id(news_article_id);
 
+
         // AI 요약을 마침표로 분할
         List<String> summaryLines = new ArrayList<>();
         if (news_article.getSummary() != null) {
