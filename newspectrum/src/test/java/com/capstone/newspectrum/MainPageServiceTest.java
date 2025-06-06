@@ -2,7 +2,7 @@ package com.capstone.newspectrum;
 
 import com.capstone.newspectrum.dto.MainBlockDTO;
 import com.capstone.newspectrum.dto.NewsArticleDTO;
-import com.capstone.newspectrum.service.MainPageSevice;
+import com.capstone.newspectrum.service.MainPageService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Transactional
 public class MainPageServiceTest {
     @Autowired
-    private MainPageSevice mainPageSevice;
+    private MainPageService mainPageService;
 
     @Test
     void test_get_main_block_list() {
@@ -28,7 +28,7 @@ public class MainPageServiceTest {
         ###########################################################################################
         """);
         LocalDateTime today = LocalDateTime.of(2025, 2, 28, 0, 0);
-        Map<String, MainBlockDTO> items = mainPageSevice.get_main_block_list(today);
+        Map<String, MainBlockDTO> items = mainPageService.get_main_block_list(today);
         System.out.println(items.size());
         items.forEach((domain, item) -> {
             System.out.println("############## " + item.getDomain() +" ##############");
