@@ -73,5 +73,17 @@ public interface NewsArticleRepo extends JpaRepository<NewsArticle, Long> {
             @Param("domain") Domain domain
     );
 
+    @Query("""
+    SELECT nc.news_article 
+    FROM NewsCluster nc 
+    WHERE  
+      nc.news_article.content LIKE %:keyword% 
+    ORDER BY nc.news_article.createdDate DESC
+    """)
+    List<NewsArticle> findArticlesByClusterWithKeywordInContent(
+            @Param("keyword") String keyword
+    );
+
+
 }
 
