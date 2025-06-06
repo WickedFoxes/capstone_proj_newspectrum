@@ -56,10 +56,19 @@
           color: #1a1a1a;
         }
 
-        .main-news p {
-          color: #777;
+        .main-news .meta-info {
+          display: flex;
+          align-items: center;
+          gap: 10px;
           margin-top: 10px;
+          flex-wrap: nowrap;
+        }
+
+        .main-news .media {
+          color: #777;
           font-size: 14px;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
         /* 오른쪽 2x2 카드 뉴스 */
@@ -119,10 +128,56 @@
           height: 3em;  /* 2줄 = line-height * 2 */
         }
 
-        .card p {
+        .card .meta-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 5px;
+          flex-wrap: nowrap;
+        }
+
+        .card .media {
           font-size: 12px;
           color: #888;
-          margin-top: 5px;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        /* 퀄리티 배지 스타일 */
+        .quality-badges {
+          display: flex;
+          gap: 5px;
+          flex-wrap: wrap;
+          flex-shrink: 1;
+        }
+
+        .quality-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 2px 6px;
+          border-radius: 10px;
+          font-size: 10px;
+          font-weight: bold;
+          color: white;
+          gap: 2px;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        .quality-badge.title-good {
+          background-color: #28a745; /* 초록색 */
+        }
+
+        .quality-badge.title-bad {
+          background-color: #dc3545; /* 빨간색 */
+        }
+
+        .quality-badge.content-good {
+          background-color: #28a745; /* 초록색 */
+        }
+
+        .quality-badge.content-bad {
+          background-color: #dc3545; /* 빨간색 */
         }
 
         /* 하단 리스트 뉴스 */
@@ -177,10 +232,19 @@
           color: #000000;
         }
 
-        .list-item p {
+        .list-item .meta-info {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-top: 5px;
+          flex-wrap: nowrap;
+        }
+
+        .list-item .media {
           font-size: 13px;
           color: #666;
-          margin-top: 5px;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
         /* 공통 링크 밑줄 제거 */
@@ -234,6 +298,30 @@
 <!--  공통 상단바 -->
 <div th:replace="layout/common/header :: header"></div>
 
+<!-- 숨겨진 퀄리티 데이터 저장소 -->
+<div id="qualityDataContainer" style="display: none;">
+    <div th:each="article : ${news_article}">
+        <div th:attr="data-article-id=${article.id}">
+            <!-- 제목 체크 데이터 -->
+            <div class="title-checks-data">
+                <div th:each="titleCheck : ${article.title_checks}"
+                     th:attr="data-type=${titleCheck.content_check_type}, data-score=${titleCheck.score}">
+                </div>
+            </div>
+            <!-- 본문 체크 데이터 -->
+            <div class="content-checks-data">
+                <div th:each="typeEntry : ${article.content_checks}">
+                    <div th:each="keywordEntry : ${typeEntry.value}">
+                        <div th:each="check : ${keywordEntry.value}"
+                             th:attr="data-type=${check.content_check_type}, data-score=${check.score}, data-keyword=${check.keyword}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="top-news-section">
     <div class="top-news-wrapper">
         <!--  상단 뉴스 5개 -->
@@ -244,7 +332,12 @@
                     <img th:src="${news_article[0].img_url}" alt="대표 이미지">
                     <div class="text">
                         <h2 th:text="${news_article[0].title}">대표 뉴스 제목</h2>
-                        <p th:text="${news_article[0].media}">언론사</p>
+                        <div class="meta-info">
+                            <span class="media" th:text="${news_article[0].media}">언론사</span>
+                            <div class="quality-badges" th:attr="data-article-id=${news_article[0].id}">
+                                <!-- JavaScript로 동적 생성 -->
+                            </div>
+                        </div>
                     </div>
                 </a>
             </div>
@@ -258,8 +351,13 @@
                         <img th:src="${article.img_url}" alt="카드 이미지">
                         <div class="text">
                             <h4 th:text="${article.title}">카드 뉴스 제목</h4>
-                            <p class="content" th:text="${article.content}">본문 요약 내용입니다. 이 내용은 2줄까지만 보여지고 이후는 ...으로 처리됩니다.</p>
-                            <p th:text="${article.media}">언론사</p>
+                            <p class="content" th:utext="${article.content}">본문 요약 내용입니다. 이 내용은 2줄까지만 보여지고 이후는 ...으로 처리됩니다.</p>
+                            <div class="meta-info">
+                                <!--                                <span class="media" th:text="${article.media}">언론사</span>-->
+                                <div class="quality-badges" th:attr="data-article-id=${article.id}">
+                                    <!-- JavaScript로 동적 생성 -->
+                                </div>
+                            </div>
                         </div>
                     </a>
                 </div>
@@ -287,6 +385,142 @@
     const articlesPerPage = 10;
     let currentPage = 0;
 
+    // 퀄리티 데이터 읽기 함수
+    function getQualityData(articleId) {
+        const container = document.querySelector(`#qualityDataContainer [data-article-id="${articleId}"]`);
+        if (!container) {
+            return { titleChecks: [], contentChecks: [] };
+        }
+
+        const titleChecks = [];
+        const contentChecks = [];
+
+        // 제목 체크 데이터 읽기
+        const titleCheckElements = container.querySelectorAll('.title-checks-data [data-type][data-score]');
+        titleCheckElements.forEach(element => {
+            const type = element.getAttribute('data-type');
+            const score = parseFloat(element.getAttribute('data-score'));
+            if (!isNaN(score)) {
+                titleChecks.push({ type, score });
+            }
+        });
+
+        // 본문 체크 데이터 읽기
+        const contentCheckElements = container.querySelectorAll('.content-checks-data [data-type][data-score][data-keyword]');
+        contentCheckElements.forEach(element => {
+            const type = element.getAttribute('data-type');
+            const score = parseFloat(element.getAttribute('data-score'));
+            const keyword = element.getAttribute('data-keyword');
+            if (!isNaN(score) && keyword) {
+                contentChecks.push({ type, score, keyword });
+            }
+        });
+
+        return { titleChecks, contentChecks };
+    }
+
+    // 제목 퀄리티 판정 (title_normal이 가장 높으면 정상)
+    function analyzeTitleQuality(titleChecks) {
+        if (titleChecks.length === 0) return { isGood: true, reason: '데이터 없음' };
+
+        // 모든 체크의 최고 점수 찾기
+        let maxScore = 0;
+        let maxType = null;
+
+        titleChecks.forEach(check => {
+            if (check.score > maxScore) {
+                maxScore = check.score;
+                maxType = check.type;
+            }
+        });
+
+        // title_normal이 가장 높은 점수를 가지면 정상
+        const isGood = maxType === 'title_normal';
+        return { isGood, maxType, maxScore };
+    }
+
+    // 본문 퀄리티 판정 (문제 문장 비율 30% 이하면 정상)
+    function analyzeContentQuality(contentChecks) {
+        if (contentChecks.length === 0) return { isGood: true, ratio: 0 };
+
+        const keywordGroups = {};
+
+        // 키워드별로 그룹화 (content_ 타입만)
+        contentChecks.forEach(check => {
+            if (check.type.startsWith('content_')) {
+                if (!keywordGroups[check.keyword]) {
+                    keywordGroups[check.keyword] = [];
+                }
+                keywordGroups[check.keyword].push(check);
+            }
+        });
+
+        let totalSentences = 0;
+        let problemSentences = 0;
+
+        // 각 키워드(문장)별로 가장 높은 점수의 타입 확인
+        for (const keyword in keywordGroups) {
+            const checks = keywordGroups[keyword];
+            totalSentences++;
+
+            // 가장 높은 점수와 해당 타입 찾기
+            let maxScore = 0;
+            let maxType = null;
+
+            checks.forEach(check => {
+                if (check.score > maxScore) {
+                    maxScore = check.score;
+                    maxType = check.type;
+                }
+            });
+
+            // normal이 아니고 임계값(0.3) 이상이면 문제 문장
+            if (maxType !== 'content_normal' && maxScore > 0.3) {
+                problemSentences++;
+            }
+        }
+
+        const ratio = totalSentences > 0 ? (problemSentences / totalSentences) : 0;
+        const isGood = ratio <= 0.3; // 30% 이하면 정상
+
+        return { isGood, ratio, problemSentences, totalSentences };
+    }
+
+    // 퀄리티 배지 생성
+    function createQualityBadges(articleId) {
+        const qualityData = getQualityData(articleId);
+        const titleAnalysis = analyzeTitleQuality(qualityData.titleChecks);
+        const contentAnalysis = analyzeContentQuality(qualityData.contentChecks);
+
+        let badgesHtml = '';
+
+        // 제목 퀄리티 배지
+        if (titleAnalysis.isGood) {
+            badgesHtml += '<span class="quality-badge title-good">📝 제목양호</span>';
+        } else {
+            badgesHtml += '<span class="quality-badge title-bad">⚠️ 제목주의</span>';
+        }
+
+        // 본문 퀄리티 배지
+        if (contentAnalysis.isGood) {
+            badgesHtml += '<span class="quality-badge content-good">📰 본문양호</span>';
+        } else {
+            badgesHtml += '<span class="quality-badge content-bad">🚨 본문주의</span>';
+        }
+
+        return badgesHtml;
+    }
+
+    // 상단 뉴스들의 퀄리티 배지 업데이트
+    function updateTopNewsQuality() {
+        const qualityBadgeContainers = document.querySelectorAll('.quality-badges[data-article-id]');
+
+        qualityBadgeContainers.forEach(container => {
+            const articleId = container.getAttribute('data-article-id');
+            container.innerHTML = createQualityBadges(articleId);
+        });
+    }
+
     function renderArticles() {
       const container = document.getElementById("newsContainer");
       container.innerHTML = "";
@@ -298,13 +532,22 @@
         const article = allArticles[i];
         const div = document.createElement("div");
         div.className = "list-item";
+
+        // 퀄리티 배지 HTML 생성
+        const qualityBadgesHtml = createQualityBadges(article.id);
+
         div.innerHTML = `
           <a href="/view/${article.id}" style="display: flex; align-items: center; text-decoration: none;">
             <img src="${article.img_url}" alt="썸네일">
             <div class="text">
               <h5>${article.title}</h5>
               <p class="content">${article.content}</p>
-              <p>${article.media}</p>
+              <div class="meta-info">
+                <span class="media">${article.media}</span>
+                <div class="quality-badges">
+                  ${qualityBadgesHtml}
+                </div>
+              </div>
             </div>
           </a>
         `;
@@ -358,6 +601,10 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      // 상단 뉴스들의 퀄리티 배지 업데이트
+      updateTopNewsQuality();
+
+      // 하단 리스트 뉴스 렌더링
       renderArticles();
       renderPagination();
     });

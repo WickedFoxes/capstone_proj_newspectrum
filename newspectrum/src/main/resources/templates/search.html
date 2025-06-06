@@ -50,6 +50,7 @@
         .news-item-content {
           display: flex;
           flex-direction: column;
+          flex: 1;
         }
         .news-title {
           font-size: 20px;
@@ -70,10 +71,56 @@
           margin-top: 4px;
         }
 
+        .news-meta {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-top: 5px;
+          flex-wrap: nowrap;
+        }
+
         .news-media {
           font-size: 13px;
-          margin-top: 4px;
           color: #888;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        /* 퀄리티 배지 스타일 */
+        .quality-badges {
+          display: flex;
+          gap: 5px;
+          flex-wrap: wrap;
+          flex-shrink: 1;
+        }
+
+        .quality-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 2px 6px;
+          border-radius: 10px;
+          font-size: 10px;
+          font-weight: bold;
+          color: white;
+          gap: 2px;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        .quality-badge.title-good {
+          background-color: #28a745; /* 초록색 */
+        }
+
+        .quality-badge.title-bad {
+          background-color: #dc3545; /* 빨간색 */
+        }
+
+        .quality-badge.content-good {
+          background-color: #28a745; /* 초록색 */
+        }
+
+        .quality-badge.content-bad {
+          background-color: #dc3545; /* 빨간색 */
         }
 
         .pagination {
@@ -112,6 +159,30 @@
 <!-- 공통 상단바 삽입 -->
 <div th:replace="layout/common/header :: header"></div>
 
+<!-- 숨겨진 퀄리티 데이터 저장소 -->
+<div id="qualityDataContainer" style="display: none;">
+    <div th:each="article : ${news_articles}">
+        <div th:attr="data-article-id=${article.id}">
+            <!-- 제목 체크 데이터 -->
+            <div class="title-checks-data">
+                <div th:each="titleCheck : ${article.title_checks}"
+                     th:attr="data-type=${titleCheck.content_check_type}, data-score=${titleCheck.score}">
+                </div>
+            </div>
+            <!-- 본문 체크 데이터 -->
+            <div class="content-checks-data">
+                <div th:each="typeEntry : ${article.content_checks}">
+                    <div th:each="keywordEntry : ${typeEntry.value}">
+                        <div th:each="check : ${keywordEntry.value}"
+                             th:attr="data-type=${check.content_check_type}, data-score=${check.score}, data-keyword=${check.keyword}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="news-container">
     <div class="news-header">검색 연관 기사</div>
     <div id="newsListContainer" th:data-news="${news_articles}"></div>
@@ -124,6 +195,132 @@
     const itemsPerPage = 10;
     let currentPage = 0;
 
+    // 퀄리티 데이터 읽기 함수
+    function getQualityData(articleId) {
+        const container = document.querySelector(`#qualityDataContainer [data-article-id="${articleId}"]`);
+        if (!container) {
+            return { titleChecks: [], contentChecks: [] };
+        }
+
+        const titleChecks = [];
+        const contentChecks = [];
+
+        // 제목 체크 데이터 읽기
+        const titleCheckElements = container.querySelectorAll('.title-checks-data [data-type][data-score]');
+        titleCheckElements.forEach(element => {
+            const type = element.getAttribute('data-type');
+            const score = parseFloat(element.getAttribute('data-score'));
+            if (!isNaN(score)) {
+                titleChecks.push({ type, score });
+            }
+        });
+
+        // 본문 체크 데이터 읽기
+        const contentCheckElements = container.querySelectorAll('.content-checks-data [data-type][data-score][data-keyword]');
+        contentCheckElements.forEach(element => {
+            const type = element.getAttribute('data-type');
+            const score = parseFloat(element.getAttribute('data-score'));
+            const keyword = element.getAttribute('data-keyword');
+            if (!isNaN(score) && keyword) {
+                contentChecks.push({ type, score, keyword });
+            }
+        });
+
+        return { titleChecks, contentChecks };
+    }
+
+    // 제목 퀄리티 판정 (title_normal이 가장 높으면 정상)
+    function analyzeTitleQuality(titleChecks) {
+        if (titleChecks.length === 0) return { isGood: true, reason: '데이터 없음' };
+
+        // 모든 체크의 최고 점수 찾기
+        let maxScore = 0;
+        let maxType = null;
+
+        titleChecks.forEach(check => {
+            if (check.score > maxScore) {
+                maxScore = check.score;
+                maxType = check.type;
+            }
+        });
+
+        // title_normal이 가장 높은 점수를 가지면 정상
+        const isGood = maxType === 'title_normal';
+        return { isGood, maxType, maxScore };
+    }
+
+    // 본문 퀄리티 판정 (문제 문장 비율 30% 이하면 정상)
+    function analyzeContentQuality(contentChecks) {
+        if (contentChecks.length === 0) return { isGood: true, ratio: 0 };
+
+        const keywordGroups = {};
+
+        // 키워드별로 그룹화 (content_ 타입만)
+        contentChecks.forEach(check => {
+            if (check.type.startsWith('content_')) {
+                if (!keywordGroups[check.keyword]) {
+                    keywordGroups[check.keyword] = [];
+                }
+                keywordGroups[check.keyword].push(check);
+            }
+        });
+
+        let totalSentences = 0;
+        let problemSentences = 0;
+
+        // 각 키워드(문장)별로 가장 높은 점수의 타입 확인
+        for (const keyword in keywordGroups) {
+            const checks = keywordGroups[keyword];
+            totalSentences++;
+
+            // 가장 높은 점수와 해당 타입 찾기
+            let maxScore = 0;
+            let maxType = null;
+
+            checks.forEach(check => {
+                if (check.score > maxScore) {
+                    maxScore = check.score;
+                    maxType = check.type;
+                }
+            });
+
+            // normal이 아니고 임계값(0.3) 이상이면 문제 문장
+            if (maxType !== 'content_normal' && maxScore > 0.3) {
+                problemSentences++;
+            }
+        }
+
+        const ratio = totalSentences > 0 ? (problemSentences / totalSentences) : 0;
+        const isGood = ratio <= 0.3; // 30% 이하면 정상
+
+        return { isGood, ratio, problemSentences, totalSentences };
+    }
+
+    // 퀄리티 배지 생성
+    function createQualityBadges(articleId) {
+        const qualityData = getQualityData(articleId);
+        const titleAnalysis = analyzeTitleQuality(qualityData.titleChecks);
+        const contentAnalysis = analyzeContentQuality(qualityData.contentChecks);
+
+        let badgesHtml = '';
+
+        // 제목 퀄리티 배지
+        if (titleAnalysis.isGood) {
+            badgesHtml += '<span class="quality-badge title-good">📝 제목양호</span>';
+        } else {
+            badgesHtml += '<span class="quality-badge title-bad">⚠️ 제목주의</span>';
+        }
+
+        // 본문 퀄리티 배지
+        if (contentAnalysis.isGood) {
+            badgesHtml += '<span class="quality-badge content-good">📰 본문양호</span>';
+        } else {
+            badgesHtml += '<span class="quality-badge content-bad">🚨 본문주의</span>';
+        }
+
+        return badgesHtml;
+    }
+
     function renderNewsList(page) {
       const listContainer = document.getElementById("newsListContainer");
       listContainer.innerHTML = "";
@@ -134,6 +331,9 @@
       pageArticles.forEach(article => {
         if (!article || !article.title) return;
 
+        // 퀄리티 배지 HTML 생성
+        const qualityBadgesHtml = createQualityBadges(article.id);
+
         const div = document.createElement("div");
         div.className = "news-card";
         div.onclick = () => window.location.href = '/view/' + article.id;
@@ -142,8 +342,13 @@
           <img class="news-image" src="${article.img_url || '/default.jpg'}" alt="뉴스 이미지">
           <div class="news-item-content">
             <div class="news-title">${article.title}</div>
-            <div class="news-content">${article.content}></div>
-            <div class="news-media">${article.media || ''}</div>
+            <div class="news-content">${article.content}</div>
+            <div class="news-meta">
+              <span class="news-media">${article.media || ''}</span>
+              <div class="quality-badges">
+                ${qualityBadgesHtml}
+              </div>
+            </div>
           </div>
         `;
         listContainer.appendChild(div);
