@@ -7,6 +7,7 @@ from .NewsCluster import NewsCluster
 from .Keyword import Keyword
 from .KeywordRelation import KeywordRelation
 from .NewsArticleRelation import NewsArticleRelation
+from .ContentCheck import ContentCheck
 # READ
 def read_news_articles_by_domain(date_str = "2025-03-01 00:00:00", 
                                date_end = "2025-03-02 23:59:59", 
@@ -562,6 +563,65 @@ def create_news_article_relation(news_article_relation:NewsArticleRelation):
         
         # 값 추출 (중요: news_cluster에서!)
         values = tuple(getattr(news_article_relation, f) for f in item_fields)
+
+        # SQL 실행
+        cur.execute(sql, values)
+        
+        # 변경사항 커밋
+        conn.commit()
+        # 삽입된 id 가져오기
+        inserted_id = cur.lastrowid
+        # print(f"✅ 데이터 삽입 성공 (ID: {inserted_id})")
+        return inserted_id
+
+    except pymysql.MySQLError as e:
+        print("❌ 데이터베이스 오류 발생:", e)
+
+    except Exception as e:
+        print("❌ 기타 예외 발생:", e)
+
+    finally:
+        # 커서 및 연결 종료
+        try:
+            if cur:
+                cur.close()
+            if conn:
+                conn.close()
+            # print("🔒 연결 종료")
+        except:
+            pass
+
+def create_content_check(content_check:ContentCheck):
+    try:
+        # DB 연결
+        conn = pymysql.connect(host='localhost',
+                            user='root',
+                            password='root',
+                            db='newspectrum',
+                            charset='utf8mb4')
+        cur = conn.cursor()
+
+        # 중복 확인 쿼리
+        check_sql = """
+        SELECT 1 FROM content_check 
+        WHERE news_article_id = %s AND keyword = %s AND content_check_type = %s
+        LIMIT 1
+        """
+        cur.execute(check_sql, (content_check.news_article_id, content_check.keyword, content_check.content_check_type))
+        if cur.fetchone():
+            print("⚠️ 이미 존재하는 (news_article_id, keyword, content_check_type) 조합입니다. 삽입 안 함.")
+            return
+
+        # id 제외 필드명 추출
+        item_fields = [f.name for f in fields(ContentCheck) if f.name != "id"]
+        field_str = ", ".join(item_fields)
+        placeholders = ", ".join(["%s"] * len(item_fields))
+
+        # SQL 구문
+        sql = f"INSERT INTO content_check ({field_str}) VALUES ({placeholders})"
+        
+        # 값 추출 (중요: news_cluster에서!)
+        values = tuple(getattr(content_check, f) for f in item_fields)
 
         # SQL 실행
         cur.execute(sql, values)
