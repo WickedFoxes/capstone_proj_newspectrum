@@ -780,6 +780,7 @@
     }
 
     // 미니 도넛 차트 생성
+    // 미니 도넛 차트 생성 (수정된 버전)
     function createMiniDonutChart(canvas, quality, type) {
         const ctx = canvas.getContext('2d');
         const centerX = 40;
@@ -796,26 +797,30 @@
         ctx.fillStyle = '#f0f0f0';
         ctx.fill();
 
-        // 품질에 따른 색상 결정
-        let color;
-        if (quality >= 0.7) {
-            color = '#48dbfb'; // 파란색 (좋음)
-        } else if (quality >= 0.4) {
-            color = '#feca57'; // 노란색 (보통)
-        } else {
-            color = '#ff6b6b'; // 빨간색 (나쁨)
+        // 정상 비율 (파란색) - quality 값만큼
+        if (quality > 0) {
+            const normalAngle = 2 * Math.PI * quality;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, -Math.PI/2, -Math.PI/2 + normalAngle);
+            ctx.lineTo(centerX + Math.cos(-Math.PI/2 + normalAngle) * innerRadius,
+                      centerY + Math.sin(-Math.PI/2 + normalAngle) * innerRadius);
+            ctx.arc(centerX, centerY, innerRadius, -Math.PI/2 + normalAngle, -Math.PI/2, true);
+            ctx.closePath();
+            ctx.fillStyle = '#48dbfb'; // 파란색 (정상)
+            ctx.fill();
         }
 
-        // 퀄리티 비율 원호
-        if (quality > 0) {
-            const angle = 2 * Math.PI * quality;
+        // 비정상 비율 (빨간색) - (1-quality) 값만큼
+        if (quality < 1) {
+            const normalAngle = 2 * Math.PI * quality;
+            const problemAngle = 2 * Math.PI * (1 - quality);
             ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, -Math.PI/2, -Math.PI/2 + angle);
-            ctx.lineTo(centerX + Math.cos(-Math.PI/2 + angle) * innerRadius,
-                      centerY + Math.sin(-Math.PI/2 + angle) * innerRadius);
-            ctx.arc(centerX, centerY, innerRadius, -Math.PI/2 + angle, -Math.PI/2, true);
+            ctx.arc(centerX, centerY, radius, -Math.PI/2 + normalAngle, -Math.PI/2 + normalAngle + problemAngle);
+            ctx.lineTo(centerX + Math.cos(-Math.PI/2 + normalAngle + problemAngle) * innerRadius,
+                      centerY + Math.sin(-Math.PI/2 + normalAngle + problemAngle) * innerRadius);
+            ctx.arc(centerX, centerY, innerRadius, -Math.PI/2 + normalAngle + problemAngle, -Math.PI/2 + normalAngle, true);
             ctx.closePath();
-            ctx.fillStyle = color;
+            ctx.fillStyle = '#ff6b6b'; // 빨간색 (비정상)
             ctx.fill();
         }
 
@@ -825,7 +830,7 @@
         ctx.fillStyle = 'white';
         ctx.fill();
 
-        // 중앙 텍스트
+        // 중앙 텍스트 (정상 비율 표시)
         ctx.fillStyle = '#333';
         ctx.font = 'bold 12px Arial';
         ctx.textAlign = 'center';
