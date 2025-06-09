@@ -481,7 +481,8 @@
         }
 
         const ratio = totalSentences > 0 ? (problemSentences / totalSentences) : 0;
-        const isGood = ratio <= 0.3; // 30% 이하면 정상
+        // const isGood = ratio <= 0.3; // 30% 이하면 정상
+        const isGood = ratio <= 0.001; // 하나도 없으면 정상
 
         return { isGood, ratio, problemSentences, totalSentences };
     }
