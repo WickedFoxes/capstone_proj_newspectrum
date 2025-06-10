@@ -123,6 +123,135 @@
             border-radius: 8px;
         }
 
+        /* AI 요약 컨테이너 스타일 */
+        .ai-summary-container {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            border: 2px solid #e3f2fd;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-summary-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #2196f3, #21cbf3, #2196f3);
+            animation: aiGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes aiGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .ai-summary-content {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .ai-image-section,
+        .ai-text-section {
+            flex: 1;
+        }
+
+        .ai-image-header,
+        .ai-text-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .ai-badge {
+            background: linear-gradient(135deg, #2196f3, #21cbf3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+        }
+
+        .ai-image-label,
+        .ai-text-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        .ai-image-wrapper {
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e3f2fd;
+        }
+
+        .ai-summary-list {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e3f2fd;
+            padding-left: 50px; /* 왼쪽 여백 추가 */
+        }
+
+        .ai-summary-list li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        /* 구분선 스타일 */
+        .content-divider {
+            display: flex;
+            align-items: center;
+            margin: 40px 0 30px 0;
+            gap: 15px;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+        }
+
+        .divider-text {
+            background: #f8f9fa;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #666;
+            border: 2px solid #e9ecef;
+            white-space: nowrap;
+        }
+
+        /* 뉴스 이미지 섹션 스타일 */
+        .news-image-section {
+            margin-bottom: 30px;
+        }
+
+        .news-img {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+<!--            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);-->
+            border: 2px solid #e9ecef;
+        }
+
         /* 품질 점수 그래프 - 더 작은 크기 */
         .quality-graph-wrapper {
             position: fixed;
@@ -308,12 +437,19 @@
             border-radius: 8px;
             padding: 15px;
             margin: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         .detail-modal-examples h4 {
             margin: 0 0 10px 0;
             color: #f57c00;
             font-size: 14px;
+            position: sticky;
+            top: 0;
+            background: #fff8e1;
+            padding-bottom: 5px;
+            z-index: 10;
         }
 
         .example-sentence {
@@ -324,6 +460,11 @@
             border-left: 3px solid #ff9800;
             font-size: 14px;
             line-height: 1.4;
+        }
+
+        .problem-sentence {
+            background: #ffebee;
+            border-left: 3px solid #f44336;
         }
 
         .highlight-problem {
@@ -355,6 +496,52 @@
             width: 10px;
             height: 10px;
             border-radius: 2px;
+        }
+
+        .type-group {
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .type-group-header {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .type-group-content {
+            padding: 15px;
+            background: #fff;
+        }
+
+        .problem-sentence-item {
+            background: #fff3e0;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #ff9800;
+            transition: all 0.3s ease;
+        }
+
+        .problem-sentence-item:hover {
+            background: #ffebee;
+            transform: translateX(3px);
+        }
+
+        .sentence-score {
+            font-size: 12px;
+            color: #c62828;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .sentence-text {
+            line-height: 1.5;
+            color: #333;
         }
 
         /* 반응형 - 더 작은 브레이크포인트 */
@@ -389,7 +576,13 @@
              class="bar-item title-check-item"
              th:attr="data-type=${titleCheck.content_check_type}, data-score=${titleCheck.score}"
              onclick="openDetailModal(this, 'title')">
-            <div class="bar-label" th:text="${#strings.replace(#strings.replace(titleCheck.content_check_type.name(), 'title_', ''), '_', ' ')}">검사 항목</div>
+            <div class="bar-label" th:text="${titleCheck.content_check_type.name() == 'title_normal'} ? '정상 표현' :
+                                            (${titleCheck.content_check_type.name() == 'title_hidden_1'} ? '의문 유발(부호)' :
+                                            (${titleCheck.content_check_type.name() == 'title_hidden_2'} ? '의문 유발(은닉)' :
+                                            (${titleCheck.content_check_type.name() == 'title_sensation'} ? '선정 표현' :
+                                            (${titleCheck.content_check_type.name() == 'title_slang'} ? '속어/줄임말 사용' :
+                                            (${titleCheck.content_check_type.name() == 'title_over_representation'} ? '과대 표현' :
+                                            (${titleCheck.content_check_type.name() == 'title_intentional_distortion'} ? '주어 의도적 왜곡' : ${titleCheck.content_check_type.name()}))))))">검사 항목</div>
             <div class="bar-container">
                 <div class="bar-fill"
                      th:classappend="${titleCheck.content_check_type.name() == 'title_normal'} ? (${titleCheck.score >= 0.7} ? 'score-low' : 'score-medium') : (${titleCheck.score >= 0.7} ? 'score-high' : (${titleCheck.score >= 0.4} ? 'score-medium' : 'score-low'))"
@@ -403,8 +596,14 @@
     <!-- 본문 퀄리티 -->
     <div class="graph-section">
         <div class="graph-section-title">본문 퀄리티</div>
-        <div id="contentChecksContainer">
-            <!-- JavaScript로 동적 생성 -->
+
+        <!-- 도넛 차트 영역 (클릭 가능) -->
+        <div style="margin-top: 15px; text-align: center; cursor: pointer;" onclick="openContentQualityModal()">
+            <canvas id="problemRatioChart" width="180" height="180" style="max-width: 180px; max-height: 180px; border: none;"></canvas>
+            <div id="chartLegend" style="font-size: 10px; margin-top: 8px;">
+                <!-- 범례가 여기에 표시됩니다 -->
+            </div>
+            <div style="font-size: 11px; color: #666; margin-top: 5px;">클릭하여 상세 분석 보기</div>
         </div>
     </div>
 
@@ -425,7 +624,7 @@
     </div>
 </div>
 
-<!-- 상세 정보 모달 -->
+<!-- 제목 검사 상세 정보 모달 -->
 <div id="detailModal" class="detail-modal">
     <div class="detail-modal-content">
         <span class="modal-close" onclick="closeDetailModal()">&times;</span>
@@ -435,6 +634,18 @@
         <div class="detail-modal-examples" id="detailKeywords" style="display: none;">
             <h4>🔍 검사 대상 문장/키워드</h4>
             <div id="keywordContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 본문 퀄리티 분석 모달 -->
+<div id="contentQualityModal" class="detail-modal">
+    <div class="detail-modal-content" style="max-width: 700px; width: 90%;">
+        <span class="modal-close" onclick="closeContentQualityModal()">&times;</span>
+        <div class="detail-modal-title">본문 퀄리티 분석</div>
+
+        <div id="contentQualityResults" style="max-height: 500px; overflow-y: auto;">
+            <!-- JavaScript로 동적 생성 -->
         </div>
     </div>
 </div>
@@ -456,17 +667,45 @@
       </span>
     </div>
 
-    <!-- AI 뉴스 요약 -->
+    <!-- AI 뉴스 요약 - 2열 레이아웃으로 변경 -->
     <div class="section-title">🧠 AI 뉴스 요약</div>
-    <ol class="ai-summary-list">
-        <li th:each="line : ${summaryLines}" th:text="${line}">요약 문장</li>
-    </ol>
-    <div class="ai-image-wrapper">
-        <img th:src="@{'/img/' + ${news_article.comics_url}}" alt="AI 요약 이미지">
+    <div class="ai-summary-container">
+        <div class="ai-summary-content">
+            <!-- 왼쪽: AI 이미지 -->
+            <div class="ai-image-section">
+                <div class="ai-image-header">
+                    <span class="ai-badge">AI 생성</span>
+                    <span class="ai-image-label">AI 만화 요약</span>
+                </div>
+                <div class="ai-image-wrapper">
+                    <img th:src="@{'/img/' + ${news_article.comics_url}}" alt="AI 요약 이미지">
+                </div>
+            </div>
+
+            <!-- 오른쪽: AI 요약 텍스트 -->
+            <div class="ai-text-section">
+                <div class="ai-text-header">
+                    <span class="ai-badge">AI 요약</span>
+                    <span class="ai-text-label">핵심 내용 정리</span>
+                </div>
+                <ol class="ai-summary-list">
+                    <li th:each="line : ${summaryLines}" th:text="${line}">요약 문장</li>
+                </ol>
+            </div>
+        </div>
     </div>
 
-    <!-- 뉴스 이미지 추가 -->
-    <img class="news-img" th:src="${news_article.img_url}" alt="뉴스 이미지">
+    <!-- 구분선 -->
+    <div class="content-divider">
+        <div class="divider-line"></div>
+        <div class="divider-text">📰 원본 기사</div>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- 뉴스 이미지 -->
+    <div class="news-image-section">
+        <img class="news-img" th:src="${news_article.img_url}" alt="뉴스 이미지">
+    </div>
 
     <div class="news-content" th:utext="${news_article.content}">
         <!-- 본문 내용 -->
@@ -485,12 +724,13 @@
     </div>
 </div>
 
-<!-- 숨겨진 데이터 저장소 (키워드 정보도 포함) -->
+<!-- 숨겨진 데이터 저장소 (새로운 구조에 맞게 수정) -->
 <div id="allContentChecksData" style="display: none;">
-    <div th:each="entry : ${news_article.content_checks}"
-         th:attr="data-keyword=${entry.key}">
-        <div th:each="check : ${entry.value}"
-             th:attr="data-type=${check.content_check_type}, data-score=${check.score}, data-keyword=${check.keyword}">
+    <div th:each="typeEntry : ${news_article.content_checks}">
+        <div th:each="keywordEntry : ${typeEntry.value}">
+            <div th:each="check : ${keywordEntry.value}"
+                 th:attr="data-type=${check.content_check_type}, data-score=${check.score}, data-keyword=${check.keyword}">
+            </div>
         </div>
     </div>
 </div>
@@ -503,6 +743,26 @@
 </div>
 
 <script>
+    // 타입명을 한글로 변환하는 함수
+    function getKoreanTypeName(englishType) {
+        const typeNames = {
+            'title_normal': '정상 표현',
+            'title_hidden_1': '의문 유발(부호)',
+            'title_hidden_2': '의문 유발(은닉)',
+            'title_sensation': '선정 표현',
+            'title_slang': '속어/줄임말 사용',
+            'title_over_representation': '과대 표현',
+            'title_intentional_distortion': '주어 의도적 왜곡',
+            'content_normal': '정상 표현',
+            'content_advertisement_1': '판매정보 노출(상품)',
+            'content_advertisement_2': '판매정보 노출(부동산)',
+            'content_advertisement_3': '판매정보 노출(서비스)',
+            'content_intentional_distortion': '의도적 상황 왜곡'
+        };
+
+        return typeNames[englishType] || englishType;
+    }
+
     // 스크롤 따라다니는 그래프 위젯
     const qualityGraph = document.getElementById('qualityGraph');
     let isScrolling = false;
@@ -519,178 +779,359 @@
         isScrolling = true;
     });
 
-    // 모든 Content Checks 데이터 읽기
+    // 모든 Content Checks 데이터 읽기 (새로운 구조 대응)
     function getAllContentChecksData() {
         const dataContainer = document.getElementById('allContentChecksData');
         const allData = [];
 
-        const keywordDivs = dataContainer.querySelectorAll('[data-keyword]');
+        // 모든 체크 데이터 수집
+        const checkElements = dataContainer.querySelectorAll('[data-type][data-score][data-keyword]');
 
-        keywordDivs.forEach(keywordDiv => {
-            const keyword = keywordDiv.getAttribute('data-keyword');
+        checkElements.forEach(element => {
+            const type = element.getAttribute('data-type');
+            const score = parseFloat(element.getAttribute('data-score'));
+            const keyword = element.getAttribute('data-keyword');
 
-            const checkDivs = keywordDiv.querySelectorAll('[data-type][data-score]');
-            checkDivs.forEach(checkDiv => {
-                const type = checkDiv.getAttribute('data-type');
-                const score = parseFloat(checkDiv.getAttribute('data-score'));
-
-                allData.push({
-                    keyword: keyword,
-                    type: type,
-                    score: score
-                });
+            allData.push({
+                type: type,
+                score: score,
+                keyword: keyword
             });
         });
 
+        console.log('전체 Content Checks 데이터:', allData.length, '개');
         return allData;
     }
 
-    // Content Checks 타입별 평균 계산 (content_ 타입만 필터링)
-    function calculateTypeAverages() {
+    // **핵심 수정: 통일된 문제 문장 탐지 로직**
+    function getProblemSentencesForChart() {
         const allData = getAllContentChecksData();
-        const typeGroups = {};
 
-        // content_로 시작하는 타입만 처리
-        allData.forEach(item => {
-            // title_로 시작하는 타입은 제외
-            if (item.type.startsWith('title_')) {
-                return;
-            }
-
-            if (!typeGroups[item.type]) {
-                typeGroups[item.type] = [];
-            }
-            typeGroups[item.type].push(item.score);
-        });
-
-        // 타입별 평균 계산
-        const averages = [];
-        for (const type in typeGroups) {
-            const scores = typeGroups[type];
-            const average = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-
-            averages.push({
-                type: type,
-                average: average,
-                count: scores.length
-            });
+        if (allData.length === 0) {
+            return {
+                totalSentences: 0,
+                problemSentences: 0,
+                normalSentences: 0,
+                problemsByType: {}
+            };
         }
 
-        // 평균 점수 내림차순 정렬
-        averages.sort((a, b) => b.average - a.average);
+        // content_ 타입만 필터링하고 키워드별로 그룹화
+        const keywordGroups = {};
+        allData.forEach(item => {
+            if (item.type && item.type.startsWith('content_')) {
+                if (!keywordGroups[item.keyword]) {
+                    keywordGroups[item.keyword] = [];
+                }
+                keywordGroups[item.keyword].push(item);
+            }
+        });
 
-        return averages;
+        let totalSentences = 0;
+        let problemSentences = 0;
+        const problemsByType = {};
+
+        // 각 키워드(문장)별로 가장 높은 점수의 타입 확인
+        for (const keyword in keywordGroups) {
+            const checks = keywordGroups[keyword];
+            totalSentences++;
+
+            // 가장 높은 점수와 해당 타입 찾기
+            let maxScore = 0;
+            let maxType = null;
+
+            checks.forEach(check => {
+                if (check.score > maxScore) {
+                    maxScore = check.score;
+                    maxType = check.type;
+                }
+            });
+
+            // normal이 아니고 임계값(0.3) 이상이면 문제 문장으로 분류
+            if (maxType !== 'content_normal' && maxScore > 0.3) {
+                problemSentences++;
+
+                // 타입별로 문제 문장 저장
+                if (!problemsByType[maxType]) {
+                    problemsByType[maxType] = [];
+                }
+                problemsByType[maxType].push({
+                    text: keyword,
+                    score: maxScore
+                });
+            }
+        }
+
+        // 각 타입별로 점수 내림차순 정렬
+        for (const type in problemsByType) {
+            problemsByType[type].sort((a, b) => b.score - a.score);
+        }
+
+        const normalSentences = totalSentences - problemSentences;
+
+        console.log(`문제 탐지 결과: 총 ${totalSentences}개, 문제 ${problemSentences}개, 정상 ${normalSentences}개`);
+        console.log('타입별 문제 문장:', problemsByType);
+
+        return {
+            totalSentences,
+            problemSentences,
+            normalSentences,
+            problemsByType
+        };
     }
 
-    // Content Checks 그래프 렌더링 (normal 값 처리 수정)
-    function renderContentChecks() {
-        const averages = calculateTypeAverages();
-        const top3 = averages.slice(0, 3);
-        const container = document.getElementById('contentChecksContainer');
+    // 문제 문장 비율 계산 및 도넛 차트 생성
+    function createProblemRatioChart() {
+        const result = getProblemSentencesForChart();
+        const { totalSentences, problemSentences, normalSentences } = result;
 
-        container.innerHTML = ''; // 기존 내용 클리어
+        const problemRatio = totalSentences > 0 ? (problemSentences / totalSentences * 100) : 0;
 
-        top3.forEach(item => {
-            // 타입명에서 content_ 제거하고 _ 를 공백으로 변경
-            const displayName = item.type.replace('content_', '').replace(/_/g, ' ');
+        console.log(`차트용 데이터: 총 문장 ${totalSentences}, 문제 문장 ${problemSentences}, 비율 ${problemRatio.toFixed(1)}%`);
 
-            // normal 타입의 경우 점수 해석을 반대로 (높을수록 좋음)
-            let colorClass = 'score-low';
-            if (item.type === 'content_normal') {
-                // normal은 높을수록 좋음
-                if (item.average >= 0.7) {
-                    colorClass = 'score-low'; // 양호
-                } else if (item.average >= 0.4) {
-                    colorClass = 'score-medium'; // 주의
-                } else {
-                    colorClass = 'score-high'; // 문제
-                }
-            } else {
-                // 다른 타입들은 높을수록 문제
-                if (item.average >= 0.7) {
-                    colorClass = 'score-high'; // 문제
-                } else if (item.average >= 0.4) {
-                    colorClass = 'score-medium'; // 주의
-                } else {
-                    colorClass = 'score-low'; // 양호
-                }
+        // 도넛 차트 생성
+        const canvas = document.getElementById('problemRatioChart');
+        if (!canvas) {
+            console.log('캔버스를 찾을 수 없습니다.');
+            return result;
+        }
+
+        const ctx = canvas.getContext('2d');
+
+        // 캔버스 초기화
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 70;
+        const innerRadius = 35;
+
+        // 전체 원 배경
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#f0f0f0';
+        ctx.fill();
+
+        if (totalSentences > 0) {
+            // 문제 문장 비율 (빨간색)
+            if (problemSentences > 0) {
+                const problemAngle = 2 * Math.PI * (problemSentences / totalSentences);
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, -Math.PI/2, -Math.PI/2 + problemAngle);
+                ctx.lineTo(centerX + Math.cos(-Math.PI/2 + problemAngle) * innerRadius,
+                          centerY + Math.sin(-Math.PI/2 + problemAngle) * innerRadius);
+                ctx.arc(centerX, centerY, innerRadius, -Math.PI/2 + problemAngle, -Math.PI/2, true);
+                ctx.closePath();
+                ctx.fillStyle = '#ff6b6b';
+                ctx.fill();
             }
 
-            const barHtml = `
-                <div class="bar-item content-check-item"
-                     data-type="${item.type}"
-                     data-score="${item.average}"
-                     data-count="${item.count}"
-                     onclick="openDetailModal(this, 'content')">
-                    <div class="bar-label">${displayName}</div>
-                    <div class="bar-container">
-                        <div class="bar-fill ${colorClass}" style="width: ${item.average * 100}%">
-                            <span class="bar-score">${item.average.toFixed(3)}</span>
-                        </div>
+            // 정상 문장 비율 (파란색)
+            if (normalSentences > 0) {
+                const problemAngle = 2 * Math.PI * (problemSentences / totalSentences);
+                const normalAngle = 2 * Math.PI * (normalSentences / totalSentences);
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, -Math.PI/2 + problemAngle, -Math.PI/2 + problemAngle + normalAngle);
+                ctx.lineTo(centerX + Math.cos(-Math.PI/2 + problemAngle + normalAngle) * innerRadius,
+                          centerY + Math.sin(-Math.PI/2 + problemAngle + normalAngle) * innerRadius);
+                ctx.arc(centerX, centerY, innerRadius, -Math.PI/2 + problemAngle + normalAngle, -Math.PI/2 + problemAngle, true);
+                ctx.closePath();
+                ctx.fillStyle = '#48dbfb';
+                ctx.fill();
+            }
+        }
+
+        // 내부 원 (도넛 구멍)
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        // 중앙 텍스트
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${problemRatio.toFixed(1)}%`, centerX, centerY - 8);
+        ctx.font = '11px Arial';
+        ctx.fillText('문제 비율', centerX, centerY + 8);
+
+        // 범례 업데이트
+        const legend = document.getElementById('chartLegend');
+        if (legend) {
+            legend.innerHTML = `
+                <div style="display: flex; justify-content: center; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 3px;">
+                        <div style="width: 8px; height: 8px; background: #ff6b6b; border-radius: 50%;"></div>
+                        <span>문제 (${problemSentences})</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 3px;">
+                        <div style="width: 8px; height: 8px; background: #48dbfb; border-radius: 50%;"></div>
+                        <span>정상 (${normalSentences})</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        return result;
+    }
+
+    // **수정된 본문 퀄리티 분석 모달 열기 - 차트와 동일한 로직 사용**
+    function openContentQualityModal() {
+        const modal = document.getElementById('contentQualityModal');
+        const resultsContainer = document.getElementById('contentQualityResults');
+
+        // 차트와 동일한 로직으로 문제 문장 탐지
+        const result = getProblemSentencesForChart();
+        const { totalSentences, problemSentences, normalSentences, problemsByType } = result;
+
+        let resultHtml = '';
+
+        if (Object.keys(problemsByType).length === 0) {
+            resultHtml = `
+                <div style="text-align: center; padding: 40px; color: #48dbfb;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">✅</div>
+                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">모든 문장이 양호합니다!</div>
+                    <div style="font-size: 14px; color: #666;">문제가 있는 문장이 발견되지 않았습니다.</div>
+                    <div style="font-size: 14px; color: #666; margin-top: 10px;">
+                        총 ${totalSentences}개 문장을 분석했습니다.
+                    </div>
+                </div>
+            `;
+        } else {
+            const totalProblemCount = Object.values(problemsByType).reduce((sum, arr) => sum + arr.length, 0);
+
+            resultHtml = `
+                <div style="margin-bottom: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                    <div style="font-size: 16px; font-weight: bold; color: #1976d2;">
+                        📊 검출된 문제 유형: ${Object.keys(problemsByType).length}개
+                    </div>
+                    <div style="font-size: 14px; color: #666; margin-top: 5px;">
+                        총 ${totalSentences}개 문장 중 ${totalProblemCount}개 문장에서 문제 발견
+                        (${((totalProblemCount / totalSentences) * 100).toFixed(1)}%)
                     </div>
                 </div>
             `;
 
-            container.innerHTML += barHtml;
-        });
+            // 타입별로 문제 문장들 표시
+            for (const type in problemsByType) {
+                const sentences = problemsByType[type];
+                const typeInfo = checkDescriptions[type] || { title: type };
+
+                resultHtml += `
+                    <div class="type-group">
+                        <div class="type-group-header">
+                            ${typeInfo.title} (${sentences.length}개 문장)
+                        </div>
+                        <div class="type-group-content">
+                `;
+
+                sentences.forEach((sentence, index) => {
+                    const shortText = sentence.text.length > 200 ?
+                        sentence.text.substring(0, 200) + '...' :
+                        sentence.text;
+
+                    resultHtml += `
+                        <div class="problem-sentence-item">
+                            <div class="sentence-score">위험도: ${sentence.score.toFixed(6)}</div>
+                            <div class="sentence-text">"${shortText}"</div>
+                        </div>
+                    `;
+                });
+
+                resultHtml += `
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        resultsContainer.innerHTML = resultHtml;
+        modal.style.display = 'block';
+    }
+
+    // 본문 퀄리티 분석 모달 닫기
+    function closeContentQualityModal() {
+        document.getElementById('contentQualityModal').style.display = 'none';
+    }
+
+    // Content Checks 그래프 렌더링 (도넛 차트만)
+    function renderContentChecks() {
+        // 도넛 차트 생성 및 결과 반환
+        const result = createProblemRatioChart();
+        console.log('렌더링 완료:', result);
+        return result;
+    }
+
+    // **기존 함수는 하위 호환성을 위해 유지하되 새로운 통합 함수 사용**
+    function getProblemSentences(checkType) {
+        // 새로운 통합 로직 사용
+        const result = getProblemSentencesForChart();
+        const problemsByType = result.problemsByType;
+
+        if (problemsByType[checkType]) {
+            return problemsByType[checkType];
+        }
+
+        return [];
     }
 
     // 검사 타입별 상세 설명 (모든 타입 포함)
     const checkDescriptions = {
         // 제목 관련
         'title_normal': {
-            title: '일반적 표현 검사',
+            title: '정상 표현',
             description: '제목이 과도하게 자극적이거나 선정적이지 않고, 일반적이고 객관적인 표현을 사용하는지 검사합니다.'
         },
         'title_hidden_1': {
-            title: '숨겨진 편향 1차 검사',
-            description: '제목에 드러나지 않은 편향이나 특정 관점을 암시하는 표현이 있는지 1차적으로 검사합니다.'
+            title: '의문 유발(부호)',
+            description: '제목에 의문을 유발하는 부호나 표현이 사용되어 독자의 호기심을 자극하는지 검사합니다. 예: "손흥민 우승의 비결은 바로 이것!"'
         },
         'title_hidden_2': {
-            title: '숨겨진 편향 2차 검사',
-            description: '제목의 숨겨진 편향을 더 깊이 있게 분석하는 2차 검사입니다.'
+            title: '의문 유발(은닉)',
+            description: '제목에서 핵심 내용을 의도적으로 숨겨 독자의 호기심을 자극하는 표현이 사용되었는지 검사합니다.'
         },
-        'title_intentional_distortion': {
-            title: '의도적 왜곡 검사',
-            description: '제목이 사실을 의도적으로 왜곡하거나 오해를 불러일으킬 수 있는 표현을 사용하는지 검사합니다.'
+        'title_sensation': {
+            title: '선정 표현',
+            description: '제목에 독자의 관심을 끌기 위한 선정적이거나 자극적인 표현이 사용되었는지 검사합니다. 예: "충격 고백! 톱스타 A, 10년간 숨겨온 비밀 연애 전격 공개"'
+        },
+        'title_slang': {
+            title: '속어/줄임말 사용',
+            description: '제목에 부적절한 속어, 은어, 줄임말 또는 격식에 맞지 않는 표현이 사용되었는지 검사합니다. 예: "한화 T1 상대로 승리! 지렸다!"'
         },
         'title_over_representation': {
-            title: '과장 표현 검사',
-            description: '제목에 과장되거나 과도한 표현이 사용되었는지 검사합니다.'
+            title: '과대 표현',
+            description: '제목에 과장되거나 과도한 표현이 사용되어 실제보다 부풀려서 표현되었는지 검사합니다. 예: "한국 로또가 숨긴 당첨의 비밀, 로또 업계에서 비밀 밝혀져.. 업계 비상!"'
+        },
+        'title_intentional_distortion': {
+            title: '주어 의도적 왜곡(주어 숨김)',
+            description: '제목에서 주어를 의도적으로 숨기거나 왜곡하여 오해를 불러일으킬 수 있는 표현을 사용하는지 검사합니다. 예: "윤 대통령의 선택은? 지명 막바지로 접어들어..."'
         },
 
         // 내용 관련
         'content_normal': {
-            title: '내용 객관성 검사',
+            title: '정상 표현',
             description: '기사 내용이 객관적이고 균형 잡힌 시각으로 작성되었는지 검사합니다.'
         },
-        'content_intentional_distortion': {
-            title: '내용 왜곡 검사',
-            description: '기사 내용에 의도적인 사실 왜곡이나 오해를 불러일으키는 표현이 있는지 검사합니다.'
-        },
         'content_advertisement_1': {
-            title: '광고성 내용 1차 검사',
-            description: '기사 내용에 광고나 홍보 목적의 내용이 포함되어 있는지 1차 검사합니다.'
+            title: '판매정보 노출(상품 판매정보)',
+            description: '기사 내용에 상품 판매를 목적으로 하는 광고성 내용이 포함되어 있는지 검사합니다. 예: 특정 상품이나 서비스의 판매 정보가 기사에 은밀하게 포함된 경우'
         },
         'content_advertisement_2': {
-            title: '광고성 내용 2차 검사',
-            description: '기사 내용에 숨겨진 광고나 간접 홍보 요소가 있는지 2차 검사합니다.'
+            title: '판매정보 노출(부동산 판매정보)',
+            description: '기사 내용에 부동산 판매나 투자를 목적으로 하는 광고성 내용이 포함되어 있는지 검사합니다.'
         },
         'content_advertisement_3': {
-            title: '광고성 내용 3차 검사',
-            description: '기사 내용에 미묘한 광고성 요소나 브랜드 노출이 있는지 3차 검사합니다.'
+            title: '판매정보 노출(서비스 판매정보)',
+            description: '기사 내용에 서비스 판매나 홍보를 목적으로 하는 광고성 내용이 포함되어 있는지 검사합니다.'
         },
-        'title_sensation': {
-            title: '선정적 표현 검사',
-            description: '제목이나 내용에 독자의 관심을 끌기 위한 선정적이거나 자극적인 표현이 사용되었는지 검사합니다.'
-        },
-        'title_slang': {
-            title: '비속어/은어 검사',
-            description: '제목이나 내용에 부적절한 비속어, 은어, 또는 격식에 맞지 않는 표현이 사용되었는지 검사합니다.'
+        'content_intentional_distortion': {
+            title: '의도적 상황 왜곡',
+            description: '기사 내용에서 실제 상황을 의도적으로 왜곡하거나 편향된 시각으로 서술하여 독자에게 잘못된 인식을 심어줄 수 있는지 검사합니다.'
         }
     };
 
-    // 해당 타입의 실제 키워드들 찾기
+    // 해당 타입의 실제 키워드들 찾기 (새로운 구조 대응)
     function findActualKeywords(checkType, type) {
         const keywords = [];
 
@@ -711,16 +1152,16 @@
             });
         } else if (type === 'content') {
             // Content checks에서 해당 타입의 키워드들 찾기
-            const contentDataContainer = document.getElementById('allContentChecksData');
-            const contentElements = contentDataContainer.querySelectorAll(`[data-type="${checkType}"]`);
+            const allData = getAllContentChecksData();
 
-            contentElements.forEach(element => {
-                const keyword = element.getAttribute('data-keyword');
-                const score = element.getAttribute('data-score');
-                if (keyword && keyword.trim() !== '') {
+            // 해당 타입의 데이터만 필터링
+            const typeData = allData.filter(item => item.type === checkType);
+
+            typeData.forEach(item => {
+                if (item.keyword && item.keyword.trim() !== '') {
                     keywords.push({
-                        text: keyword,
-                        score: parseFloat(score)
+                        text: item.keyword,
+                        score: item.score
                     });
                 }
             });
@@ -800,43 +1241,70 @@
 
         description.innerHTML = checkInfo.description + interpretation;
 
-        // 실제 키워드들 표시
-        const actualKeywords = findActualKeywords(checkType, type);
-        if (actualKeywords.length > 0) {
-            let keywordHtml = '';
+        // 실제 키워드들 표시 (문제 문장만 필터링)
+        if (type === 'content') {
+            const problemSentences = getProblemSentences(checkType);
 
-            if (type === 'content') {
-                keywordHtml += `<div style="font-size: 12px; color: #666; margin-bottom: 10px;">총 ${actualKeywords.length}개의 문장에서 검사됨</div>`;
-            }
+            if (problemSentences.length > 0) {
+                let keywordHtml = `<div style="font-size: 12px; color: #666; margin-bottom: 10px;">문제가 있는 문장: ${problemSentences.length}개</div>`;
 
-            // 상위 5개만 표시 (너무 많으면 화면이 복잡해짐)
-            const displayKeywords = actualKeywords.slice(0, 5);
+                problemSentences.forEach((item, index) => {
+                    const shortText = item.text.length > 150 ?
+                        item.text.substring(0, 150) + '...' :
+                        item.text;
 
-            displayKeywords.forEach((item, index) => {
-                const shortText = item.text.length > 100 ?
-                    item.text.substring(0, 100) + '...' :
-                    item.text;
-
-                keywordHtml += `
-                    <div class="example-sentence">
-                        <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
-                            점수: ${item.score.toFixed(6)}
+                    keywordHtml += `
+                        <div class="example-sentence problem-sentence">
+                            <div style="font-size: 12px; color: #c62828; margin-bottom: 5px; font-weight: bold;">
+                                위험도: ${item.score.toFixed(6)}
+                            </div>
+                            <div style="line-height: 1.4;">
+                                "${shortText}"
+                            </div>
                         </div>
-                        <div style="line-height: 1.4;">
-                            "${shortText}"
-                        </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
 
-            if (actualKeywords.length > 5) {
-                keywordHtml += `<div style="font-size: 12px; color: #999; text-align: center; margin-top: 10px;">외 ${actualKeywords.length - 5}개 더...</div>`;
+                keywordContent.innerHTML = keywordHtml;
+                keywordsDiv.style.display = 'block';
+            } else {
+                keywordContent.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">이 타입에서 문제가 있는 문장이 발견되지 않았습니다.</div>';
+                keywordsDiv.style.display = 'block';
             }
-
-            keywordContent.innerHTML = keywordHtml;
-            keywordsDiv.style.display = 'block';
         } else {
-            keywordsDiv.style.display = 'none';
+            // Title checks는 기존 방식 유지
+            const actualKeywords = findActualKeywords(checkType, type);
+            if (actualKeywords.length > 0) {
+                let keywordHtml = '';
+
+                const displayKeywords = actualKeywords.slice(0, 5);
+
+                displayKeywords.forEach((item, index) => {
+                    const shortText = item.text.length > 100 ?
+                        item.text.substring(0, 100) + '...' :
+                        item.text;
+
+                    keywordHtml += `
+                        <div class="example-sentence">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                                점수: ${item.score.toFixed(6)}
+                            </div>
+                            <div style="line-height: 1.4;">
+                                "${shortText}"
+                            </div>
+                        </div>
+                    `;
+                });
+
+                if (actualKeywords.length > 5) {
+                    keywordHtml += `<div style="font-size: 12px; color: #999; text-align: center; margin-top: 10px;">외 ${actualKeywords.length - 5}개 더...</div>`;
+                }
+
+                keywordContent.innerHTML = keywordHtml;
+                keywordsDiv.style.display = 'block';
+            } else {
+                keywordsDiv.style.display = 'none';
+            }
         }
 
         modal.style.display = 'block';
@@ -851,14 +1319,19 @@
     window.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             closeDetailModal();
+            closeContentQualityModal();
         }
     });
 
     // 바깥 클릭 시 닫기
     window.onclick = function(event) {
         const detailModal = document.getElementById("detailModal");
+        const contentQualityModal = document.getElementById("contentQualityModal");
         if (event.target === detailModal) {
             closeDetailModal();
+        }
+        if (event.target === contentQualityModal) {
+            closeContentQualityModal();
         }
     }
 
@@ -870,9 +1343,9 @@
 
     // 페이지 로드 시 Content Checks 렌더링
     window.addEventListener('load', function() {
-        console.log('페이지 로드 완료 - 최종 버전');
+        console.log('페이지 로드 완료 - 도넛 차트 버전');
 
-        // Content Checks 그래프 생성
+        // Content Checks 도넛 차트 생성
         renderContentChecks();
 
         // 그래프 애니메이션

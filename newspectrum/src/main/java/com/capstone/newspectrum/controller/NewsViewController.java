@@ -27,9 +27,17 @@ public class NewsViewController {
         // AI 요약을 마침표로 분할
         List<String> summaryLines = new ArrayList<>();
         if (news_article.getSummary() != null) {
-            String[] split = news_article.getSummary().split("\\.\\s+");
+            String[] split = news_article.getSummary().split("\\.\\s*");
             for (String line : split) {
-                if (!line.isBlank()) summaryLines.add(line.trim() + ".");
+                String trimmedLine = line.trim();
+                if (!trimmedLine.isEmpty()) {
+                    // 이미 마침표로 끝나는지 확인하고 없으면 추가
+                    if (trimmedLine.endsWith(".")) {
+                        summaryLines.add(trimmedLine);
+                    } else {
+                        summaryLines.add(trimmedLine + ".");
+                    }
+                }
                 if (summaryLines.size() == 3) break;
             }
         }

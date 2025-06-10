@@ -34,16 +34,16 @@
         /* ===== 오늘의 이슈 슬라이더 영역 ===== */
         .hot-issues-section {
             position: relative;
-            max-width: 1360px; /* 버튼 공간 포함한 전체 너비 */
+            max-width: 1360px;
             margin: 0 auto;
-            padding: 0 40px; /* 버튼 공간을 줄임 (80px -> 60px) */
+            padding: 0 40px;
         }
 
         .news-slider-wrapper {
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
-            overflow: hidden; /* 슬라이더 콘텐츠만 숨김 */
+            overflow: hidden;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
@@ -65,6 +65,7 @@
 
         .news-left {
             width: 65%;
+            cursor: pointer;
         }
 
         .news-left img {
@@ -77,71 +78,106 @@
         .news-left h2 {
             font-size: 20px;
             font-weight: bold;
-            margin-top: 10px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin: 15px 0 0 0;
+            line-height: 1.4;
+            color: #333;
         }
 
         .news-right {
             width: 35%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: space-between;
+            gap: 0;
         }
 
-        .thumbnail-news {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .thumbnail-news:last-of-type {
-            border-bottom: none;
+        /* AI 요약 섹션 */
+        .ai-summary-section {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
             margin-bottom: 0;
-            padding-bottom: 0;
         }
 
-        .thumbnail-news img {
-            width: 100px;
-            height: 75px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-
-        .thumbnail-news p {
-            font-size: 14px;
-            font-weight: bold;
-            color: #111;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin: 0;
-        }
-
-        .news-headlines {
-            list-style: none;
-            padding-left: 0;
-            margin-top: 20px;
-        }
-
-        .news-headlines li {
+        .ai-summary-title {
             font-size: 16px;
             font-weight: bold;
-            color: #333;
-            margin-bottom: 6px;
-            padding-bottom: 6px;
-            border-bottom: 1px solid #e0e0e0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            color: #007bff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .news-headlines li:last-child {
-            border-bottom: none;
+        .ai-summary-content {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        .ai-summary-content ol {
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .ai-summary-content li {
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        /* 퀄리티 그래프 섹션 */
+        .quality-section {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .quality-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .quality-charts {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .chart-container {
+            text-align: center;
+        }
+
+        .chart-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .mini-chart {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+
+        .chart-score {
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .quality-summary {
+            font-size: 12px;
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            color: #555;
+            text-align: left;
         }
 
         /* 통일된 좌우 슬라이딩 버튼 스타일 */
@@ -173,11 +209,11 @@
         }
 
         .nav-left {
-            left: 0; /* hot-issues-section 기준 왼쪽 끝 */
+            left: 0;
         }
 
         .nav-right {
-            right: 0; /* hot-issues-section 기준 오른쪽 끝 */
+            right: 0;
         }
 
         /* 슬라이더 점 표시 */
@@ -247,7 +283,7 @@
 
         .ai-summary-item {
             flex: 0 0 auto;
-            width: 200px;
+            width: 280px;
             margin-right: 20px;
             border-radius: 8px;
             background-color: white;
@@ -268,16 +304,71 @@
 
         .ai-summary-item img {
             width: 100%;
-            height: 120px;
+            height: 160px;
             object-fit: cover;
         }
 
+        .ai-summary-item .content {
+            padding: 15px;
+        }
+
         .ai-summary-item .title {
-            font-size: 14px;
-            padding: 10px;
-            white-space: nowrap;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
-            text-overflow: ellipsis;
+        }
+
+        .ai-summary-item .summary {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* AI 요약 리스트 스타일 추가 */
+        .ai-summary-item .summary ol {
+            margin: 0;
+            padding-left: 18px;
+            counter-reset: summary-counter;
+        }
+
+        .ai-summary-item .summary li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+            position: relative;
+            list-style: none;
+            counter-increment: summary-counter;
+            padding-left: 0;
+        }
+
+        .ai-summary-item .summary li::before {
+            content: counter(summary-counter) ". ";
+            font-weight: bold;
+            color: #007bff;
+            position: absolute;
+            left: -18px;
+            top: 0;
+        }
+
+        /* 말줄임 처리 개선 */
+        .ai-summary-item .summary {
+            max-height: 210px; /* 약 6-7줄 정도의 높이로 대폭 증가 */
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ai-summary-item .summary::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 30px;
+            height: 20px;
+            background: linear-gradient(to right, transparent, white);
         }
 
         /* ===== 오늘의 키워드 워드클라우드 영역 ===== */
@@ -416,27 +507,51 @@
 
     <div class="news-slider-wrapper">
         <div class="news-slider-track" id="newsSliderTrack">
-            <div class="news-main-container" th:each="issue : ${hotIssues}"
-                 th:attr="data-domain=${issue.news_articles[0].domain}">
-                <div class="news-left" th:onclick="|window.location.href='/view/${issue.news_articles[0].id}'|" style="cursor: pointer;">
-                    <img th:src="@{${issue.news_articles[0].img_url}}" />
-                    <h2 th:text="${issue.news_articles[0].title}"></h2>
+            <div class="news-main-container" th:each="article, iter : ${today_main_block_articles}"
+                 th:attr="data-domain=${article.domain}">
+                <div class="news-left" th:onclick="|window.location.href='/view/${article.id}'|">
+                    <img th:src="@{${article.img_url}}" alt="뉴스 이미지" />
+                    <h2 th:text="${article.title}">뉴스 제목</h2>
                 </div>
                 <div class="news-right">
-                    <div class="thumbnail-news" th:each="news, iter : ${issue.news_articles}"
-                         th:if="${iter.index > 0 and iter.index <= 3}"
-                         th:onclick="|window.location.href='/view/${news.id}'|"
-                         style="cursor: pointer;">
-                        <img th:src="@{${news.img_url}}" />
-                        <p th:text="${#strings.abbreviate(news.title, 50)}"></p>
+                    <!-- AI 요약 섹션 -->
+                    <div class="ai-summary-section">
+                        <div class="ai-summary-title">
+                            🧠 AI 요약
+                        </div>
+                        <div class="ai-summary-content">
+                            <ol th:if="${article.summary != null and !#strings.isEmpty(article.summary)}">
+                                <li th:each="line : ${#strings.arraySplit(article.summary, '.')}"
+                                    th:if="${!#strings.isEmpty(#strings.trim(line))}"
+                                    th:text="${#strings.trim(line) + '.'}">요약 항목</li>
+                            </ol>
+                            <div th:if="${article.summary == null or #strings.isEmpty(article.summary)}">
+                                AI 요약 정보가 없습니다.
+                            </div>
+                        </div>
                     </div>
-                    <ul class="news-headlines">
-                        <li th:each="news, iter : ${issue.news_articles}"
-                            th:if="${iter.index >= 4 and iter.index < 8}"
-                            th:text="${#strings.abbreviate(news.title, 60)}"
-                            th:onclick="|window.location.href='/view/${news.id}'|"
-                            style="cursor: pointer;"></li>
-                    </ul>
+
+                    <!-- 퀄리티 분석 섹션 -->
+                    <div class="quality-section">
+                        <div class="quality-title">📊 기사 퀄리티 분석</div>
+                        <div class="quality-charts">
+                            <div class="chart-container">
+                                <div class="chart-label">제목 퀄리티</div>
+                                <canvas class="mini-chart title-chart" th:attr="data-article-id=${article.id}" width="80" height="80"></canvas>
+                                <div class="chart-score title-score" th:attr="data-article-id=${article.id}">-</div>
+                            </div>
+                            <div class="chart-container">
+                                <div class="chart-label">본문 퀄리티</div>
+                                <canvas class="mini-chart content-chart" th:attr="data-article-id=${article.id}" width="80" height="80"></canvas>
+                                <div class="chart-score content-score" th:attr="data-article-id=${article.id}">-</div>
+                            </div>
+                        </div>
+                        <!-- 제목 및 본문 분석 요약 텍스트 -->
+                        <div class="quality-summary">
+                            제목: <span class="best-title-type" th:attr="data-article-id=${article.id}">-</span><br>
+                            본문: <span class="dominant-content-type" th:attr="data-article-id=${article.id}">-</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -445,18 +560,53 @@
     <div class="slider-dots" id="sliderDots"></div>
 </div>
 
+<!-- 숨겨진 퀄리티 데이터 저장소 -->
+<div id="qualityDataContainer" style="display: none;">
+    <div th:each="article : ${today_main_block_articles}">
+        <div th:attr="data-article-id=${article.id}">
+            <!-- 제목 체크 데이터 -->
+            <div class="title-checks-data">
+                <div th:each="titleCheck : ${article.title_checks}"
+                     th:attr="data-type=${titleCheck.content_check_type}, data-score=${titleCheck.score}">
+                </div>
+            </div>
+            <!-- 본문 체크 데이터 -->
+            <div class="content-checks-data">
+                <div th:each="typeEntry : ${article.content_checks}">
+                    <div th:each="keywordEntry : ${typeEntry.value}">
+                        <div th:each="check : ${keywordEntry.value}"
+                             th:attr="data-type=${check.content_check_type}, data-score=${check.score}, data-keyword=${check.keyword}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ===== AI 요약 카드 뉴스 섹션 ===== -->
 <div class="section-title">🧠 AI 요약 만화 뉴스</div>
 
 <div class="ai-news-wrapper">
     <div class="ai-news-container">
         <div class="ai-summary-scroll" onwheel="scrollHorizontally(event)">
-            <div class="ai-summary-item"
-                 th:each="news, iter : ${hotIssues[0].news_articles}"
-                 th:if="${iter.index < 10}">
+            <div class="ai-summary-item" th:each="news : ${news_articles_for_comic}">
                 <a th:href="@{/view/{id}(id=${news.id})}">
-                    <img th:src="@{${news.img_url}}" alt="뉴스 이미지">
-                    <div class="title" th:text="${news.title}">뉴스 제목</div>
+                    <img th:src="@{'/img/' + ${news.comics_url}}" alt="AI 생성 이미지">
+<!--                    <img th:src="@{/img/0db02033-b91b-4c93-88ee-527c18baf337.png}" alt="AI 생성 이미지">-->
+                    <div class="content">
+                        <div class="title" th:text="${news.title}">뉴스 제목</div>
+                        <div class="summary">
+                            <ol th:if="${news.summary != null and !#strings.isEmpty(news.summary)}">
+                                <li th:each="line : ${#strings.arraySplit(news.summary, '.')}"
+                                    th:if="${!#strings.isEmpty(#strings.trim(line))}"
+                                    th:text="${#strings.trim(line)}">요약 항목</li>
+                            </ol>
+                            <div th:if="${news.summary == null or #strings.isEmpty(news.summary)}">
+                                AI 요약 정보가 없습니다.
+                            </div>
+                        </div>
+                    </div>
                 </a>
             </div>
         </div>
@@ -494,16 +644,254 @@
     let slideInterval = null;
     let resumeTimeout = null;
 
-    // 수동 슬라이드 이동 함수들을 먼저 정의
+    function getKoreanTypeName(englishType) {
+        const typeNames = {
+            // 제목 관련
+            'title_normal': '정상 표현',
+            'title_hidden_1': '의문 유발(부호)',
+            'title_hidden_2': '의문 유발(은닉)',
+            'title_sensation': '선정 표현',
+            'title_slang': '속어/줄임말 사용',
+            'title_over_representation': '과대 표현',
+            'title_intentional_distortion': '주어 의도적 왜곡',
+
+            // 본문 관련
+            'content_normal': '정상 표현',
+            'content_advertisement_1': '판매정보 노출(상품)',
+            'content_advertisement_2': '판매정보 노출(부동산)',
+            'content_advertisement_3': '판매정보 노출(서비스)',
+            'content_intentional_distortion': '의도적 상황 왜곡'
+        };
+
+        return typeNames[englishType] || englishType;
+    }
+
+
+    // 퀄리티 데이터 읽기 함수 (개선된 버전)
+    function getQualityData(articleId) {
+        console.log('Getting quality data for article:', articleId);
+
+        const container = document.querySelector(`#qualityDataContainer [data-article-id="${articleId}"]`);
+        if (!container) {
+            console.log('Container not found for article:', articleId);
+            return { titleChecks: [], contentChecks: [] };
+        }
+
+        const titleChecks = [];
+        const contentChecks = [];
+
+        // 제목 체크 데이터 읽기
+        const titleCheckElements = container.querySelectorAll('.title-checks-data [data-type][data-score]');
+        console.log('Found title check elements:', titleCheckElements.length);
+
+        titleCheckElements.forEach(element => {
+            const type = element.getAttribute('data-type');
+            const score = parseFloat(element.getAttribute('data-score'));
+
+            if (!isNaN(score)) {
+                titleChecks.push({ type, score });
+                console.log('Title check:', type, score);
+            }
+        });
+
+        // 본문 체크 데이터 읽기
+        const contentCheckElements = container.querySelectorAll('.content-checks-data [data-type][data-score][data-keyword]');
+        console.log('Found content check elements:', contentCheckElements.length);
+
+        contentCheckElements.forEach(element => {
+            const type = element.getAttribute('data-type');
+            const score = parseFloat(element.getAttribute('data-score'));
+            const keyword = element.getAttribute('data-keyword');
+
+            if (!isNaN(score) && keyword) {
+                contentChecks.push({ type, score, keyword });
+                console.log('Content check:', type, score, keyword.substring(0, 30) + '...');
+            }
+        });
+
+        console.log('Final quality data - Title checks:', titleChecks.length, 'Content checks:', contentChecks.length);
+        return { titleChecks, contentChecks };
+    }
+
+    // 제목 퀄리티 점수 계산 (수정된 버전 - title_normal 기준)
+    function calculateTitleQuality(titleChecks) {
+        if (titleChecks.length === 0) return 0.5;
+
+        // title_normal 타입의 점수를 찾기
+        const normalCheck = titleChecks.find(check => check.type === 'title_normal');
+
+        if (normalCheck) {
+            // title_normal의 점수를 그대로 사용 (0~1 범위)
+            return Math.max(0, Math.min(1, normalCheck.score));
+        } else {
+            // title_normal이 없으면 모든 점수의 평균 사용
+            let totalScore = 0;
+            titleChecks.forEach(check => {
+                totalScore += check.score;
+            });
+            const averageScore = totalScore / titleChecks.length;
+            return Math.max(0, Math.min(1, averageScore));
+        }
+    }
+
+    // 본문 퀄리티 점수 계산 (수정된 버전)
+    function calculateContentQuality(contentChecks) {
+        if (contentChecks.length === 0) return 0.5;
+
+        const keywordGroups = {};
+
+        // 키워드별로 그룹화
+        contentChecks.forEach(check => {
+            if (check.type.startsWith('content_')) {
+                if (!keywordGroups[check.keyword]) {
+                    keywordGroups[check.keyword] = [];
+                }
+                keywordGroups[check.keyword].push(check);
+            }
+        });
+
+        let totalSentences = 0;
+        let normalSentences = 0;
+
+        // 각 키워드(문장)별로 가장 높은 점수의 타입 확인
+        for (const keyword in keywordGroups) {
+            const checks = keywordGroups[keyword];
+            totalSentences++;
+
+            // 가장 높은 점수와 해당 타입 찾기
+            let maxScore = 0;
+            let maxType = null;
+
+            checks.forEach(check => {
+                if (check.score > maxScore) {
+                    maxScore = check.score;
+                    maxType = check.type;
+                }
+            });
+
+            // 가장 높은 점수의 타입이 normal이면 정상 문장
+            if (maxType === 'content_normal') {
+                normalSentences++;
+            }
+        }
+
+        const quality = totalSentences > 0 ? normalSentences / totalSentences : 0.5;
+        return quality;
+    }
+
+    // 미니 도넛 차트 생성
+    // 미니 도넛 차트 생성 (수정된 버전)
+    function createMiniDonutChart(canvas, quality, type) {
+        const ctx = canvas.getContext('2d');
+        const centerX = 40;
+        const centerY = 40;
+        const radius = 30;
+        const innerRadius = 18;
+
+        // 캔버스 초기화
+        ctx.clearRect(0, 0, 80, 80);
+
+        // 배경 원
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = '#f0f0f0';
+        ctx.fill();
+
+        // 정상 비율 (파란색) - quality 값만큼
+        if (quality > 0) {
+            const normalAngle = 2 * Math.PI * quality;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, -Math.PI/2, -Math.PI/2 + normalAngle);
+            ctx.lineTo(centerX + Math.cos(-Math.PI/2 + normalAngle) * innerRadius,
+                      centerY + Math.sin(-Math.PI/2 + normalAngle) * innerRadius);
+            ctx.arc(centerX, centerY, innerRadius, -Math.PI/2 + normalAngle, -Math.PI/2, true);
+            ctx.closePath();
+            ctx.fillStyle = '#48dbfb'; // 파란색 (정상)
+            ctx.fill();
+        }
+
+        // 비정상 비율 (빨간색) - (1-quality) 값만큼
+        if (quality < 1) {
+            const normalAngle = 2 * Math.PI * quality;
+            const problemAngle = 2 * Math.PI * (1 - quality);
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, -Math.PI/2 + normalAngle, -Math.PI/2 + normalAngle + problemAngle);
+            ctx.lineTo(centerX + Math.cos(-Math.PI/2 + normalAngle + problemAngle) * innerRadius,
+                      centerY + Math.sin(-Math.PI/2 + normalAngle + problemAngle) * innerRadius);
+            ctx.arc(centerX, centerY, innerRadius, -Math.PI/2 + normalAngle + problemAngle, -Math.PI/2 + normalAngle, true);
+            ctx.closePath();
+            ctx.fillStyle = '#ff6b6b'; // 빨간색 (비정상)
+            ctx.fill();
+        }
+
+        // 내부 원 (도넛 구멍)
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+
+        // 중앙 텍스트 (정상 비율 표시)
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${Math.round(quality * 100)}%`, centerX, centerY);
+    }
+
+    // 모든 차트 업데이트
+    function updateQualityCharts() {
+        const currentArticleContainer = slides[currentSlide];
+        const articleElement = currentArticleContainer.querySelector('[data-article-id]');
+
+        if (!articleElement) {
+            console.log('Article element not found for slide:', currentSlide);
+            return;
+        }
+
+        const articleId = articleElement.getAttribute('data-article-id');
+        console.log('Updating charts for article:', articleId);
+
+        const qualityData = getQualityData(articleId);
+        console.log('Quality data:', qualityData);
+
+        // 제목 퀄리티 차트 업데이트
+        const titleCanvas = currentArticleContainer.querySelector('.title-chart');
+        const titleScore = currentArticleContainer.querySelector('.title-score');
+
+        if (titleCanvas && titleScore) {
+            const titleQuality = calculateTitleQuality(qualityData.titleChecks);
+            console.log('Title quality:', titleQuality);
+
+            createMiniDonutChart(titleCanvas, titleQuality, 'title');
+            titleScore.textContent = Math.round(titleQuality * 100) + '%';
+        }
+
+        // 본문 퀄리티 차트 업데이트
+        const contentCanvas = currentArticleContainer.querySelector('.content-chart');
+        const contentScoreElement = currentArticleContainer.querySelector('.content-score');
+
+        if (contentCanvas && contentScoreElement) {
+            const contentQuality = calculateContentQuality(qualityData.contentChecks);
+            console.log('Content quality:', contentQuality);
+
+            createMiniDonutChart(contentCanvas, contentQuality, 'content');
+            contentScoreElement.textContent = Math.round(contentQuality * 100) + '%';
+        }
+        updateQualityTextSummary();  // 제목/본문 타입 표시용
+    }
+
+    // 수정된 슬라이드 이동 함수들
     function manualNextSlide() {
         currentSlide = (currentSlide + 1) % totalSlides;
         moveSlide(currentSlide);
+        updateQualityCharts();
         resetAutoSlide();
     }
 
     function manualPrevSlide() {
         currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
         moveSlide(currentSlide);
+        updateQualityCharts();
         resetAutoSlide();
     }
 
@@ -529,6 +917,7 @@
                     currentSlide = i;
                     moveSlide(currentSlide);
                     updateDots();
+                    updateQualityCharts();
                     resetAutoSlide();
                 });
 
@@ -551,6 +940,7 @@
         slideInterval = setInterval(() => {
             currentSlide = (currentSlide + 1) % totalSlides;
             moveSlide(currentSlide);
+            updateQualityCharts();
         }, slideIntervalTime);
     }
 
@@ -571,6 +961,11 @@
     startAutoSlide();
     renderDots();
     updateDots();
+
+    // 초기 차트 로드
+    setTimeout(() => {
+        updateQualityCharts();
+    }, 100);
 
     // 마우스 이벤트 감지
     const container = document.querySelector(".news-slider-wrapper");
@@ -769,9 +1164,90 @@
         renderWordCloud(domains[currentIndex]);
         updateStatusText();
     }
+    function getBestTitleType(titleChecks) {
+        if (!titleChecks || titleChecks.length === 0) return "-";
+        const sorted = [...titleChecks].sort((a, b) => b.score - a.score);
+        return getKoreanTypeName(sorted[0].type);
+    }
+
+    function getDominantContentType(contentChecks) {
+        if (!contentChecks || contentChecks.length === 0) return "-";
+
+        const keywordGroups = {};
+
+        // 키워드 기준으로 content_ 타입만 그룹화
+        contentChecks.forEach(check => {
+            if (check.type.startsWith("content_")) {
+                if (!keywordGroups[check.keyword]) keywordGroups[check.keyword] = [];
+                keywordGroups[check.keyword].push(check);
+            }
+        });
+
+        let total = 0;
+        let problemCount = 0;
+        const typeCount = {};
+
+        for (const keyword in keywordGroups) {
+            const checks = keywordGroups[keyword];
+            total++;
+
+            let maxScore = 0;
+            let maxType = null;
+            checks.forEach(check => {
+                if (check.score > maxScore) {
+                    maxScore = check.score;
+                    maxType = check.type;
+                }
+            });
+
+            if (maxType !== "content_normal" && maxScore > 0.3) {
+                problemCount++;
+                typeCount[maxType] = (typeCount[maxType] || 0) + 1;
+            }
+        }
+        console.log("🟢 total:", total);
+        console.log("🟡 problemCount:", problemCount);
+        console.log("🔴 typeCount:", typeCount);
+
+        if (problemCount === 0) {
+            console.log("✅ 모든 문장이 정상 → 본문: 정상");
+            return "정상 표현";
+        }
+        // 전체 문장 중 30% 이상이어야 유의미
+        const sortedTypes = Object.entries(typeCount).sort((a, b) => b[1] - a[1]);
+        for (const [type, count] of sortedTypes) {
+            if ((count / total) >= 0.3) {
+                return getKoreanTypeName(type);
+            }
+        }
+        return getKoreanTypeName(sortedTypes[0][0]);
+    }
+
+    function updateQualityTextSummary() {
+        const currentArticleContainer = slides[currentSlide];
+        const articleElement = currentArticleContainer.querySelector('[data-article-id]');
+        if (!articleElement) return;
+
+        const articleId = articleElement.getAttribute('data-article-id');
+        const qualityData = getQualityData(articleId);
+
+        // 제목 타입 표시
+        const titleSpan = currentArticleContainer.querySelector('.best-title-type');
+        if (titleSpan) {
+            titleSpan.textContent = getBestTitleType(qualityData.titleChecks);
+        }
+
+        // 본문 주요 타입 표시
+        const contentSpan = currentArticleContainer.querySelector('.dominant-content-type');
+        if (contentSpan) {
+            contentSpan.textContent = getDominantContentType(qualityData.contentChecks);
+        }
+        console.log("본문 span 대상:", contentSpan);
+    }
 
     renderWordCloud(domains[currentIndex]);
     updateStatusText();
+<!--    updateQualityTextSummary();-->
 </script>
 </body>
 </html>
