@@ -86,12 +86,33 @@
           flex-shrink: 0;
         }
 
+        .news-date {
+          font-size: 12px;
+          color: #999;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+
+        .news-keywords {
+          font-size: 12px;
+          color: #007bff;
+          flex-shrink: 1;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+        .news-keywords .keyword {
+          margin-right: 6px;
+          font-weight: 500;
+        }
+
         /* 퀄리티 배지 스타일 */
         .quality-badges {
           display: flex;
           gap: 5px;
           flex-wrap: wrap;
-          flex-shrink: 1;
+          flex-shrink: 0;
         }
 
         .quality-badge {
@@ -292,7 +313,7 @@
 
         const ratio = totalSentences > 0 ? (problemSentences / totalSentences) : 0;
         // const isGood = ratio <= 0.3; // 30% 이하면 정상
-        const isGood = ratio <= 0.001; // 하나도 없으면 정상g
+        const isGood = ratio <= 0.001; // 하나도 없으면 정상
 
         return { isGood, ratio, problemSentences, totalSentences };
     }
@@ -322,6 +343,24 @@
         return badgesHtml;
     }
 
+    // 날짜 포맷팅 함수
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${month}-${day} ${hours}:${minutes}`;
+    }
+
+    // 키워드 포맷팅 함수 (최대 5개)
+    function formatKeywords(keywords) {
+        if (!keywords || keywords.length === 0) return '';
+        const displayKeywords = keywords.slice(0, 5);
+        return displayKeywords.map(keyword => `#${keyword}`).join(' ');
+    }
+
     function renderNewsList(page) {
       const listContainer = document.getElementById("newsListContainer");
       listContainer.innerHTML = "";
@@ -335,6 +374,10 @@
         // 퀄리티 배지 HTML 생성
         const qualityBadgesHtml = createQualityBadges(article.id);
 
+        // 날짜와 키워드 포맷팅
+        const formattedDate = formatDate(article.createdDate);
+        const formattedKeywords = formatKeywords(article.keywords);
+
         const div = document.createElement("div");
         div.className = "news-card";
         div.onclick = () => window.location.href = '/view/' + article.id;
@@ -346,6 +389,8 @@
             <div class="news-content">${article.content}</div>
             <div class="news-meta">
               <span class="news-media">${article.media || ''}</span>
+              <span class="news-date">${formattedDate}</span>
+              <span class="news-keywords">${formattedKeywords}</span>
               <div class="quality-badges">
                 ${qualityBadgesHtml}
               </div>
